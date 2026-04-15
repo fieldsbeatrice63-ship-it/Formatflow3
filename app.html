@@ -255,29 +255,30 @@
     }
 
     .watermark {
-      position: absolute;
-      inset: 0;
-      display: none;
-      pointer-events: none;
-      opacity: 0.10;
-      font-size: 42px;
-      font-weight: 700;
-      color: #1e4db7;
-      transform: rotate(-28deg);
-      text-align: center;
-      padding-top: 160px;
-      letter-spacing: 2px;
-      user-select: none;
-    }
+  position: absolute;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+  opacity: 0.16;
+  font-size: 44px;
+  font-weight: 700;
+  color: #1e4db7;
+  transform: rotate(-28deg);
+  text-align: center;
+  padding-top: 160px;
+  letter-spacing: 3px;
+  user-select: none;
+}
 
     .locked .watermark {
       display: block;
     }
 
-    .locked .paper-content {
-      filter: blur(3.2px);
-      user-select: none;
-    }
+   .locked .paper-content {
+  filter: blur(1.4px);
+  opacity: 0.88;
+  user-select: none;
+}
 
     .unlock-box {
       margin-top: 16px;
