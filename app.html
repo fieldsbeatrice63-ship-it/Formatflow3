@@ -499,6 +499,11 @@
       <div class="success-banner" id="successBanner">
         Payment confirmed. Return access detected. Your document preview has been restored below.
       </div>
+      <div id="retrieveBox" style="display:none; margin-bottom:16px; text-align:center;">
+  <button id="retrieveBtn" style="background:#2c7dff; color:#ffffff; border:0; border-radius:14px; padding:14px 20px; font-size:15px; font-weight:700; cursor:pointer;">
+    Retrieve My Document
+  </button>
+</div>
 
       <div class="preview-head">
         <div class="preview-title" id="previewTitle">Document Preview</div>
@@ -549,7 +554,8 @@ Choose a document type, complete the form, and click “Generate Preview” to s
     const subjectField = document.getElementById("subjectField");
     const amountField = document.getElementById("amountField");
     const detailsField = document.getElementById("detailsField");
-
+const retrieveBox = document.getElementById("retrieveBox");
+const retrieveBtn = document.getElementById("retrieveBtn");
     const generateBtn = document.getElementById("generateBtn");
     const clearBtn = document.getElementById("clearBtn");
 
@@ -596,6 +602,11 @@ Choose a document type, complete the form, and click “Generate Preview” to s
     function formatLine(value) {
       return value && value.trim() ? value.trim() : "[Not Provided]";
     }
+
+    function unlockRetrievedDocument() {
+  previewPaper.classList.remove("locked");
+  previewStatus.textContent = "Document retrieved";
+}
 
     function buildDocument() {
       const type = docType.value;
@@ -973,15 +984,19 @@ Client`;
       previewPaper.classList.add("locked");
       localStorage.removeItem("formatflow_pending_document");
     });
+    retrieveBtn.addEventListener("click", function () {
+  unlockRetrievedDocument();
+});
 
     window.addEventListener("DOMContentLoaded", function () {
       const params = new URLSearchParams(window.location.search);
       const paymentStatus = params.get("payment");
 
-      if (paymentStatus === "success") {
-        successBanner.style.display = "block";
-        restorePendingDocument();
-      }
+     if (paymentStatus === "success") {
+  successBanner.style.display = "block";
+  retrieveBox.style.display = "block";
+  restorePendingDocument();
+}
     });
   </script>
 </body>
