@@ -499,10 +499,20 @@
       <div class="success-banner" id="successBanner">
         Payment confirmed. Return access detected. Your document preview has been restored below.
       </div>
-      <div id="retrieveBox" style="display:none; margin-bottom:16px; text-align:center;">
-  <button id="retrieveBtn" style="background:#2c7dff; color:#ffffff; border:0; border-radius:14px; padding:14px 20px; font-size:15px; font-weight:700; cursor:pointer;">
+     <div id="retrieveBox" style="display:none; margin-bottom:16px; text-align:center;">
+  <button id="retrieveBtn" style="background:#2c7dff; color:#ffffff; border:0; border-radius:14px; padding:14px 20px; font-size:15px; font-weight:700; cursor:pointer; margin-bottom:10px;">
     Retrieve My Document
   </button>
+
+  <div id="downloadTools" style="display:none; margin-top:10px;">
+    <button id="downloadPdfBtn" style="background:#ffffff; color:#1e4db7; border:1px solid #cfe0ff; border-radius:14px; padding:12px 18px; font-size:15px; font-weight:700; cursor:pointer; margin:6px;">
+      Download PDF
+    </button>
+
+    <button id="printDocBtn" style="background:#ffffff; color:#1e4db7; border:1px solid #cfe0ff; border-radius:14px; padding:12px 18px; font-size:15px; font-weight:700; cursor:pointer; margin:6px;">
+      Print / Save PDF
+    </button>
+  </div>
 </div>
 
       <div class="preview-head">
@@ -556,6 +566,10 @@ Choose a document type, complete the form, and click “Generate Preview” to s
     const detailsField = document.getElementById("detailsField");
 const retrieveBox = document.getElementById("retrieveBox");
 const retrieveBtn = document.getElementById("retrieveBtn");
+const downloadTools = document.getElementById("downloadTools");
+const downloadPdfBtn = document.getElementById("downloadPdfBtn");
+const printDocBtn = document.getElementById("printDocBtn");
+    
     const generateBtn = document.getElementById("generateBtn");
     const clearBtn = document.getElementById("clearBtn");
 
@@ -603,9 +617,12 @@ const retrieveBtn = document.getElementById("retrieveBtn");
       return value && value.trim() ? value.trim() : "[Not Provided]";
     }
 
-    function unlockRetrievedDocument() {
+   function unlockRetrievedDocument() {
   previewPaper.classList.remove("locked");
   previewStatus.textContent = "Document retrieved";
+  if (downloadTools) {
+    downloadTools.style.display = "block";
+  }
 }
 
     function buildDocument() {
@@ -958,6 +975,35 @@ Client`;
       }
     }
 
+   function openDocumentPrintWindow() {
+  const documentText = previewContent.textContent || "";
+  const printableWindow = window.open("", "_blank");
+
+  printableWindow.document.write(`
+    <html>
+      <head>
+        <title>FormatFlow Document</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            line-height: 1.7;
+            color: #222;
+            white-space: pre-wrap;
+          }
+        </style>
+      </head>
+      <body>
+${documentText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
+      </body>
+    </html>
+  `);
+
+  printableWindow.document.close();
+  printableWindow.focus();
+  printableWindow.print();
+}
+
     generateBtn.addEventListener("click", function () {
       const builtDoc = buildDocument();
       previewTitle.textContent = docTitles[docType.value] || "Document Preview";
@@ -986,6 +1032,14 @@ Client`;
     });
     retrieveBtn.addEventListener("click", function () {
   unlockRetrievedDocument();
+});
+
+   downloadPdfBtn.addEventListener("click", function () {
+  openDocumentPrintWindow();
+});
+
+printDocBtn.addEventListener("click", function () {
+  openDocumentPrintWindow();
 });
 
     window.addEventListener("DOMContentLoaded", function () {
