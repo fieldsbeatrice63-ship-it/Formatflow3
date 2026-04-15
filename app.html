@@ -246,6 +246,19 @@
       box-shadow: inset 0 0 0 1px #edf3ff;
     }
 
+    .preview-paper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0);
+  pointer-events: none;
+  transition: background 0.2s ease;
+}
+
+.preview-paper.locked::after {
+  background: rgba(255, 255, 255, 0.14);
+}
+
     .paper-content {
       color: #222222;
       line-height: 1.75;
@@ -254,12 +267,12 @@
       word-wrap: break-word;
     }
 
-    .watermark {
+  .watermark {
   position: absolute;
   inset: 0;
   display: none;
   pointer-events: none;
-  opacity: 0.16;
+  opacity: 0.18;
   font-size: 44px;
   font-weight: 700;
   color: #1e4db7;
@@ -268,15 +281,15 @@
   padding-top: 160px;
   letter-spacing: 3px;
   user-select: none;
-}
+} 
 
     .locked .watermark {
       display: block;
     }
 
    .locked .paper-content {
-  filter: blur(1.4px);
-  opacity: 0.88;
+  filter: blur(2.2px);
+  opacity: 0.72;
   user-select: none;
 }
 
