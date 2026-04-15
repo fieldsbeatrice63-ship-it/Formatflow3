@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FormatFlow™ | Payment Successful</title>
+  <meta name="description" content="Your payment was successful. Return to FormatFlow™ to retrieve your document." />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #eaf6ff 0%, #d8efff 100%);
+      color: #173b79;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 760px;
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 36px 30px;
+      box-shadow: 0 16px 36px rgba(19, 59, 121, 0.12);
+      border: 1px solid #dce9ff;
+      text-align: center;
+    }
+
+    .check {
+      width: 74px;
+      height: 74px;
+      border-radius: 50%;
+      background: #2c7dff;
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      font-weight: 700;
+      margin-bottom: 18px;
+      box-shadow: 0 10px 24px rgba(44, 125, 255, 0.20);
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: 38px;
+      color: #173b79;
+    }
+
+    p {
+      margin: 0 auto 16px;
+      max-width: 620px;
+      color: #355171;
+      line-height: 1.8;
+      font-size: 16px;
+    }
+
+    .notice {
+      margin: 22px 0;
+      padding: 18px;
+      border-radius: 18px;
+      background: #f7fbff;
+      border: 1px solid #dce9ff;
+      color: #355171;
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 20px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 16px;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: #2c7dff;
+      color: #ffffff;
+      box-shadow: 0 10px 24px rgba(44, 125, 255, 0.18);
+    }
+
+    .btn-secondary {
+      background: #ffffff;
+      color: #1e4db7;
+      border: 1px solid #cfe0ff;
+    }
+
+    .small {
+      margin-top: 20px;
+      font-size: 13px;
+      color: #5d7694;
+    }
+
+    @media (max-width: 700px) {
+      .card {
+        padding: 28px 20px;
+      }
+
+      h1 {
+        font-size: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="check">✓</div>
+
+    <h1>Payment Successful</h1>
+
+    <p>
+      Thank you. Your payment has been received successfully.
+      You may now return to FormatFlow™ to retrieve your document.
+    </p>
+
+    <div class="notice">
+      If your document was already prepared before checkout, returning to the document page in the same browser session
+      should allow you to continue where you left off.
+    </div>
+
+    <div class="actions">
+      <a class="btn btn-primary" href="app.html?payment=success">Return to My Document</a>
+      <a class="btn btn-secondary" href="index.html">Back to Home</a>
+    </div>
+
+    <div class="small">
+      If your main generator page is not named <strong>app.html</strong>, replace that link with your actual generator page name.
+    </div>
+  </div>
+
+</body>
+</html>
