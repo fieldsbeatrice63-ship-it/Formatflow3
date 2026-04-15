@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FormatFlow™ | Document Generator</title>
+  <meta name="description" content="Create professional documents for credit, career, housing, legal, and business needs with FormatFlow™." />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #eaf6ff 0%, #d8efff 100%);
+      color: #173b79;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    .topbar {
+      background: #ffffff;
+      border-bottom: 1px solid #d7e8ff;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav {
+      max-width: 1250px;
+      margin: 0 auto;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1e4db7;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: #355171;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .nav-btn {
+      background: #2c7dff;
+      color: #ffffff !important;
+      padding: 11px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      display: inline-block;
+    }
+
+    .hero {
+      max-width: 1250px;
+      margin: 0 auto;
+      padding: 34px 20px 20px;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: 40px;
+      color: #173b79;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 860px;
+      color: #355171;
+      line-height: 1.8;
+      font-size: 16px;
+    }
+
+    .app-shell {
+      max-width: 1250px;
+      margin: 0 auto;
+      padding: 18px 20px 50px;
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .panel,
+    .preview-panel {
+      background: #ffffff;
+      border-radius: 24px;
+      border: 1px solid #dce9ff;
+      box-shadow: 0 14px 32px rgba(19, 59, 121, 0.08);
+    }
+
+    .panel {
+      padding: 24px;
+    }
+
+    .preview-panel {
+      padding: 20px;
+      position: sticky;
+      top: 92px;
+    }
+
+    .section-title {
+      margin: 0 0 8px;
+      font-size: 24px;
+      color: #173b79;
+    }
+
+    .section-subtitle {
+      margin: 0 0 18px;
+      color: #355171;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #355171;
+    }
+
+    select,
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid #cfe0ff;
+      border-radius: 14px;
+      padding: 13px 14px;
+      font-size: 15px;
+      font-family: Arial, sans-serif;
+      color: #173b79;
+      background: #ffffff;
+      outline: none;
+      margin-bottom: 16px;
+    }
+
+    textarea {
+      min-height: 105px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
+    }
+
+    .btn-primary {
+      background: #2c7dff;
+      color: #ffffff;
+      box-shadow: 0 10px 24px rgba(44, 125, 255, 0.18);
+    }
+
+    .btn-secondary {
+      background: #ffffff;
+      color: #1e4db7;
+      border: 1px solid #cfe0ff;
+    }
+
+    .doc-note {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: #f7fbff;
+      border: 1px solid #dce9ff;
+      color: #48617f;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .preview-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .preview-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #173b79;
+    }
+
+    .preview-status {
+      background: #eaf3ff;
+      color: #1e4db7;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .preview-frame {
+      background: #eef6ff;
+      border: 1px solid #d7e8ff;
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    .preview-paper {
+      width: 100%;
+      min-height: 720px;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 42px 38px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px #edf3ff;
+    }
+
+    .paper-content {
+      color: #222222;
+      line-height: 1.75;
+      font-size: 15px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .watermark {
+      position: absolute;
+      inset: 0;
+      display: none;
+      pointer-events: none;
+      opacity: 0.10;
+      font-size: 42px;
+      font-weight: 700;
+      color: #1e4db7;
+      transform: rotate(-28deg);
+      text-align: center;
+      padding-top: 160px;
+      letter-spacing: 2px;
+      user-select: none;
+    }
+
+    .locked .watermark {
+      display: block;
+    }
+
+    .locked .paper-content {
+      filter: blur(3.2px);
+      user-select: none;
+    }
+
+    .unlock-box {
+      margin-top: 16px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #1d4f9a 0%, #173b79 100%);
+      color: #ffffff;
+      padding: 22px;
+      box-shadow: 0 14px 32px rgba(23, 59, 121, 0.16);
+    }
+
+    .unlock-box h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+    }
+
+    .unlock-box p {
+      margin: 0 0 16px;
+      line-height: 1.8;
+      color: #e3efff;
+      font-size: 15px;
+    }
+
+    .pricing-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .pricing-link {
+      display: inline-block;
+      padding: 13px 16px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 15px;
+      text-align: center;
+    }
+
+    .pricing-basic {
+      background: #ffffff;
+      color: #1e4db7;
+    }
+
+    .pricing-pro {
+      background: #b9d8ff;
+      color: #173b79;
+    }
+
+    .pricing-premium {
+      background: #2c7dff;
+      color: #ffffff;
+    }
+
+    .success-banner {
+      display: none;
+      margin-bottom: 16px;
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: #ecfff1;
+      border: 1px solid #b7e9c6;
+      color: #1f6b3c;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.7;
+    }
+
+    .footer {
+      max-width: 1250px;
+      margin: 0 auto;
+      padding: 0 20px 40px;
+      color: #48617f;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 1050px) {
+      .app-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .preview-panel {
+        position: static;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .hero h1 {
+        font-size: 31px;
+      }
+
+      .field-row {
+        grid-template-columns: 1fr;
+      }
+
+      .preview-paper {
+        padding: 28px 22px;
+        min-height: 620px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="nav">
+      <div class="brand">FormatFlow™</div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="pricing.html">Pricing</a>
+        <a class="nav-btn" href="app.html">Generator</a>
+      </div>
+    </div>
+  </div>
+
+  <section class="hero">
+    <h1>Build Your Document</h1>
+    <p>
+      Select the type of document you need, enter your details, generate your preview,
+      and choose the access level that fits your situation.
+    </p>
+  </section>
+
+  <section class="app-shell">
+    <div class="panel">
+      <h2 class="section-title">Document Setup</h2>
+      <p class="section-subtitle">
+        Complete the fields below. FormatFlow™ will generate a professional draft based on your selected document type.
+      </p>
+
+      <label for="docType">Document Type</label>
+      <select id="docType">
+        <option value="credit_dispute">Credit Dispute Letter</option>
+        <option value="debt_validation">Debt Validation Letter</option>
+        <option value="resume">Professional Resume</option>
+        <option value="cover_letter">Job-Specific Cover Letter</option>
+        <option value="lease_agreement">Residential Lease Agreement</option>
+        <option value="eviction_response">Eviction Response Letter</option>
+        <option value="proof_of_income">Proof of Income Letter</option>
+        <option value="hardship_letter">Financial Hardship Letter</option>
+        <option value="business_funding">Business Funding Request Letter</option>
+        <option value="service_agreement">Simple Service Agreement</option>
+      </select>
+
+      <div class="field-row">
+        <div>
+          <label for="fullName">Full Name</label>
+          <input id="fullName" type="text" placeholder="Enter your full name" />
+        </div>
+        <div>
+          <label for="address">Address</label>
+          <input id="address" type="text" placeholder="Enter your address" />
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div>
+          <label for="cityStateZip">City, State, Zip</label>
+          <input id="cityStateZip" type="text" placeholder="City, State, Zip" />
+        </div>
+        <div>
+          <label for="dateField">Date</label>
+          <input id="dateField" type="text" placeholder="MM/DD/YYYY" />
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div>
+          <label for="recipientName">Recipient / Company Name</label>
+          <input id="recipientName" type="text" placeholder="Recipient, company, landlord, lender, or client" />
+        </div>
+        <div>
+          <label for="recipientAddress">Recipient Address</label>
+          <input id="recipientAddress" type="text" placeholder="Recipient address" />
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div>
+          <label for="subjectField">Subject / Position / Account / Property</label>
+          <input id="subjectField" type="text" placeholder="Account number, job title, property, service, or topic" />
+        </div>
+        <div>
+          <label for="amountField">Amount / Rent / Income / Funding</label>
+          <input id="amountField" type="text" placeholder="$ Amount, rent, deposit, income, or funding request" />
+        </div>
+      </div>
+
+      <label for="detailsField">Details</label>
+      <textarea id="detailsField" placeholder="Add any key details, explanation, responsibilities, hardship, work experience, dispute reason, or service description here."></textarea>
+
+      <div class="button-row">
+        <button class="btn-primary" id="generateBtn">Generate Preview</button>
+        <button class="btn-secondary" id="clearBtn" type="button">Clear</button>
+      </div>
+
+      <div class="doc-note" id="docNote">
+        Start by selecting your document type. The form stays intentionally simple so you can move quickly.
+      </div>
+    </div>
+
+    <div class="preview-panel">
+      <div class="success-banner" id="successBanner">
+        Payment confirmed. Return access detected. Your document preview has been restored below.
+      </div>
+
+      <div class="preview-head">
+        <div class="preview-title" id="previewTitle">Document Preview</div>
+        <div class="preview-status" id="previewStatus">Waiting for input</div>
+      </div>
+
+      <div class="preview-frame">
+        <div class="preview-paper locked" id="previewPaper">
+          <div class="watermark">FORMATFLOW™ PREVIEW</div>
+          <div class="paper-content" id="previewContent">
+Choose a document type, complete the form, and click “Generate Preview” to see your draft here.
+          </div>
+        </div>
+      </div>
+
+      <div class="unlock-box">
+        <h3>Unlock Your Document</h3>
+        <p>
+          Once your preview is generated, choose the access level below to continue with your document.
+          After payment, return to this page to retrieve your prepared draft.
+        </p>
+        <div class="pricing-actions">
+          <a class="pricing-link pricing-basic" id="basicLink" href="https://buy.stripe.com/8x25kC2Jd7AJ2gIdNf3ks0i" target="_blank">Basic — $19.99</a>
+          <a class="pricing-link pricing-pro" id="proLink" href="https://buy.stripe.com/aFa9AS2Jdf3baNe38B3ks02" target="_blank">Professional — $29.99</a>
+          <a class="pricing-link pricing-premium" id="premiumLink" href="https://buy.stripe.com/aFa14m2Jd8EN1cEfVn3ks0j" target="_blank">Premium — $49.99</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    FormatFlow™ provides general document-generation support based on information entered by the user.
+    FormatFlow™ does not provide legal advice, financial advice, or guaranteed results.
+  </footer>
+
+  <script>
+    const docType = document.getElementById("docType");
+    const fullName = document.getElementById("fullName");
+    const address = document.getElementById("address");
+    const cityStateZip = document.getElementById("cityStateZip");
+    const dateField = document.getElementById("dateField");
+    const recipientName = document.getElementById("recipientName");
+    const recipientAddress = document.getElementById("recipientAddress");
+    const subjectField = document.getElementById("subjectField");
+    const amountField = document.getElementById("amountField");
+    const detailsField = document.getElementById("detailsField");
+
+    const generateBtn = document.getElementById("generateBtn");
+    const clearBtn = document.getElementById("clearBtn");
+
+    const previewTitle = document.getElementById("previewTitle");
+    const previewStatus = document.getElementById("previewStatus");
+    const previewContent = document.getElementById("previewContent");
+    const previewPaper = document.getElementById("previewPaper");
+    const docNote = document.getElementById("docNote");
+    const successBanner = document.getElementById("successBanner");
+
+    const docNotes = {
+      credit_dispute: "Use this for disputing inaccurate late payments or questionable reporting tied to a credit account.",
+      debt_validation: "Use this to request validation of a debt from a collection agency and place the burden of proof on the collector.",
+      resume: "Use this to generate a clean, professional resume draft for employment opportunities.",
+      cover_letter: "Use this to build a polished cover letter for a specific position or employer.",
+      lease_agreement: "Use this to create a simple residential lease agreement structure between landlord and tenant.",
+      eviction_response: "Use this to respond to an eviction notice and request time, resolution, or a payment arrangement.",
+      proof_of_income: "Use this to verify employment, self-employment, or general income for housing or application purposes.",
+      hardship_letter: "Use this to explain hardship and request consideration, flexibility, or relief from a creditor or company.",
+      business_funding: "Use this to request funding for business launch, operations, or growth.",
+      service_agreement: "Use this to define services, payment terms, and responsibilities between provider and client."
+    };
+
+    const docTitles = {
+      credit_dispute: "Credit Dispute Letter",
+      debt_validation: "Debt Validation Letter",
+      resume: "Professional Resume",
+      cover_letter: "Job-Specific Cover Letter",
+      lease_agreement: "Residential Lease Agreement",
+      eviction_response: "Eviction Response Letter",
+      proof_of_income: "Proof of Income Letter",
+      hardship_letter: "Financial Hardship Letter",
+      business_funding: "Business Funding Request Letter",
+      service_agreement: "Simple Service Agreement"
+    };
+
+    function updateNote() {
+      docNote.textContent = docNotes[docType.value] || "Complete the form to continue.";
+    }
+
+    docType.addEventListener("change", updateNote);
+    updateNote();
+
+    function formatLine(value) {
+      return value && value.trim() ? value.trim() : "[Not Provided]";
+    }
+
+    function buildDocument() {
+      const type = docType.value;
+      const data = {
+        fullName: formatLine(fullName.value),
+        address: formatLine(address.value),
+        cityStateZip: formatLine(cityStateZip.value),
+        dateField: formatLine(dateField.value),
+        recipientName: formatLine(recipientName.value),
+        recipientAddress: formatLine(recipientAddress.value),
+        subjectField: formatLine(subjectField.value),
+        amountField: formatLine(amountField.value),
+        detailsField: formatLine(detailsField.value)
+      };
+
+      if (type === "credit_dispute") {
+        return `${data.fullName}
+${data.address}
+${data.cityStateZip}
+${data.dateField}
+
+${data.recipientName}
+${data.recipientAddress}
+
+RE: Formal Dispute of Inaccurate Reporting
+Reference: ${data.subjectField}
+
+To Whom It May Concern,
+
+I am writing to formally dispute inaccurate or questionable reporting connected to the reference listed above.
+
+After reviewing the matter carefully, I believe the information being reported is inaccurate, incomplete, or not properly verified. I respectfully request a prompt review and written verification of the information in question.
+
+Please investigate this matter and provide any available documentation supporting the accuracy of the reporting. If the information cannot be properly verified, I request that it be corrected or removed as appropriate.
+
+Additional context:
+${data.detailsField}
+
+Please provide written confirmation of your findings and any updates made.
+
+Sincerely,
+
+${data.fullName}`;
+      }
+
+      if (type === "debt_validation") {
+        return `${data.fullName}
+${data.address}
+${data.cityStateZip}
+${data.dateField}
+
+${data.recipientName}
+${data.recipientAddress}
+
+RE: Request for Debt Validation
+Reference: ${data.subjectField}
+
+To Whom It May Concern,
+
+I am writing in response to communication regarding the account or debt referenced above. I dispute the validity of this matter and request proper validation.
+
+Please provide the name of the original creditor, the basis for the amount claimed, and supporting documentation showing that I am legally responsible for the debt in question.
+
+Additional notes:
+${data.detailsField}
+
+Until proper validation is provided, I request that collection activity and related reporting be handled in accordance with applicable requirements.
+
+Sincerely,
+
+${data.fullName}`;
+      }
+
+      if (type === "resume") {
+        return `${data.fullName}
+${data.address} | ${data.cityStateZip}
+
+PROFESSIONAL SUMMARY
+
+Dependable and results-focused professional with experience relevant to ${data.subjectField}. Recognized for communication, organization, consistency, and the ability to perform effectively in fast-paced environments.
+
+PROFESSIONAL EXPERIENCE
+
+Primary Experience / Role
+${data.recipientName}
+
+- Demonstrated reliability, professionalism, and consistent support in daily responsibilities
+- Maintained a strong work ethic while adapting to shifting priorities and expectations
+- Supported business goals through effective communication, organization, and follow-through
+- Helped improve workflow, accuracy, and overall service quality where applicable
+
+ADDITIONAL DETAILS
+${data.detailsField}
+
+CORE SKILLS
+
+- Communication
+- Organization
+- Time Management
+- Problem-Solving
+- Professionalism
+- Team Collaboration
+
+EDUCATION / TRAINING
+
+${data.subjectField}`;
+      }
+
+      if (type === "cover_letter") {
+        return `${data.fullName}
+${data.address}
+${data.cityStateZip}
+${data.dateField}
+
+${data.recipientName}
+${data.recipientAddress}
+
+RE: Application for ${data.subjectField}
+
+Dear Hiring Manager,
+
+I am writing to express my interest in the ${data.subjectField} position. I bring a professional mindset, a dependable work ethic, and experience that supports strong performance in fast-paced and service-oriented environments.
+
+My background includes strengths in communication, responsibility, organization, and follow-through. I am committed to contributing positively and maintaining a strong standard of professionalism.
+
+Additional experience or relevant details:
+${data.detailsField}
+
+Thank you for your time and consideration. I welcome the opportunity to contribute and discuss my qualifications further.
+
+Sincerely,
+
+${data.fullName}`;
+      }
+
+      if (type === "lease_agreement") {
+        return `RESIDENTIAL LEASE AGREEMENT
+
+This Agreement is entered into on ${data.dateField}, by and between:
+
+LANDLORD: ${data.fullName}
+TENANT: ${data.recipientName}
+
+PROPERTY / REFERENCE:
+${data.subjectField}
+
+PROPERTY ADDRESS:
+${data.address}, ${data.cityStateZip}
+
+1. TERM
+This lease shall remain in effect according to the dates and arrangement agreed upon by the parties.
+
+2. RENT
+The agreed rent, deposit, or related amount is: ${data.amountField}
+
+3. ADDITIONAL TERMS
+${data.detailsField}
+
+4. RESPONSIBILITIES
+The parties agree to maintain professional communication and act in accordance with the terms established for occupancy and payment.
+
+5. GOVERNING LOCATION
+This agreement is associated with:
+${data.cityStateZip}
+
+By signing below, both parties acknowledge and accept the structure of this agreement.
+
+______________________________
+Landlord / Owner
+
+______________________________
+Tenant`;
+      }
+
+      if (type === "eviction_response") {
+        return `${data.fullName}
+${data.address}
+${data.cityStateZip}
+${data.dateField}
+
+${data.recipientName}
+${data.recipientAddress}
+
+RE: Response to Eviction Notice
+Property / Reference: ${data.subjectField}
+
+Dear ${data.recipientName},
+
+I am writing in response to the eviction notice or housing-related matter referenced above. I respectfully request an opportunity to resolve this matter in good faith.
+
+At this time, I am asking for consideration regarding the circumstances affecting my ability to respond or comply as originally expected.
+
+Additional explanation:
+${data.detailsField}
+
+The amount involved, if applicable, is:
+${data.amountField}
+
+I respectfully request a reasonable opportunity to address this matter and receive written guidance on available next steps.
+
+Sincerely,
+
+${data.fullName}`;
+      }
+
+      if (type === "proof_of_income") {
+        return `${data.fullName}
+${data.address}
+${data.cityStateZip}
+${data.dateField}
+
+To Whom It May Concern,
+
+This letter is to verify that I, ${data.fullName}, currently receive income associated with the following work, role, or source:
+
+${data.subjectField}
+
+Reported amount:
+${data.amountField}
+
+Additional details regarding income source, consistency, or verification:
+${data.detailsField}
+
+Please contact me if further clarification is needed.
+
+Sincerely,
+
+${data.fullName}`;
+      }
+
+      if (type === "hardship_letter") {
+        return `${data.fullName}
+${data.address}
+${data.cityStateZip}
+${data.dateField}
+
+${data.recipientName}
+${data.recipientAddress}
+
+RE: Financial Hardship Request
+Reference: ${data.subjectField}
+
+To Whom It May Concern,
+
+I am writing to explain my current financial hardship and respectfully request consideration regarding the matter referenced above.
+
+At this time, I have experienced circumstances that have made it difficult to meet my financial obligations as originally expected.
+
+Additional hardship details:
+${data.detailsField}
+
+Amount or obligation involved:
+${data.amountField}
+
+I am respectfully requesting review, flexibility, or any available relief option that may help me move forward responsibly.
+
+Sincerely,
+
+${data.fullName}`;
+      }
+
+      if (type === "business_funding") {
+        return `${data.fullName}
+${data.address}
+${data.cityStateZip}
+${data.dateField}
+
+${data.recipientName}
+${data.recipientAddress}
+
+RE: Business Funding Request
+Business / Reference: ${data.subjectField}
+
+Dear ${data.recipientName},
+
+I am writing to formally request business funding support related to the opportunity, project, or business matter referenced above.
+
+The requested amount is:
+${data.amountField}
+
+Purpose and supporting details:
+${data.detailsField}
+
+I believe this request supports meaningful growth, continuity, or expansion, and I would welcome the opportunity to provide additional information if needed.
+
+Sincerely,
+
+${data.fullName}`;
+      }
+
+      if (type === "service_agreement") {
+        return `SERVICE AGREEMENT
+
+This Agreement is entered into on ${data.dateField}, by and between:
+
+SERVICE PROVIDER:
+${data.fullName}
+
+CLIENT:
+${data.recipientName}
+
+SERVICE DESCRIPTION:
+${data.subjectField}
+
+PAYMENT / COMPENSATION:
+${data.amountField}
+
+SERVICE LOCATION / ADDRESS:
+${data.address}, ${data.cityStateZip}
+
+ADDITIONAL TERMS:
+${data.detailsField}
+
+Both parties agree to communicate professionally, follow the outlined expectations, and honor the agreed structure of this arrangement.
+
+______________________________
+Service Provider
+
+______________________________
+Client`;
+      }
+
+      return "No document selected.";
+    }
+
+    function savePendingDocument(content, selectedDocType) {
+      const pendingDoc = {
+        content: content || "",
+        docType: selectedDocType || "",
+        savedAt: new Date().toISOString()
+      };
+      localStorage.setItem("formatflow_pending_document", JSON.stringify(pendingDoc));
+    }
+
+    function restorePendingDocument() {
+      const saved = localStorage.getItem("formatflow_pending_document");
+      if (!saved) return;
+
+      try {
+        const data = JSON.parse(saved);
+        if (data.content) {
+          previewContent.textContent = data.content;
+          previewPaper.classList.remove("locked");
+          previewTitle.textContent = docTitles[data.docType] || "Restored Document";
+          previewStatus.textContent = "Restored after payment";
+        }
+      } catch (error) {
+        console.error("Could not restore pending document:", error);
+      }
+    }
+
+    generateBtn.addEventListener("click", function () {
+      const builtDoc = buildDocument();
+      previewTitle.textContent = docTitles[docType.value] || "Document Preview";
+      previewStatus.textContent = "Preview ready";
+      previewContent.textContent = builtDoc;
+      previewPaper.classList.add("locked");
+      savePendingDocument(builtDoc, docType.value);
+    });
+
+    clearBtn.addEventListener("click", function () {
+      fullName.value = "";
+      address.value = "";
+      cityStateZip.value = "";
+      dateField.value = "";
+      recipientName.value = "";
+      recipientAddress.value = "";
+      subjectField.value = "";
+      amountField.value = "";
+      detailsField.value = "";
+
+      previewTitle.textContent = "Document Preview";
+      previewStatus.textContent = "Waiting for input";
+      previewContent.textContent = "Choose a document type, complete the form, and click “Generate Preview” to see your draft here.";
+      previewPaper.classList.add("locked");
+      localStorage.removeItem("formatflow_pending_document");
+    });
+
+    window.addEventListener("DOMContentLoaded", function () {
+      const params = new URLSearchParams(window.location.search);
+      const paymentStatus = params.get("payment");
+
+      if (paymentStatus === "success") {
+        successBanner.style.display = "block";
+        restorePendingDocument();
+      }
+    });
+  </script>
+</body>
+</html>
