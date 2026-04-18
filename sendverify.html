@@ -581,15 +581,28 @@ Your transferred document will appear here once it is loaded from the generator.
       service_agreement: "Simple Service Agreement"
     };
 
-    function loadTransferredDocument() {
-      transferredDocument = localStorage.getItem("verified_send_document") || "";
-      transferredDocType = localStorage.getItem("verified_send_doc_type") || "";
+    function loadTransferDocument() {
+  const storedDoc = localStorage.getItem("verified_send_document") || "";
+  const storedDocType = localStorage.getItem("verified_send_doc_type") || "";
 
-      documentPreview.textContent = transferredDocument || "No transferred document was found. Return to the generator and select Send with Verify after unlocking your document.";
-      documentTypeDisplay.value = docTitles[transferredDocType] || transferredDocType || "Not detected";
-      previewTitle.textContent = (docTitles[transferredDocType] || "Document") + " Ready for Delivery";
-      previewStatus.textContent = transferredDocument ? "Document loaded" : "No document detected";
+  if (storedDoc) {
+    previewContent.textContent = storedDoc;
+
+    if (typeof previewTitle !== "undefined") {
+      previewTitle.textContent = "Document Ready to Send";
     }
+
+    previewStatus.textContent = "Document loaded";
+  } else {
+    previewContent.textContent = "No document was detected. Return to the generator and retrieve your document first.";
+
+    if (typeof previewTitle !== "undefined") {
+      previewTitle.textContent = "Document Ready to Send";
+    }
+
+    previewStatus.textContent = "Waiting for details";
+  }
+}
 
     function generateVerificationId() {
       const now = new Date();
