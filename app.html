@@ -512,6 +512,10 @@
     <button id="printDocBtn" style="background:#ffffff; color:#1e4db7; border:1px solid #cfe0ff; border-radius:14px; padding:12px 18px; font-size:15px; font-weight:700; cursor:pointer; margin:6px;">
       Print / Save PDF
     </button>
+
+    <button id="verifiedSendBtn" style="background:#ffffff; color:#1e4db7; border:1px solid #cfe0ff; border-radius:14px; padding:12px 18px; font-size:15px; font-weight:700; cursor:pointer; margin:6px;">
+  Send with Verify
+</button>
   </div>
 </div>
 
@@ -569,6 +573,7 @@ const retrieveBtn = document.getElementById("retrieveBtn");
 const downloadTools = document.getElementById("downloadTools");
 const downloadPdfBtn = document.getElementById("downloadPdfBtn");
 const printDocBtn = document.getElementById("printDocBtn");
+    const verifiedSendBtn = document.getElementById("verifiedSendBtn");
     
     const generateBtn = document.getElementById("generateBtn");
     const clearBtn = document.getElementById("clearBtn");
@@ -1040,6 +1045,15 @@ ${documentText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
 
 printDocBtn.addEventListener("click", function () {
   openDocumentPrintWindow();
+});
+
+   verifiedSendBtn.addEventListener("click", function () {
+  const docContent = previewContent.textContent || "";
+
+  localStorage.setItem("verified_send_document", docContent);
+  localStorage.setItem("verified_send_doc_type", docType.value || "");
+
+  window.location.href = "sendverify.html";
 });
 
     window.addEventListener("DOMContentLoaded", function () {
