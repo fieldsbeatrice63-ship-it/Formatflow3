@@ -683,33 +683,53 @@ const editVerifyBtn = document.getElementById("editVerifyBtn");
   }
 }
 
-    function loadTransferredDocument() {
-      let storedDoc = localStorage.getItem("verified_send_document") || "";
-      let storedDocType = localStorage.getItem("verified_send_doc_type") || "";
+   function loadTransferDocument() {
+  const verifiedDoc = localStorage.getItem("verified_send_document");
+  const verifiedDocType = localStorage.getItem("verified_send_doc_type");
 
-      if (!storedDoc) {
-        const pendingRaw = localStorage.getItem("formatflow_pending_document");
-        if (pendingRaw) {
-          try {
-            const pendingData = JSON.parse(pendingRaw);
-            storedDoc = pendingData.content || "";
-            storedDocType = pendingData.docType || storedDocType;
-          } catch (error) {
-            console.error("Could not parse pending document:", error);
-          }
-        }
-      }
+  let fallbackContent = "";
+  let fallbackDocType = "";
 
-      if (storedDoc) {
-        previewContent.textContent = storedDoc;
-        previewStatus.textContent = "Document loaded";
-        previewTitle.textContent = docTitles[storedDocType] || "Document Ready to Send";
-      } else {
-        previewContent.textContent = "No document was detected. Return to the generator and retrieve your document first.";
-        previewStatus.textContent = "Waiting for details";
-        previewTitle.textContent = "Document Ready to Send";
-      }
+  const pendingDocRaw = localStorage.getItem("formatflow_pending_document");
+  if (pendingDocRaw) {
+    try {
+      const pendingDoc = JSON.parse(pendingDocRaw);
+      fallbackContent = pendingDoc.content || "";
+      fallbackDocType = pendingDoc.docType || "";
+    } catch (error) {
+      console.error("Could not read pending document:", error);
     }
+  }
+
+  const finalContent = verifiedDoc || fallbackContent;
+  const finalDocType = verifiedDocType || fallbackDocType;
+
+  if (finalContent) {
+    if (previewContent) {
+      previewContent.textContent = finalContent;
+    }
+
+    if (previewStatus) {
+      previewStatus.textContent = "Document loaded for verified delivery";
+    }
+
+    if (previewPaper) {
+      previewPaper.classList.remove("locked");
+    }
+
+    if (docNote) {
+      docNote.textContent = "Your document has been loaded into the verified delivery window. Review your information, make any final edits, and continue when ready.";
+    }
+  } else {
+    if (previewStatus) {
+      previewStatus.textContent = "No transferred document found";
+    }
+
+    if (docNote) {
+      docNote.textContent = "No document was found to transfer. Please return to the generator and retrieve your document first.";
+    }
+  }
+}
 
     function validateForm() {
       if (!previewContent.textContent || previewContent.textContent.indexOf("No document was detected") === 0) {
