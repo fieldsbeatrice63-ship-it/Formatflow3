@@ -1105,6 +1105,7 @@ if (continueVerifyPayment) {
 
 
   <!-- SEND VERIFY MODAL -->
+<!-- SEND VERIFY INFO MODAL -->
 <div id="sendVerifyModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999;">
   <div style="max-width:520px; margin:100px auto; background:#fff; border-radius:20px; padding:24px; position:relative;">
 
@@ -1118,12 +1119,8 @@ if (continueVerifyPayment) {
       </span>
     </div>
 
-    <h2 style="margin-top:0;">Send Verify™</h2>
-
-    <p>
-      Send Verify™ allows you to move your completed document into a verified delivery workflow.
-    </p>
-
+    <h2>Send Verify™</h2>
+    <p>Send Verify™ allows you to move your completed document into a verified delivery workflow.</p>
     <p><strong>Best use for credit dispute letters.</strong></p>
 
     <ul>
@@ -1134,97 +1131,67 @@ if (continueVerifyPayment) {
     </ul>
 
     <p><strong>Price: $7.99 per document</strong></p>
-
-    <p style="font-size:14px; color:#555;">
-      Available after your document has been purchased and retrieved.
-    </p>
+    <p style="font-size:14px; color:#555;">Available after your document has been purchased and retrieved.</p>
 
   </div>
 </div>
 
-  <script>
-  const sendVerifyInfoLink = document.getElementById("sendVerifyInfoLink");
-  const sendVerifyModal = document.getElementById("sendVerifyModal");
-  const closeSendVerifyModal = document.getElementById("closeSendVerifyModal");
-
-  if (sendVerifyInfoLink) {
-    sendVerifyInfoLink.addEventListener("click", function(e) {
-      e.preventDefault();
-      sendVerifyModal.style.display = "block";
-    });
-  }
-
-  if (closeSendVerifyModal) {
-    closeSendVerifyModal.addEventListener("click", function() {
-      sendVerifyModal.style.display = "none";
-    });
-  }
-
-
-    <div id="confirmVerifyModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999;">
-  <div style="max-width:520px; margin:100px auto; background:#fff; border-radius:20px; padding:24px; position:relative;">
-
-    <button id="closeConfirmVerifyModal" style="position:absolute; top:10px; right:10px; border:none; background:#eee; padding:6px 10px; border-radius:8px; cursor:pointer;">
-      ✕
-    </button>
-
-    <div style="margin-bottom:10px;">
-      <span style="background:#28c76f; color:#fff; padding:4px 10px; border-radius:999px; font-size:11px; font-weight:700;">
-        VERIFY
-      </span>
-    </div>
-
-    <h2 style="margin-top:0;">Send with Verify™</h2>
-
-    <p>
-      You are about to purchase verified delivery for this document for <strong>$7.99</strong>.
-    </p>
-
-    <p>
-      After payment, you will be redirected to the Send Verify page to complete the verified sending process.
-    </p>
-
-    <p style="font-size:14px; color:#555;">
-      Do you want to continue to payment?
-    </p>
-
-    <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:18px;">
-      <button id="continueVerifyPayment" style="background:#2c7dff; color:#fff; border:none; border-radius:14px; padding:12px 18px; font-size:15px; font-weight:700; cursor:pointer;">
-        Continue to Payment
-      </button>
-
-      <button id="cancelVerifyPayment" style="background:#ffffff; color:#1e4db7; border:1px solid #cfe0ff; border-radius:14px; padding:12px 18px; font-size:15px; font-weight:700; cursor:pointer;">
-        Cancel
-      </button>
-    </div>
-
+<!-- CONFIRM VERIFY MODAL -->
+<!-- SEND VERIFY INFO MODAL -->
+<!-- SEND VERIFY INFO MODAL -->
+<div id="sendVerifyModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999;">
+  <div style="max-width:520px; margin:100px auto; background:#fff; border-radius:20px; padding:24px;">
+    <button id="closeSendVerifyModal">✕</button>
+    <h2>Send Verify™</h2>
+    <p><strong>Best use for credit dispute letters.</strong></p>
+    <p>Verified delivery workflow with receipt.</p>
+    <p><strong>$7.99 per document</strong></p>
   </div>
 </div>
 
-    <script>
-  const confirmVerifyModalBottom = document.getElementById("confirmVerifyModal");
-  const closeConfirmVerifyModalBottom = document.getElementById("closeConfirmVerifyModal");
-  const continueVerifyPaymentBottom = document.getElementById("continueVerifyPayment");
-  const cancelVerifyPaymentBottom = document.getElementById("cancelVerifyPayment");
+<!-- CONFIRM VERIFY MODAL -->
+<div id="confirmVerifyModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999;">
+  <div style="max-width:520px; margin:100px auto; background:#fff; border-radius:20px; padding:24px;">
+    <button id="closeConfirmVerifyModal">✕</button>
+    <h2>Send with Verify™</h2>
+    <p>This will send your document with verified delivery for <strong>$7.99</strong>.</p>
 
-  if (closeConfirmVerifyModalBottom) {
-    closeConfirmVerifyModalBottom.addEventListener("click", function () {
-      confirmVerifyModalBottom.style.display = "none";
-    });
-  }
+    <button id="continueVerifyPayment">Continue</button>
+    <button id="cancelVerifyPayment">Cancel</button>
+  </div>
+</div>
 
-  if (cancelVerifyPaymentBottom) {
-    cancelVerifyPaymentBottom.addEventListener("click", function () {
-      confirmVerifyModalBottom.style.display = "none";
-    });
-  }
+<script>
+document.getElementById("sendVerifyInfoLink")?.addEventListener("click", function(e){
+  e.preventDefault();
+  document.getElementById("sendVerifyModal").style.display = "block";
+});
 
-  if (continueVerifyPaymentBottom) {
-    continueVerifyPaymentBottom.addEventListener("click", function () {
-      window.location.href = "https://buy.stripe.com/eVqcN4erVg7f9JacJb3ks0k";
-    });
-  }
-</script>
+document.getElementById("closeSendVerifyModal")?.addEventListener("click", function(){
+  document.getElementById("sendVerifyModal").style.display = "none";
+});
+
+document.getElementById("verifiedSendBtn")?.addEventListener("click", function () {
+  const content = document.getElementById("previewContent").textContent || "";
+  const type = document.getElementById("docType").value || "";
+
+  localStorage.setItem("verified_send_document", content);
+  localStorage.setItem("verified_send_doc_type", type);
+
+  document.getElementById("confirmVerifyModal").style.display = "block";
+});
+
+document.getElementById("closeConfirmVerifyModal")?.addEventListener("click", function(){
+  document.getElementById("confirmVerifyModal").style.display = "none";
+});
+
+document.getElementById("cancelVerifyPayment")?.addEventListener("click", function(){
+  document.getElementById("confirmVerifyModal").style.display = "none";
+});
+
+document.getElementById("continueVerifyPayment")?.addEventListener("click", function(){
+  window.location.href = "https://buy.stripe.com/eVqcN4erVg7f9JacJb3ks0k";
+});
 </script>
 </body>
 </html>
