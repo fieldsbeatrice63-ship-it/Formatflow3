@@ -1046,8 +1046,9 @@ Client`;
             line-height: 1.7;
             color: #222;
             white-space: pre-wrap;
+          }
 
-            function updatePaidDocument() {
+           function updatePaidDocument() {
   const builtDoc = buildDocument();
 
   previewTitle.textContent = docTitles[docType.value] || "Document Preview";
@@ -1061,7 +1062,6 @@ Client`;
     savedAt: new Date().toISOString()
   }));
 }
-          }
         </style>
       </head>
       <body>
