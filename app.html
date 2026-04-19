@@ -401,6 +401,8 @@
         <a href="index.html">Home</a>
         <a href="pricing.html">Pricing</a>
         <a href="terms.html">Terms</a>
+
+        
         <a class="nav-btn" href="app.html">Generator</a>
         
         
@@ -1071,5 +1073,63 @@ printDocBtn.addEventListener("click", function () {
 }
     });
   </script>
+
+
+  <!-- SEND VERIFY MODAL -->
+<div id="sendVerifyModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999;">
+  <div style="max-width:520px; margin:100px auto; background:#fff; border-radius:20px; padding:24px; position:relative;">
+
+    <button id="closeSendVerifyModal" style="position:absolute; top:10px; right:10px; border:none; background:#eee; padding:6px 10px; border-radius:8px; cursor:pointer;">
+      ✕
+    </button>
+
+    <div style="margin-bottom:10px;">
+      <span style="background:#28c76f; color:#fff; padding:4px 10px; border-radius:999px; font-size:11px; font-weight:700;">
+        NEW
+      </span>
+    </div>
+
+    <h2 style="margin-top:0;">Send Verify™</h2>
+
+    <p>
+      Send Verify™ allows you to move your completed document into a verified delivery workflow.
+    </p>
+
+    <p><strong>Best use for credit dispute letters.</strong></p>
+
+    <ul>
+      <li>Verification number</li>
+      <li>Structured delivery workflow</li>
+      <li>Downloadable receipt (PDF)</li>
+      <li>Document record copy</li>
+    </ul>
+
+    <p><strong>Price: $7.99 per document</strong></p>
+
+    <p style="font-size:14px; color:#555;">
+      Available after your document has been purchased and retrieved.
+    </p>
+
+  </div>
+</div>
+
+  <script>
+  const sendVerifyInfoLink = document.getElementById("sendVerifyInfoLink");
+  const sendVerifyModal = document.getElementById("sendVerifyModal");
+  const closeSendVerifyModal = document.getElementById("closeSendVerifyModal");
+
+  if (sendVerifyInfoLink) {
+    sendVerifyInfoLink.addEventListener("click", function(e) {
+      e.preventDefault();
+      sendVerifyModal.style.display = "block";
+    });
+  }
+
+  if (closeSendVerifyModal) {
+    closeSendVerifyModal.addEventListener("click", function() {
+      sendVerifyModal.style.display = "none";
+    });
+  }
+</script>
 </body>
 </html>
