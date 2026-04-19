@@ -716,30 +716,37 @@ This receipt confirms that the verified delivery workflow was completed inside F
     }
 
     function printTextDocument(title, text) {
-      const printableWindow = window.open("", "_blank");
-      printableWindow.document.write(`
-        <html>
-          <head>
-            <title>${title}</title>
-            <style>
-              body {
-                font-family: Arial, sans-serif;
-                padding: 40px;
-                line-height: 1.7;
-                color: #222;
-                white-space: pre-wrap;
-              }
-              h1 {
-                font-size: 24px;
-                margin-bottom: 20px;
-              }
-            </style>
-          </head>
+  const printableWindow = window.open("", "_blank");
+  printableWindow.document.write(`
+    <html>
+      <head>
+        <title>${title}</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            line-height: 1.7;
+            color: #222;
+            white-space: pre-wrap;
+          }
+          h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>${title}</h1>
+        <div>${text.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
+      </body>
+    </html>
+  `);
+  printableWindow.document.close();
+  printableWindow.focus();
+  printableWindow.print();
+}
 
-          <script>
-  window.addEventListener("DOMContentLoaded", function () {
-    loadTransferDocument();
-  });
-</script>
-          <body>
-            <h1>${
+window.addEventListener("DOMContentLoaded", function () {
+  loadTransferDocument();
+});
+          
