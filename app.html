@@ -494,6 +494,9 @@
       <div class="button-row">
         <button class="btn-primary" id="generateBtn">Generate Preview</button>
         <button class="btn-secondary" id="clearBtn" type="button">Clear</button>
+        <button id="editBtn" class="btn-secondary" type="button" style="display:none;">
+  Edit
+</button>
       </div>
 
       <div class="doc-note" id="docNote">
@@ -584,6 +587,7 @@ const downloadTools = document.getElementById("downloadTools");
 const downloadPdfBtn = document.getElementById("downloadPdfBtn");
 const printDocBtn = document.getElementById("printDocBtn");
     const verifiedSendBtn = document.getElementById("verifiedSendBtn");
+    const editBtn = document.getElementById("editBtn");
 
     const confirmVerifyModal = document.getElementById("confirmVerifyModal");
 const closeConfirmVerifyModal = document.getElementById("closeConfirmVerifyModal");
@@ -995,6 +999,37 @@ Client`;
       }
     }
 
+    function handlePaidEdit() {
+  let editCount = parseInt(localStorage.getItem("formatflow_edit_count") || "0", 10);
+
+  if (editCount >= 2) {
+    if (docNote) {
+      docNote.textContent = "You have reached your edit limit. Please download your document or return to the homepage to generate a new document.";
+    }
+    if (editBtn) {
+      editBtn.disabled = true;
+    }
+    return;
+  }
+
+  updatePaidDocument();
+
+  editCount += 1;
+  localStorage.setItem("formatflow_edit_count", String(editCount));
+
+  if (docNote) {
+    if (editCount === 1) {
+      docNote.textContent = "Your document has been updated. You have 1 edit remaining.";
+    } else {
+      docNote.textContent = "Your final edit has been used. Please download your document. Changes will not be saved beyond this session.";
+    }
+  }
+
+  if (editCount >= 2 && editBtn) {
+    editBtn.disabled = true;
+  }
+}
+
    function openDocumentPrintWindow() {
   const documentText = previewContent.textContent || "";
   const printableWindow = window.open("", "_blank");
@@ -1010,6 +1045,21 @@ Client`;
             line-height: 1.7;
             color: #222;
             white-space: pre-wrap;
+
+            function updatePaidDocument() {
+  const builtDoc = buildDocument();
+
+  previewTitle.textContent = docTitles[docType.value] || "Document Preview";
+  previewStatus.textContent = "Updated after payment";
+  previewContent.textContent = builtDoc;
+  previewPaper.classList.remove("locked");
+
+  localStorage.setItem("formatflow_pending_document", JSON.stringify({
+    content: builtDoc,
+    docType: docType.value,
+    savedAt: new Date().toISOString()
+  }));
+}
           }
         </style>
       </head>
@@ -1064,6 +1114,12 @@ printDocBtn.addEventListener("click", function () {
   completeDocumentSession();
 });
 
+  if (editBtn) {
+  editBtn.addEventListener("click", function () {
+    handlePaidEdit();
+  });
+}
+
  verifiedSendBtn.addEventListener("click", function () {
   const docContent = previewContent.textContent || "";
   localStorage.setItem("verified_send_document", docContent);
@@ -1102,6 +1158,11 @@ if (continueVerifyPayment) {
   retrieveBox.style.display = "block";
   restorePendingDocument();
        localStorage.setItem("formatflow_paid_unlocked", "true");
+       localStorage.setItem("formatflow_edit_count", "0");
+       if (editBtn) editBtn.style.display = "inline-block";
+
+if (generateBtn) generateBtn.disabled = true;
+if (clearBtn) clearBtn.disabled = true;
 }
     });
   </script>
