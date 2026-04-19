@@ -491,11 +491,13 @@
       <label for="detailsField">Details</label>
       <textarea id="detailsField" placeholder="Add any key details, explanation, responsibilities, hardship, work experience, dispute reason, or service description here."></textarea>
 
-     <div class="button-row">
-  <button class="btn-primary" id="generateBtn">Generate Preview</button>
-  <button class="btn-secondary" id="clearBtn" type="button">Clear</button>
-  <button id="editBtn" class="btn-secondary" type="button" style="display:none;">Edit</button>
-</div>
+      <div class="button-row">
+        <button class="btn-primary" id="generateBtn">Generate Preview</button>
+        <button class="btn-secondary" id="clearBtn" type="button">Clear</button>
+        <button id="editBtn" class="btn-secondary" type="button" style="display:none;">
+  Edit
+</button>
+      </div>
 
       <div class="doc-note" id="docNote">
         Start by selecting your document type. The form stays intentionally simple so you can move quickly.
@@ -568,94 +570,102 @@ Choose a document type, complete the form, and click “Generate Preview” to s
     FormatFlow™ does not provide legal advice, financial advice, or guaranteed results. AI Governance Powered by HALO™
   </footer>
 
-<script>
-  const docType = document.getElementById("docType");
-  const fullName = document.getElementById("fullName");
-  const address = document.getElementById("address");
-  const cityStateZip = document.getElementById("cityStateZip");
-  const dateField = document.getElementById("dateField");
-  const recipientName = document.getElementById("recipientName");
-  const recipientAddress = document.getElementById("recipientAddress");
-  const subjectField = document.getElementById("subjectField");
-  const amountField = document.getElementById("amountField");
-  const detailsField = document.getElementById("detailsField");
+  <script>
+    const docType = document.getElementById("docType");
+    const fullName = document.getElementById("fullName");
+    const address = document.getElementById("address");
+    const cityStateZip = document.getElementById("cityStateZip");
+    const dateField = document.getElementById("dateField");
+    const recipientName = document.getElementById("recipientName");
+    const recipientAddress = document.getElementById("recipientAddress");
+    const subjectField = document.getElementById("subjectField");
+    const amountField = document.getElementById("amountField");
+    const detailsField = document.getElementById("detailsField");
+const retrieveBox = document.getElementById("retrieveBox");
+const retrieveBtn = document.getElementById("retrieveBtn");
+const downloadTools = document.getElementById("downloadTools");
+const downloadPdfBtn = document.getElementById("downloadPdfBtn");
+const printDocBtn = document.getElementById("printDocBtn");
+    const verifiedSendBtn = document.getElementById("verifiedSendBtn");
+   
 
-  const retrieveBox = document.getElementById("retrieveBox");
-  const retrieveBtn = document.getElementById("retrieveBtn");
-  const downloadTools = document.getElementById("downloadTools");
-  const downloadPdfBtn = document.getElementById("downloadPdfBtn");
-  const printDocBtn = document.getElementById("printDocBtn");
-  const verifiedSendBtn = document.getElementById("verifiedSendBtn");
+    const confirmVerifyModal = document.getElementById("confirmVerifyModal");
+const closeConfirmVerifyModal = document.getElementById("closeConfirmVerifyModal");
+const continueVerifyPayment = document.getElementById("continueVerifyPayment");
+const cancelVerifyPayment = document.getElementById("cancelVerifyPayment");
+    
+    const generateBtn = document.getElementById("generateBtn");
+    const clearBtn = document.getElementById("clearBtn");
+     const editBtn = document.getElementById("editBtn");
 
-  const generateBtn = document.getElementById("generateBtn");
-  const clearBtn = document.getElementById("clearBtn");
-  const editBtn = document.getElementById("editBtn");
+    const previewTitle = document.getElementById("previewTitle");
+    const previewStatus = document.getElementById("previewStatus");
+    const previewContent = document.getElementById("previewContent");
+    const previewPaper = document.getElementById("previewPaper");
+    const docNote = document.getElementById("docNote");
+    const successBanner = document.getElementById("successBanner");
 
-  const previewTitle = document.getElementById("previewTitle");
-  const previewStatus = document.getElementById("previewStatus");
-  const previewContent = document.getElementById("previewContent");
-  const previewPaper = document.getElementById("previewPaper");
-  const docNote = document.getElementById("docNote");
-  const successBanner = document.getElementById("successBanner");
-
-  const docNotes = {
-    credit_dispute: "Use this for disputing inaccurate late payments or questionable reporting tied to a credit account.",
-    debt_validation: "Use this to request validation of a debt from a collection agency and place the burden of proof on the collector.",
-    resume: "Use this to generate a clean, professional resume draft for employment opportunities.",
-    cover_letter: "Use this to build a polished cover letter for a specific position or employer.",
-    lease_agreement: "Use this to create a simple residential lease agreement structure between landlord and tenant.",
-    eviction_response: "Use this to respond to an eviction notice and request time, resolution, or a payment arrangement.",
-    proof_of_income: "Use this to verify employment, self-employment, or general income for housing or application purposes.",
-    hardship_letter: "Use this to explain hardship and request consideration, flexibility, or relief from a creditor or company.",
-    business_funding: "Use this to request funding for business launch, operations, or growth.",
-    service_agreement: "Use this to define services, payment terms, and responsibilities between provider and client."
-  };
-
-  const docTitles = {
-    credit_dispute: "Credit Dispute Letter",
-    debt_validation: "Debt Validation Letter",
-    resume: "Professional Resume",
-    cover_letter: "Job-Specific Cover Letter",
-    lease_agreement: "Residential Lease Agreement",
-    eviction_response: "Eviction Response Letter",
-    proof_of_income: "Proof of Income Letter",
-    hardship_letter: "Financial Hardship Letter",
-    business_funding: "Business Funding Request Letter",
-    service_agreement: "Simple Service Agreement"
-  };
-
-  function updateNote() {
-    docNote.textContent = docNotes[docType.value] || "Complete the form to continue.";
-  }
-
-  function formatLine(value) {
-    return value && value.trim() ? value.trim() : "[Not Provided]";
-  }
-
-  function unlockRetrievedDocument() {
-    previewPaper.classList.remove("locked");
-    previewStatus.textContent = "Document retrieved";
-    if (downloadTools) {
-      downloadTools.style.display = "block";
-    }
-  }
-
-  function buildDocument() {
-    const type = docType.value;
-    const data = {
-      fullName: formatLine(fullName.value),
-      address: formatLine(address.value),
-      cityStateZip: formatLine(cityStateZip.value),
-      dateField: formatLine(dateField.value),
-      recipientName: formatLine(recipientName.value),
-      recipientAddress: formatLine(recipientAddress.value),
-      subjectField: formatLine(subjectField.value),
-      amountField: formatLine(amountField.value),
-      detailsField: formatLine(detailsField.value)
+    const docNotes = {
+      credit_dispute: "Use this for disputing inaccurate late payments or questionable reporting tied to a credit account.",
+      debt_validation: "Use this to request validation of a debt from a collection agency and place the burden of proof on the collector.",
+      resume: "Use this to generate a clean, professional resume draft for employment opportunities.",
+      cover_letter: "Use this to build a polished cover letter for a specific position or employer.",
+      lease_agreement: "Use this to create a simple residential lease agreement structure between landlord and tenant.",
+      eviction_response: "Use this to respond to an eviction notice and request time, resolution, or a payment arrangement.",
+      proof_of_income: "Use this to verify employment, self-employment, or general income for housing or application purposes.",
+      hardship_letter: "Use this to explain hardship and request consideration, flexibility, or relief from a creditor or company.",
+      business_funding: "Use this to request funding for business launch, operations, or growth.",
+      service_agreement: "Use this to define services, payment terms, and responsibilities between provider and client."
     };
 
-    if (type === "credit_dispute") {
-      return `${data.fullName}
+    const docTitles = {
+      credit_dispute: "Credit Dispute Letter",
+      debt_validation: "Debt Validation Letter",
+      resume: "Professional Resume",
+      cover_letter: "Job-Specific Cover Letter",
+      lease_agreement: "Residential Lease Agreement",
+      eviction_response: "Eviction Response Letter",
+      proof_of_income: "Proof of Income Letter",
+      hardship_letter: "Financial Hardship Letter",
+      business_funding: "Business Funding Request Letter",
+      service_agreement: "Simple Service Agreement"
+    };
+
+    function updateNote() {
+      docNote.textContent = docNotes[docType.value] || "Complete the form to continue.";
+    }
+
+    docType.addEventListener("change", updateNote);
+    updateNote();
+
+    function formatLine(value) {
+      return value && value.trim() ? value.trim() : "[Not Provided]";
+    }
+
+   function unlockRetrievedDocument() {
+  previewPaper.classList.remove("locked");
+  previewStatus.textContent = "Document retrieved";
+  if (downloadTools) {
+    downloadTools.style.display = "block";
+  }
+}
+
+    function buildDocument() {
+      const type = docType.value;
+      const data = {
+        fullName: formatLine(fullName.value),
+        address: formatLine(address.value),
+        cityStateZip: formatLine(cityStateZip.value),
+        dateField: formatLine(dateField.value),
+        recipientName: formatLine(recipientName.value),
+        recipientAddress: formatLine(recipientAddress.value),
+        subjectField: formatLine(subjectField.value),
+        amountField: formatLine(amountField.value),
+        detailsField: formatLine(detailsField.value)
+      };
+
+      if (type === "credit_dispute") {
+        return `${data.fullName}
 ${data.address}
 ${data.cityStateZip}
 ${data.dateField}
@@ -682,10 +692,10 @@ Please provide written confirmation of your findings and any updates made.
 Sincerely,
 
 ${data.fullName}`;
-    }
+      }
 
-    if (type === "debt_validation") {
-      return `${data.fullName}
+      if (type === "debt_validation") {
+        return `${data.fullName}
 ${data.address}
 ${data.cityStateZip}
 ${data.dateField}
@@ -710,10 +720,10 @@ Until proper validation is provided, I request that collection activity and rela
 Sincerely,
 
 ${data.fullName}`;
-    }
+      }
 
-    if (type === "resume") {
-      return `${data.fullName}
+      if (type === "resume") {
+        return `${data.fullName}
 ${data.address} | ${data.cityStateZip}
 
 PROFESSIONAL SUMMARY
@@ -745,10 +755,10 @@ CORE SKILLS
 EDUCATION / TRAINING
 
 ${data.subjectField}`;
-    }
+      }
 
-    if (type === "cover_letter") {
-      return `${data.fullName}
+      if (type === "cover_letter") {
+        return `${data.fullName}
 ${data.address}
 ${data.cityStateZip}
 ${data.dateField}
@@ -772,10 +782,10 @@ Thank you for your time and consideration. I welcome the opportunity to contribu
 Sincerely,
 
 ${data.fullName}`;
-    }
+      }
 
-    if (type === "lease_agreement") {
-      return `RESIDENTIAL LEASE AGREEMENT
+      if (type === "lease_agreement") {
+        return `RESIDENTIAL LEASE AGREEMENT
 
 This Agreement is entered into on ${data.dateField}, by and between:
 
@@ -811,10 +821,10 @@ Landlord / Owner
 
 ______________________________
 Tenant`;
-    }
+      }
 
-    if (type === "eviction_response") {
-      return `${data.fullName}
+      if (type === "eviction_response") {
+        return `${data.fullName}
 ${data.address}
 ${data.cityStateZip}
 ${data.dateField}
@@ -842,10 +852,10 @@ I respectfully request a reasonable opportunity to address this matter and recei
 Sincerely,
 
 ${data.fullName}`;
-    }
+      }
 
-    if (type === "proof_of_income") {
-      return `${data.fullName}
+      if (type === "proof_of_income") {
+        return `${data.fullName}
 ${data.address}
 ${data.cityStateZip}
 ${data.dateField}
@@ -867,10 +877,10 @@ Please contact me if further clarification is needed.
 Sincerely,
 
 ${data.fullName}`;
-    }
+      }
 
-    if (type === "hardship_letter") {
-      return `${data.fullName}
+      if (type === "hardship_letter") {
+        return `${data.fullName}
 ${data.address}
 ${data.cityStateZip}
 ${data.dateField}
@@ -898,10 +908,10 @@ I am respectfully requesting review, flexibility, or any available relief option
 Sincerely,
 
 ${data.fullName}`;
-    }
+      }
 
-    if (type === "business_funding") {
-      return `${data.fullName}
+      if (type === "business_funding") {
+        return `${data.fullName}
 ${data.address}
 ${data.cityStateZip}
 ${data.dateField}
@@ -927,10 +937,10 @@ I believe this request supports meaningful growth, continuity, or expansion, and
 Sincerely,
 
 ${data.fullName}`;
-    }
+      }
 
-    if (type === "service_agreement") {
-      return `SERVICE AGREEMENT
+      if (type === "service_agreement") {
+        return `SERVICE AGREEMENT
 
 This Agreement is entered into on ${data.dateField}, by and between:
 
@@ -959,294 +969,336 @@ Service Provider
 
 ______________________________
 Client`;
-    }
-
-    return "No document selected.";
-  }
-
-  function savePendingDocument(content, selectedDocType) {
-    const pendingDoc = {
-      content: content || "",
-      docType: selectedDocType || "",
-      savedAt: new Date().toISOString()
-    };
-    localStorage.setItem("formatflow_pending_document", JSON.stringify(pendingDoc));
-  }
-
-  function restorePendingDocument() {
-    const saved = localStorage.getItem("formatflow_pending_document");
-    if (!saved) return;
-
-    try {
-      const data = JSON.parse(saved);
-      if (data.content) {
-        previewContent.textContent = data.content;
-        previewPaper.classList.remove("locked");
-        previewTitle.textContent = docTitles[data.docType] || "Restored Document";
-        previewStatus.textContent = "Restored after payment";
       }
-    } catch (error) {
-      console.error("Could not restore pending document:", error);
-    }
-  }
 
-  function updatePaidDocument() {
-    const builtDoc = buildDocument();
-
-    previewTitle.textContent = docTitles[docType.value] || "Document Preview";
-    previewStatus.textContent = "Updated after payment";
-    previewContent.textContent = builtDoc;
-    previewPaper.classList.remove("locked");
-
-    localStorage.setItem("formatflow_pending_document", JSON.stringify({
-      content: builtDoc,
-      docType: docType.value,
-      savedAt: new Date().toISOString()
-    }));
-  }
-
-  function handlePaidEdit() {
-    let editCount = parseInt(localStorage.getItem("formatflow_edit_count") || "0", 10);
-
-    if (editCount >= 2) {
-      if (docNote) {
-        docNote.textContent = "You have reached your edit limit. Please download your document or return to the homepage to generate a new document.";
-      }
-      if (editBtn) {
-        editBtn.disabled = true;
-      }
-      return;
+      return "No document selected.";
     }
 
-    updatePaidDocument();
-
-    editCount += 1;
-    localStorage.setItem("formatflow_edit_count", String(editCount));
-
-    if (docNote) {
-      if (editCount === 1) {
-        docNote.textContent = "Your document has been updated. You have 1 edit remaining.";
-      } else {
-        docNote.textContent = "Your final edit has been used. Please download your document. Changes will not be saved beyond this session.";
-      }
+    function savePendingDocument(content, selectedDocType) {
+      const pendingDoc = {
+        content: content || "",
+        docType: selectedDocType || "",
+        savedAt: new Date().toISOString()
+      };
+      localStorage.setItem("formatflow_pending_document", JSON.stringify(pendingDoc));
     }
 
-    if (editCount >= 2 && editBtn) {
-      editBtn.disabled = true;
-    }
-  }
+    function restorePendingDocument() {
+      const saved = localStorage.getItem("formatflow_pending_document");
+      if (!saved) return;
 
-  function openDocumentPrintWindow() {
-    const documentText = previewContent.textContent || "";
-    const printableWindow = window.open("", "_blank");
-
-    printableWindow.document.write(`
-      <html>
-        <head>
-          <title>FormatFlow Document</title>
-          <style>
-            body {
-              font-family: Arial, sans-serif;
-              padding: 40px;
-              line-height: 1.7;
-              color: #222;
-              white-space: pre-wrap;
-            }
-          </style>
-        </head>
-        <body>
-${documentText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
-        </body>
-      </html>
-    `);
-
-    printableWindow.document.close();
-    printableWindow.focus();
-    printableWindow.print();
-  }
-
-  function completeDocumentSession() {
-    if (successBanner) {
-      successBanner.innerText = "Thank you for your purchase. Your document session is now complete.";
-      successBanner.style.display = "block";
-    }
-
-    localStorage.setItem("formatflow_session_complete", "true");
-
-    setTimeout(() => {
-      window.location.href = "index.html";
-    }, 5000);
-  }
-
-  docType.addEventListener("change", updateNote);
-  updateNote();
-
-  generateBtn.addEventListener("click", function () {
-    const builtDoc = buildDocument();
-    previewTitle.textContent = docTitles[docType.value] || "Document Preview";
-    previewStatus.textContent = "Preview ready";
-    previewContent.textContent = builtDoc;
-    previewPaper.classList.add("locked");
-    savePendingDocument(builtDoc, docType.value);
-  });
-
-  clearBtn.addEventListener("click", function () {
-    fullName.value = "";
-    address.value = "";
-    cityStateZip.value = "";
-    dateField.value = "";
-    recipientName.value = "";
-    recipientAddress.value = "";
-    subjectField.value = "";
-    amountField.value = "";
-    detailsField.value = "";
-
-    previewTitle.textContent = "Document Preview";
-    previewStatus.textContent = "Waiting for input";
-    previewContent.textContent = "Choose a document type, complete the form, and click “Generate Preview” to see your draft here.";
-    previewPaper.classList.add("locked");
-    localStorage.removeItem("formatflow_pending_document");
-  });
-
-  retrieveBtn.addEventListener("click", function () {
-    unlockRetrievedDocument();
-  });
-
-  downloadPdfBtn.addEventListener("click", function () {
-    openDocumentPrintWindow();
-    completeDocumentSession();
-  });
-
-  printDocBtn.addEventListener("click", function () {
-    openDocumentPrintWindow();
-    completeDocumentSession();
-  });
-
-  if (editBtn) {
-    editBtn.addEventListener("click", function () {
-      handlePaidEdit();
-    });
-  }
-
-  verifiedSendBtn.addEventListener("click", function () {
-    const docContent = previewContent.textContent || "";
-    localStorage.setItem("verified_send_document", docContent);
-    localStorage.setItem("verified_send_doc_type", docType.value || "");
-
-    const confirmVerifyModal = document.getElementById("confirmVerifyModal");
-    if (confirmVerifyModal) {
-      confirmVerifyModal.style.display = "block";
-    }
-  });
-
-  if (closeConfirmVerifyModal) {
-    closeConfirmVerifyModal.addEventListener("click", function () {
-      confirmVerifyModal.style.display = "none";
-    });
-  }
-
-  if (cancelVerifyPayment) {
-    cancelVerifyPayment.addEventListener("click", function () {
-      confirmVerifyModal.style.display = "none";
-    });
-  }
-
-  if (continueVerifyPayment) {
-    continueVerifyPayment.addEventListener("click", function () {
-      window.location.href = "https://buy.stripe.com/eVqcN4erVg7f9JacJb3ks0k";
-    });
-  }
-
- window.addEventListener("DOMContentLoaded", function () {
-  const params = new URLSearchParams(window.location.search);
-  const paymentStatus = params.get("payment");
-  const paidUnlocked = localStorage.getItem("formatflow_paid_unlocked");
-  const saved = localStorage.getItem("formatflow_pending_document");
-
-  if (paymentStatus === "success") {
-    if (successBanner) {
-      successBanner.innerText = "Payment confirmed. Return access detected. Your document preview has been restored below.";
-      successBanner.style.display = "block";
-    }
-
-    if (retrieveBox) retrieveBox.style.display = "block";
-
-    if (saved) {
       try {
         const data = JSON.parse(saved);
-
         if (data.content) {
           previewContent.textContent = data.content;
+          previewPaper.classList.remove("locked");
           previewTitle.textContent = docTitles[data.docType] || "Restored Document";
           previewStatus.textContent = "Restored after payment";
-          previewPaper.classList.remove("locked");
-        }
-
-        if (data.docType) {
-          docType.value = data.docType;
-          docType.disabled = true;
         }
       } catch (error) {
         console.error("Could not restore pending document:", error);
       }
     }
 
-    localStorage.setItem("formatflow_paid_unlocked", "true");
-    localStorage.setItem("formatflow_edit_count", "0");
+    function handlePaidEdit() {
+  let editCount = parseInt(localStorage.getItem("formatflow_edit_count") || "0", 10);
 
-    if (editBtn) editBtn.style.display = "inline-block";
-    if (generateBtn) generateBtn.disabled = true;
-    if (clearBtn) clearBtn.disabled = true;
+  if (editCount >= 2) {
+    if (docNote) {
+      docNote.textContent = "You have reached your edit limit. Please download your document or return to the homepage to generate a new document.";
+    }
+    if (editBtn) {
+      editBtn.disabled = true;
+    }
+    return;
   }
 
-  if (paidUnlocked === "true" && paymentStatus !== "success") {
-    if (editBtn) editBtn.style.display = "inline-block";
-    if (generateBtn) generateBtn.disabled = true;
-    if (clearBtn) clearBtn.disabled = true;
-    if (retrieveBox) retrieveBox.style.display = "block";
+  updatePaidDocument();
+
+  editCount += 1;
+  localStorage.setItem("formatflow_edit_count", String(editCount));
+
+  if (docNote) {
+    if (editCount === 1) {
+      docNote.textContent = "Your document has been updated. You have 1 edit remaining.";
+    } else {
+      docNote.textContent = "Your final edit has been used. Please download your document. Changes will not be saved beyond this session.";
+    }
+  }
+
+  if (editCount >= 2 && editBtn) {
+    editBtn.disabled = true;
+  }
+}
+
+   function openDocumentPrintWindow() {
+  const documentText = previewContent.textContent || "";
+  const printableWindow = window.open("", "_blank");
+
+  printableWindow.document.write(`
+    <html>
+      <head>
+        <title>FormatFlow Document</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            line-height: 1.7;
+            color: #222;
+            white-space: pre-wrap;
+          }
+
+           function updatePaidDocument() {
+  const builtDoc = buildDocument();
+
+  previewTitle.textContent = docTitles[docType.value] || "Document Preview";
+  previewStatus.textContent = "Updated after payment";
+  previewContent.textContent = builtDoc;
+  previewPaper.classList.remove("locked");
+
+  localStorage.setItem("formatflow_pending_document", JSON.stringify({
+    content: builtDoc,
+    docType: docType.value,
+    savedAt: new Date().toISOString()
+  }));
+}
+        </style>
+      </head>
+      <body>
+${documentText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
+      </body>
+    </html>
+  `);
+
+  printableWindow.document.close();
+  printableWindow.focus();
+  printableWindow.print();
+}
+
+    generateBtn.addEventListener("click", function () {
+      const builtDoc = buildDocument();
+      previewTitle.textContent = docTitles[docType.value] || "Document Preview";
+      previewStatus.textContent = "Preview ready";
+      previewContent.textContent = builtDoc;
+      previewPaper.classList.add("locked");
+      savePendingDocument(builtDoc, docType.value);
+    });
+
+    clearBtn.addEventListener("click", function () {
+      fullName.value = "";
+      address.value = "";
+      cityStateZip.value = "";
+      dateField.value = "";
+      recipientName.value = "";
+      recipientAddress.value = "";
+      subjectField.value = "";
+      amountField.value = "";
+      detailsField.value = "";
+
+      previewTitle.textContent = "Document Preview";
+      previewStatus.textContent = "Waiting for input";
+      previewContent.textContent = "Choose a document type, complete the form, and click “Generate Preview” to see your draft here.";
+      previewPaper.classList.add("locked");
+      localStorage.removeItem("formatflow_pending_document");
+    });
+    retrieveBtn.addEventListener("click", function () {
+  unlockRetrievedDocument();
+});
+
+   downloadPdfBtn.addEventListener("click", function () {
+  openDocumentPrintWindow();
+     completeDocumentSession();
+});
+
+printDocBtn.addEventListener("click", function () {
+  openDocumentPrintWindow();
+  completeDocumentSession();
+});
+
+  if (editBtn) {
+  editBtn.addEventListener("click", function () {
+    handlePaidEdit();
+  });
+}
+
+ verifiedSendBtn.addEventListener("click", function () {
+  const docContent = previewContent.textContent || "";
+  localStorage.setItem("verified_send_document", docContent);
+  localStorage.setItem("verified_send_doc_type", docType.value || "");
+
+  const confirmVerifyModal = document.getElementById("confirmVerifyModal");
+  if (confirmVerifyModal) {
+    confirmVerifyModal.style.display = "block";
   }
 });
-</script>
 
+    if (closeConfirmVerifyModal) {
+  closeConfirmVerifyModal.addEventListener("click", function () {
+    confirmVerifyModal.style.display = "none";
+  });
+}
+
+if (cancelVerifyPayment) {
+  cancelVerifyPayment.addEventListener("click", function () {
+    confirmVerifyModal.style.display = "none";
+  });
+}
+
+if (continueVerifyPayment) {
+  continueVerifyPayment.addEventListener("click", function () {
+    window.location.href = "https://buy.stripe.com/eVqcN4erVg7f9JacJb3ks0k";
+  });
+}
+
+    window.addEventListener("DOMContentLoaded", function () {
+      const params = new URLSearchParams(window.location.search);
+      const paymentStatus = params.get("payment");
+
+     if (paymentStatus === "success") {
+  successBanner.style.display = "block";
+  retrieveBox.style.display = "block";
+  restorePendingDocument();
+       localStorage.setItem("formatflow_paid_unlocked", "true");
+       localStorage.setItem("formatflow_edit_count", "0");
+       if (editBtn) editBtn.style.display = "inline-block";
+
+if (generateBtn) generateBtn.disabled = true;
+if (clearBtn) clearBtn.disabled = true;
+}
+    });
+  </script>
+
+
+  <!-- SEND VERIFY MODAL -->
+<!-- SEND VERIFY INFO MODAL -->
 <div id="sendVerifyModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999;">
   <div style="max-width:520px; margin:100px auto; background:#fff; border-radius:20px; padding:24px; position:relative;">
-    <button id="closeSendVerifyModal" style="position:absolute; top:10px; right:10px; border:none; background:#eee; padding:6px 10px; border-radius:8px; cursor:pointer;">✕</button>
+
+    <button id="closeSendVerifyModal" style="position:absolute; top:10px; right:10px; border:none; background:#eee; padding:6px 10px; border-radius:8px; cursor:pointer;">
+      ✕
+    </button>
+
     <div style="margin-bottom:10px;">
-      <span style="background:#28c76f; color:#fff; padding:4px 10px; border-radius:999px; font-size:11px; font-weight:700;">NEW</span>
+      <span style="background:#28c76f; color:#fff; padding:4px 10px; border-radius:999px; font-size:11px; font-weight:700;">
+        NEW
+      </span>
     </div>
+
     <h2>Send Verify™</h2>
     <p>Send Verify™ allows you to move your completed document into a verified delivery workflow.</p>
     <p><strong>Best use for credit dispute letters.</strong></p>
+
     <ul>
       <li>Verification number</li>
       <li>Structured delivery workflow</li>
       <li>Downloadable receipt (PDF)</li>
       <li>Document record copy</li>
     </ul>
+
     <p><strong>Price: $7.99 per document</strong></p>
     <p style="font-size:14px; color:#555;">Available after your document has been purchased and retrieved.</p>
+
   </div>
 </div>
 
+<!-- CONFIRM VERIFY MODAL -->
+<!-- SEND VERIFY INFO MODAL -->
+<!-- SEND VERIFY INFO MODAL -->
+<div id="sendVerifyModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999;">
+  <div style="max-width:520px; margin:100px auto; background:#fff; border-radius:20px; padding:24px;">
+    <button id="closeSendVerifyModal">✕</button>
+    <h2>Send Verify™</h2>
+    <p><strong>Best use for credit dispute letters.</strong></p>
+    <p>Verified delivery workflow with receipt.</p>
+    <p><strong>$7.99 per document</strong></p>
+  </div>
+</div>
+
+<!-- CONFIRM VERIFY MODAL -->
 <div id="confirmVerifyModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999;">
-  <div style="max-width:520px; margin:100px auto; background:#fff; border-radius:20px; padding:24px; position:relative;">
-    <button id="closeConfirmVerifyModal" style="position:absolute; top:10px; right:10px; border:none; background:#eee; padding:6px 10px; border-radius:8px; cursor:pointer;">✕</button>
+  <div style="max-width:520px; margin:100px auto; background:#fff; border-radius:20px; padding:24px;">
+    <button id="closeConfirmVerifyModal">✕</button>
     <h2>Send with Verify™</h2>
     <p>This will send your document with verified delivery for <strong>$7.99</strong>.</p>
+
     <button id="continueVerifyPayment">Continue</button>
     <button id="cancelVerifyPayment">Cancel</button>
   </div>
 </div>
 
 <script>
-  document.getElementById("sendVerifyInfoLink")?.addEventListener("click", function(e) {
-    e.preventDefault();
-    document.getElementById("sendVerifyModal").style.display = "block";
-  });
+document.getElementById("sendVerifyInfoLink")?.addEventListener("click", function(e){
+  e.preventDefault();
+  document.getElementById("sendVerifyModal").style.display = "block";
+});
 
-  document.getElementById("closeSendVerifyModal")?.addEventListener("click", function() {
-    document.getElementById("sendVerifyModal").style.display = "none";
-  });
+document.getElementById("closeSendVerifyModal")?.addEventListener("click", function(){
+  document.getElementById("sendVerifyModal").style.display = "none";
+});
+
+document.getElementById("verifiedSendBtn")?.addEventListener("click", function () {
+  const content = document.getElementById("previewContent").textContent || "";
+  const type = document.getElementById("docType").value || "";
+
+  localStorage.setItem("verified_send_document", content);
+  localStorage.setItem("verified_send_doc_type", type);
+
+  document.getElementById("confirmVerifyModal").style.display = "block";
+});
+
+document.getElementById("closeConfirmVerifyModal")?.addEventListener("click", function(){
+  document.getElementById("confirmVerifyModal").style.display = "none";
+});
+
+document.getElementById("cancelVerifyPayment")?.addEventListener("click", function(){
+  document.getElementById("confirmVerifyModal").style.display = "none";
+});
+
+document.getElementById("continueVerifyPayment")?.addEventListener("click", function(){
+  window.location.href = "https://buy.stripe.com/eVqcN4erVg7f9JacJb3ks0k";
+});
+  window.addEventListener("DOMContentLoaded", function () {
+  const paidUnlocked = localStorage.getItem("formatflow_paid_unlocked");
+
+  if (paidUnlocked === "true") {
+    const previewPaper = document.getElementById("previewPaper");
+    const downloadTools = document.getElementById("downloadTools");
+
+    if (previewPaper) previewPaper.classList.remove("locked");
+    if (downloadTools) downloadTools.style.display = "block";
+  }
+});
+
+
+  window.addEventListener("DOMContentLoaded", function () {
+  const sessionComplete = localStorage.getItem("formatflow_session_complete");
+
+  if (sessionComplete === "true") {
+    const successBanner = document.getElementById("successBanner");
+
+    if (successBanner) {
+      successBanner.innerText = "Thank you for your purchase. Your document session has been completed.";
+      successBanner.style.display = "block";
+    }
+
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 2000);
+  }
+});
+
+  function completeDocumentSession() {
+  if (successBanner) {
+    successBanner.innerText = "Thank you for your purchase. Your document session is now complete.";
+    successBanner.style.display = "block";
+  }
+
+  localStorage.setItem("formatflow_session_complete", "true");
+
+ setTimeout(() => {
+  window.location.href = "index.html";
+}, 5000);
+}
 </script>
 </body>
 </html>
