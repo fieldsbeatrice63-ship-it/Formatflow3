@@ -1062,7 +1062,7 @@ printDocBtn.addEventListener("click", function () {
   openDocumentPrintWindow();
 });
 
-  verifySendBtn.addEventListener("click", function () {
+  verifiedSendBtn.addEventListener("click", function () {
   const docContent = previewContent.textContent || "";
   localStorage.setItem("verified_send_document", docContent);
   localStorage.setItem("verified_send_doc_type", docType.value || "");
