@@ -1157,29 +1157,55 @@ ${documentText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
     });
   }
 
-  window.addEventListener("DOMContentLoaded", function () {
-    const paidUnlocked = localStorage.getItem("formatflow_paid_unlocked");
-    const params = new URLSearchParams(window.location.search);
-    const paymentStatus = params.get("payment");
+ window.addEventListener("DOMContentLoaded", function () {
+  const params = new URLSearchParams(window.location.search);
+  const paymentStatus = params.get("payment");
+  const paidUnlocked = localStorage.getItem("formatflow_paid_unlocked");
+  const saved = localStorage.getItem("formatflow_pending_document");
 
-    if (paidUnlocked === "true") {
-      previewPaper.classList.remove("locked");
-      if (downloadTools) downloadTools.style.display = "block";
-    }
-
-    if (paymentStatus === "success") {
+  if (paymentStatus === "success") {
+    if (successBanner) {
+      successBanner.innerText = "Payment confirmed. Return access detected. Your document preview has been restored below.";
       successBanner.style.display = "block";
-      retrieveBox.style.display = "block";
-      restorePendingDocument();
-
-      localStorage.setItem("formatflow_paid_unlocked", "true");
-      localStorage.setItem("formatflow_edit_count", "0");
-
-      if (editBtn) editBtn.style.display = "inline-block";
-      if (generateBtn) generateBtn.disabled = true;
-      if (clearBtn) clearBtn.disabled = true;
     }
-  });
+
+    if (retrieveBox) retrieveBox.style.display = "block";
+
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+
+        if (data.content) {
+          previewContent.textContent = data.content;
+          previewTitle.textContent = docTitles[data.docType] || "Restored Document";
+          previewStatus.textContent = "Restored after payment";
+          previewPaper.classList.remove("locked");
+        }
+
+        if (data.docType) {
+          docType.value = data.docType;
+          docType.disabled = true;
+        }
+      } catch (error) {
+        console.error("Could not restore pending document:", error);
+      }
+    }
+
+    localStorage.setItem("formatflow_paid_unlocked", "true");
+    localStorage.setItem("formatflow_edit_count", "0");
+
+    if (editBtn) editBtn.style.display = "inline-block";
+    if (generateBtn) generateBtn.disabled = true;
+    if (clearBtn) clearBtn.disabled = true;
+  }
+
+  if (paidUnlocked === "true" && paymentStatus !== "success") {
+    if (editBtn) editBtn.style.display = "inline-block";
+    if (generateBtn) generateBtn.disabled = true;
+    if (clearBtn) clearBtn.disabled = true;
+    if (retrieveBox) retrieveBox.style.display = "block";
+  }
+});
 </script>
 
 <div id="sendVerifyModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999;">
