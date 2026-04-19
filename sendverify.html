@@ -507,7 +507,8 @@
 
       <div class="button-row">
         <button class="btn-primary" id="sendVerifiedBtn">Send with Verified Delivery</button>
-        <button class="btn-secondary" id="backToGeneratorBtn" type="button">Back to Generator</button>
+        <button id="editVerifyBtn" class="btn-secondary" type="button" style="display:none;">Edit</button>
+        
       </div>
     </div>
 
@@ -597,7 +598,7 @@
     const backToGeneratorBtn = document.getElementById("backToGeneratorBtn");
     const downloadDocCopyBtn = document.getElementById("downloadDocCopyBtn");
     const downloadReceiptBtn = document.getElementById("downloadReceiptBtn");
-
+const editVerifyBtn = document.getElementById("editVerifyBtn");
     const successBox = document.getElementById("successBox");
     const successMessage = document.getElementById("successMessage");
     const receiptCard = document.getElementById("receiptCard");
@@ -636,6 +637,51 @@
     function formatTimestamp() {
       return new Date().toLocaleString();
     }
+    function updateVerifyDocument() {
+  const docContent = localStorage.getItem("verified_send_document") || "";
+  const updatedContent = document.getElementById("previewContent").textContent;
+
+  localStorage.setItem("verified_send_document", updatedContent);
+
+  const previewStatus = document.getElementById("previewStatus");
+  if (previewStatus) {
+    previewStatus.textContent = "Updated for verification";
+  }
+}
+
+    function handleVerifyEdit() {
+  let editCount = parseInt(localStorage.getItem("verify_edit_count") || "0", 10);
+  const note = document.getElementById("docNote");
+
+  if (editCount >= 3) {
+    if (note) {
+      note.textContent = "You have reached your edit limit. Please proceed with verified delivery.";
+    }
+    if (editVerifyBtn) {
+      editVerifyBtn.disabled = true;
+    }
+    return;
+  }
+
+  updateVerifyDocument();
+
+  editCount += 1;
+  localStorage.setItem("verify_edit_count", String(editCount));
+
+  if (note) {
+    if (editCount === 1) {
+      note.textContent = "Your document has been updated. You have 2 edits remaining.";
+    } else if (editCount === 2) {
+      note.textContent = "Your document has been updated. You have 1 edit remaining.";
+    } else {
+      note.textContent = "Final edit used. Please proceed with verified delivery.";
+    }
+  }
+
+  if (editCount >= 3 && editVerifyBtn) {
+    editVerifyBtn.disabled = true;
+  }
+}
 
     function loadTransferredDocument() {
       let storedDoc = localStorage.getItem("verified_send_document") || "";
@@ -842,6 +888,12 @@ ${data.documentContent}
       downloadTextFile("verified-delivery-receipt.txt", buildReceiptText(data));
     });
 
+    if (editVerifyBtn) {
+  editVerifyBtn.addEventListener("click", function () {
+    handleVerifyEdit();
+  });
+}
+
     downloadDocCopyBtn.addEventListener("click", function () {
       const savedReceipt = localStorage.getItem("verified_delivery_receipt_data");
       let exportData;
@@ -870,6 +922,14 @@ ${data.documentContent}
       const yyyy = today.getFullYear();
       sendDate.value = `${mm}/${dd}/${yyyy}`;
     });
+    
+    window.addEventListener("DOMContentLoaded", function () {
+  localStorage.setItem("verify_edit_count", "0");
+
+  if (editVerifyBtn) {
+    editVerifyBtn.style.display = "inline-block";
+  }
+});
   </script>
 
 </body>
