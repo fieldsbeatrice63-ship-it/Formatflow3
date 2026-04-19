@@ -582,25 +582,41 @@ Your transferred document will appear here once it is loaded from the generator.
     };
 
     function loadTransferDocument() {
-  const storedDoc = localStorage.getItem("verified_send_document") || "";
-  const storedDocType = localStorage.getItem("verified_send_doc_type") || "";
+  let storedDoc = localStorage.getItem("verified_send_document") || "";
+  let storedDocType = localStorage.getItem("verified_send_doc_type") || "";
+
+  if (!storedDoc) {
+    const pendingRaw = localStorage.getItem("formatflow_pending_document");
+
+    if (pendingRaw) {
+      try {
+        const pendingData = JSON.parse(pendingRaw);
+        storedDoc = pendingData.content || "";
+        storedDocType = pendingData.docType || storedDocType;
+      } catch (error) {
+        console.error("Could not parse pending document:", error);
+      }
+    }
+  }
 
   if (storedDoc) {
     previewContent.textContent = storedDoc;
+    previewStatus.textContent = "Document loaded";
 
     if (typeof previewTitle !== "undefined") {
-      previewTitle.textContent = "Document Ready to Send";
+      if (typeof docTitles !== "undefined" && docTitles[storedDocType]) {
+        previewTitle.textContent = docTitles[storedDocType];
+      } else {
+        previewTitle.textContent = "Document Ready to Send";
+      }
     }
-
-    previewStatus.textContent = "Document loaded";
   } else {
     previewContent.textContent = "No document was detected. Return to the generator and retrieve your document first.";
+    previewStatus.textContent = "Waiting for details";
 
     if (typeof previewTitle !== "undefined") {
       previewTitle.textContent = "Document Ready to Send";
     }
-
-    previewStatus.textContent = "Waiting for details";
   }
 }
 
