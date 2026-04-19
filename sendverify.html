@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FormatFlow™ | Send Your Document with Verified Delivery</title>
-  <meta name="description" content="Send your document with verified delivery through FormatFlow™. Review your document, enter delivery details, and generate a downloadable receipt for your records." />
+  <meta name="description" content="Send your document with verified delivery, receipt tracking, and downloadable records through FormatFlow™." />
   <style>
     * {
       box-sizing: border-box;
@@ -82,7 +82,7 @@
 
     .hero p {
       margin: 0;
-      max-width: 860px;
+      max-width: 900px;
       color: #355171;
       line-height: 1.8;
       font-size: 16px;
@@ -137,9 +137,9 @@
       color: #355171;
     }
 
-    select,
     input,
-    textarea {
+    textarea,
+    select {
       width: 100%;
       border: 1px solid #cfe0ff;
       border-radius: 14px;
@@ -153,7 +153,7 @@
     }
 
     textarea {
-      min-height: 105px;
+      min-height: 96px;
       resize: vertical;
       line-height: 1.6;
     }
@@ -162,6 +162,43 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
+    }
+
+    .doc-note {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: #f7fbff;
+      border: 1px solid #dce9ff;
+      color: #48617f;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .check-wrap {
+      background: #f8fbff;
+      border: 1px solid #dce9ff;
+      border-radius: 18px;
+      padding: 16px 16px 2px;
+      margin-top: 4px;
+      margin-bottom: 16px;
+    }
+
+    .check-wrap label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #355171;
+      margin-bottom: 12px;
+    }
+
+    .check-wrap input[type="checkbox"] {
+      width: auto;
+      margin: 3px 0 0;
+      padding: 0;
     }
 
     .button-row {
@@ -193,24 +230,6 @@
       border: 1px solid #cfe0ff;
     }
 
-    .btn-disabled {
-      background: #d8e7ff;
-      color: #6a86b1;
-      cursor: not-allowed;
-      box-shadow: none;
-    }
-
-    .doc-note {
-      margin-top: 14px;
-      padding: 14px 16px;
-      border-radius: 16px;
-      background: #f7fbff;
-      border: 1px solid #dce9ff;
-      color: #48617f;
-      font-size: 14px;
-      line-height: 1.7;
-    }
-
     .preview-head {
       display: flex;
       align-items: center;
@@ -235,6 +254,31 @@
       font-weight: 700;
     }
 
+    .tool-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .tool-btn {
+      background: #ffffff;
+      color: #1e4db7;
+      border: 1px solid #cfe0ff;
+      border-radius: 14px;
+      padding: 12px 18px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .send-btn {
+      background: #2c7dff;
+      color: #ffffff;
+      border: 0;
+      box-shadow: 0 10px 24px rgba(44, 125, 255, 0.18);
+    }
+
     .preview-frame {
       background: #eef6ff;
       border: 1px solid #d7e8ff;
@@ -244,10 +288,10 @@
 
     .preview-paper {
       width: 100%;
-      min-height: 540px;
+      min-height: 720px;
       background: #ffffff;
       border-radius: 16px;
-      padding: 32px 30px;
+      padding: 42px 38px;
       position: relative;
       overflow: hidden;
       box-shadow: inset 0 0 0 1px #edf3ff;
@@ -261,20 +305,7 @@
       word-wrap: break-word;
     }
 
-    .success-banner {
-      display: none;
-      margin-bottom: 16px;
-      padding: 16px 18px;
-      border-radius: 16px;
-      background: #ecfff1;
-      border: 1px solid #b7e9c6;
-      color: #1f6b3c;
-      font-size: 15px;
-      font-weight: 700;
-      line-height: 1.7;
-    }
-
-    .receipt-box {
+    .success-box {
       display: none;
       margin-top: 16px;
       border-radius: 20px;
@@ -284,68 +315,49 @@
       box-shadow: 0 14px 32px rgba(23, 59, 121, 0.16);
     }
 
-    .receipt-box h3 {
-      margin: 0 0 10px;
+    .success-box h3 {
+      margin: 0 0 12px;
       font-size: 22px;
     }
 
-    .receipt-box p {
-      margin: 0 0 10px;
+    .success-box p {
+      margin: 0 0 12px;
       line-height: 1.8;
       color: #e3efff;
       font-size: 15px;
     }
 
-    .receipt-tools {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 12px;
-    }
-
-    .receipt-tools button {
-      background: #ffffff;
-      color: #1e4db7;
-      border: 1px solid #cfe0ff;
-    }
-
-    .checkbox-wrap {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      margin-bottom: 14px;
-      color: #355171;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    .checkbox-wrap input {
-      width: auto;
-      margin: 3px 0 0;
-    }
-
-    .detail-card {
-      margin-top: 14px;
-      padding: 14px 16px;
-      border-radius: 16px;
-      background: #f7fbff;
+    .receipt-card {
+      display: none;
+      margin-top: 16px;
+      border-radius: 20px;
+      background: #f8fbff;
       border: 1px solid #dce9ff;
-      color: #355171;
-      font-size: 14px;
-      line-height: 1.7;
+      padding: 18px;
     }
 
-    .detail-grid {
+    .receipt-card h4 {
+      margin: 0 0 12px;
+      font-size: 20px;
+      color: #173b79;
+    }
+
+    .receipt-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px 20px;
-      margin-top: 8px;
     }
 
-    .detail-item strong {
+    .receipt-item {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #355171;
+    }
+
+    .receipt-item strong {
       display: block;
       color: #173b79;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
 
     .footer {
@@ -373,13 +385,13 @@
       }
 
       .field-row,
-      .detail-grid {
+      .receipt-grid {
         grid-template-columns: 1fr;
       }
 
       .preview-paper {
-        padding: 24px 20px;
-        min-height: 460px;
+        padding: 28px 22px;
+        min-height: 620px;
       }
     }
   </style>
@@ -392,8 +404,8 @@
       <div class="nav-links">
         <a href="index.html">Home</a>
         <a href="pricing.html">Pricing</a>
-        <a href="terms.html">Terms</a>
-        <a class="nav-btn" href="app.html">Generator</a>
+        <a href="app.html">Generator</a>
+        <a class="nav-btn" href="app.html?payment=success">Back to Generator</a>
       </div>
     </div>
   </div>
@@ -401,147 +413,179 @@
   <section class="hero">
     <h1>Send Your Document with Verified Delivery</h1>
     <p>
-      Review your document, enter your delivery information, and complete your verified submission.
-      After sending, you will receive a verification number, timestamp, and a downloadable receipt for your records.
+      Review your prepared document, complete your sender and delivery details, and submit through a structured verified workflow.
+      After submission, download your receipt and save it for your records at no extra charge.
     </p>
   </section>
 
   <section class="app-shell">
     <div class="panel">
-      <h2 class="section-title">Delivery Setup</h2>
+      <h2 class="section-title">Verified Delivery Setup</h2>
       <p class="section-subtitle">
-        Complete the fields below before sending. This page is designed to organize your submission details and produce a receipt for your records after delivery is initiated.
+        Complete the fields below before sending. This page is designed to help organize sender information,
+        delivery details, and confirmation records in one place.
       </p>
 
-      <label for="senderFullName">Full Name</label>
-      <input id="senderFullName" type="text" placeholder="Enter your full name" />
-
       <div class="field-row">
+        <div>
+          <label for="senderName">Full Name</label>
+          <input id="senderName" type="text" placeholder="Enter your full name" />
+        </div>
         <div>
           <label for="senderEmail">Email Address</label>
           <input id="senderEmail" type="email" placeholder="Enter your email address" />
         </div>
+      </div>
+
+      <div class="field-row">
         <div>
           <label for="senderPhone">Phone Number</label>
           <input id="senderPhone" type="text" placeholder="Enter your phone number" />
         </div>
+        <div>
+          <label for="sendDate">Date</label>
+          <input id="sendDate" type="text" placeholder="MM/DD/YYYY" />
+        </div>
       </div>
 
-      <label for="senderAddress">Mailing Address</label>
-      <input id="senderAddress" type="text" placeholder="Enter your mailing address" />
-
       <div class="field-row">
+        <div>
+          <label for="senderAddress">Mailing Address</label>
+          <input id="senderAddress" type="text" placeholder="Enter your mailing address" />
+        </div>
         <div>
           <label for="senderCityStateZip">City, State, Zip</label>
           <input id="senderCityStateZip" type="text" placeholder="City, State, Zip" />
         </div>
-        <div>
-          <label for="documentTypeDisplay">Document Type</label>
-          <input id="documentTypeDisplay" type="text" placeholder="Document type" readonly />
-        </div>
       </div>
-
-      <label for="deliveryTarget">Recipient / Bureau / Company</label>
-      <input id="deliveryTarget" type="text" placeholder="Enter recipient, bureau, lender, company, or target name" />
 
       <div class="field-row">
         <div>
-          <label for="deliveryEmail">Delivery Email / Endpoint</label>
-          <input id="deliveryEmail" type="text" placeholder="Enter delivery email or endpoint if available" />
+          <label for="recipientCompany">Recipient / Bureau / Company</label>
+          <input id="recipientCompany" type="text" placeholder="Recipient, bureau, company, or department" />
+        </div>
+        <div>
+          <label for="recipientEmail">Delivery Email / Endpoint</label>
+          <input id="recipientEmail" type="text" placeholder="Recipient email or delivery endpoint" />
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div>
+          <label for="recipientAddress">Recipient Address</label>
+          <input id="recipientAddress" type="text" placeholder="Recipient mailing address" />
         </div>
         <div>
           <label for="referenceNumber">Reference / Account Number</label>
-          <input id="referenceNumber" type="text" placeholder="Account, file, or reference number" />
+          <input id="referenceNumber" type="text" placeholder="Reference or account number" />
         </div>
       </div>
 
-      <label for="deliveryNotes">Additional Delivery Notes</label>
-      <textarea id="deliveryNotes" placeholder="Add any supporting delivery notes, instructions, or clarifying details here."></textarea>
+      <label for="deliveryNotes">Delivery Notes</label>
+      <textarea id="deliveryNotes" placeholder="Add any delivery notes, supporting comments, or submission details here."></textarea>
 
-      <div class="checkbox-wrap">
-        <input id="confirmAccuracy" type="checkbox" />
-        <label for="confirmAccuracy" style="margin:0; font-weight:400;">
-          I confirm that the information I entered is accurate to the best of my knowledge.
+      <div class="check-wrap">
+        <label>
+          <input type="checkbox" id="confirmAccuracy" />
+          <span>I confirm that the information provided on this page is accurate to the best of my knowledge.</span>
         </label>
-      </div>
 
-      <div class="checkbox-wrap">
-        <input id="confirmAuthorization" type="checkbox" />
-        <label for="confirmAuthorization" style="margin:0; font-weight:400;">
-          I authorize this document to be prepared for verified delivery through this workflow.
+        <label>
+          <input type="checkbox" id="confirmAuthorization" />
+          <span>I authorize submission of this document through this verified delivery workflow.</span>
         </label>
-      </div>
 
-      <div class="checkbox-wrap">
-        <input id="confirmDisclosure" type="checkbox" />
-        <label for="confirmDisclosure" style="margin:0; font-weight:400;">
-          I understand that proof of submission or delivery status does not guarantee review, acceptance, or approval by the receiving party.
+        <label>
+          <input type="checkbox" id="confirmDisclosure" />
+          <span>I understand that delivery confirmation does not guarantee review, acceptance, approval, or legal outcome.</span>
         </label>
-      </div>
-
-      <div class="button-row">
-        <button class="btn-primary btn-disabled" id="sendVerifyBtn" disabled>Send to Verify</button>
-        <button class="btn-secondary" id="downloadDocCopyBtn" type="button">Download Document Copy</button>
       </div>
 
       <div class="doc-note">
-        Keep a copy of your document and receipt for your own records. After submission is completed, you will be encouraged to download the receipt at no extra charge.
+        Once submitted, you will receive a verification number and be encouraged to download your receipt for your records.
+      </div>
+
+      <div class="button-row">
+        <button class="btn-primary" id="sendVerifiedBtn">Send with Verified Delivery</button>
+        <button class="btn-secondary" id="backToGeneratorBtn" type="button">Back to Generator</button>
       </div>
     </div>
 
     <div class="preview-panel">
-      <div class="success-banner" id="successBanner">
-        Verified delivery workflow completed. Your verification number and downloadable receipt are now available below.
+      <div class="preview-head">
+        <div class="preview-title" id="previewTitle">Document Ready to Send</div>
+        <div class="preview-status" id="previewStatus">Waiting for details</div>
       </div>
 
-      <div class="preview-head">
-        <div class="preview-title" id="previewTitle">Document Ready for Delivery</div>
-        <div class="preview-status" id="previewStatus">Waiting for details</div>
+      <div class="tool-row">
+        <button class="tool-btn" id="downloadDocCopyBtn">Download Document Copy</button>
+        <button class="tool-btn" id="downloadReceiptBtn" style="display:none;">Download Receipt</button>
       </div>
 
       <div class="preview-frame">
         <div class="preview-paper">
-          <div class="paper-content" id="documentPreview">
-Your transferred document will appear here once it is loaded from the generator.
-          </div>
+          <div class="paper-content" id="previewContent">Your transferred document will appear here once it is loaded from the generator.</div>
         </div>
       </div>
 
-      <div class="detail-card" id="statusCard">
-        <strong style="display:block; margin-bottom:6px; color:#173b79;">Submission Status</strong>
-        Complete the form on the left and check all required confirmations to enable verified sending.
+      <div class="success-box" id="successBox">
+        <h3>Verified Delivery Submitted</h3>
+        <p id="successMessage">
+          Your document has been submitted through the verified delivery workflow.
+        </p>
       </div>
 
-      <div class="receipt-box" id="receiptBox">
-        <h3>Receipt Ready</h3>
-        <p><strong>Verification Number:</strong> <span id="receiptVerificationId"></span></p>
-        <p><strong>Timestamp:</strong> <span id="receiptTimestamp"></span></p>
-        <p><strong>Status:</strong> Submission prepared and recorded</p>
-
-        <div class="receipt-tools">
-          <button id="downloadReceiptBtn" type="button">Download Receipt</button>
-          <button id="printReceiptBtn" type="button">Print / Save Receipt</button>
-          <button id="returnToGeneratorBtn" type="button">Return to Generator</button>
+      <div class="receipt-card" id="receiptCard">
+        <h4>Receipt Summary</h4>
+        <div class="receipt-grid">
+          <div class="receipt-item">
+            <strong>Verification Number</strong>
+            <span id="receiptVerificationId">—</span>
+          </div>
+          <div class="receipt-item">
+            <strong>Status</strong>
+            <span id="receiptStatus">—</span>
+          </div>
+          <div class="receipt-item">
+            <strong>Timestamp</strong>
+            <span id="receiptTimestamp">—</span>
+          </div>
+          <div class="receipt-item">
+            <strong>Document Type</strong>
+            <span id="receiptDocType">—</span>
+          </div>
+          <div class="receipt-item">
+            <strong>Sender</strong>
+            <span id="receiptSender">—</span>
+          </div>
+          <div class="receipt-item">
+            <strong>Recipient</strong>
+            <span id="receiptRecipient">—</span>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <footer class="footer">
-    FormatFlow™ provides document workflow and recordkeeping support based on user-entered information.
-    FormatFlow™ does not provide legal advice, financial advice, delivery guarantees, or guaranteed outcomes.
-    AI Governance Powered by HALO™
+    FormatFlow™ provides structured document-generation and workflow support based on user-entered information.
+    Verified delivery records are intended for organizational and recordkeeping purposes and do not guarantee review, acceptance, approval, or legal outcome.
   </footer>
 
   <script>
-    const senderFullName = document.getElementById("senderFullName");
+    const previewTitle = document.getElementById("previewTitle");
+    const previewStatus = document.getElementById("previewStatus");
+    const previewContent = document.getElementById("previewContent");
+
+    const senderName = document.getElementById("senderName");
     const senderEmail = document.getElementById("senderEmail");
     const senderPhone = document.getElementById("senderPhone");
+    const sendDate = document.getElementById("sendDate");
     const senderAddress = document.getElementById("senderAddress");
     const senderCityStateZip = document.getElementById("senderCityStateZip");
-    const documentTypeDisplay = document.getElementById("documentTypeDisplay");
-    const deliveryTarget = document.getElementById("deliveryTarget");
-    const deliveryEmail = document.getElementById("deliveryEmail");
+    const recipientCompany = document.getElementById("recipientCompany");
+    const recipientEmail = document.getElementById("recipientEmail");
+    const recipientAddress = document.getElementById("recipientAddress");
     const referenceNumber = document.getElementById("referenceNumber");
     const deliveryNotes = document.getElementById("deliveryNotes");
 
@@ -549,24 +593,21 @@ Your transferred document will appear here once it is loaded from the generator.
     const confirmAuthorization = document.getElementById("confirmAuthorization");
     const confirmDisclosure = document.getElementById("confirmDisclosure");
 
-    const sendVerifyBtn = document.getElementById("sendVerifyBtn");
+    const sendVerifiedBtn = document.getElementById("sendVerifiedBtn");
+    const backToGeneratorBtn = document.getElementById("backToGeneratorBtn");
     const downloadDocCopyBtn = document.getElementById("downloadDocCopyBtn");
     const downloadReceiptBtn = document.getElementById("downloadReceiptBtn");
-    const printReceiptBtn = document.getElementById("printReceiptBtn");
-    const returnToGeneratorBtn = document.getElementById("returnToGeneratorBtn");
 
-    const previewTitle = document.getElementById("previewTitle");
-    const previewStatus = document.getElementById("previewStatus");
-    const documentPreview = document.getElementById("documentPreview");
-    const statusCard = document.getElementById("statusCard");
-    const successBanner = document.getElementById("successBanner");
-    const receiptBox = document.getElementById("receiptBox");
+    const successBox = document.getElementById("successBox");
+    const successMessage = document.getElementById("successMessage");
+    const receiptCard = document.getElementById("receiptCard");
+
     const receiptVerificationId = document.getElementById("receiptVerificationId");
+    const receiptStatus = document.getElementById("receiptStatus");
     const receiptTimestamp = document.getElementById("receiptTimestamp");
-
-    let transferredDocument = "";
-    let transferredDocType = "";
-    let latestReceipt = null;
+    const receiptDocType = document.getElementById("receiptDocType");
+    const receiptSender = document.getElementById("receiptSender");
+    const receiptRecipient = document.getElementById("receiptRecipient");
 
     const docTitles = {
       credit_dispute: "Credit Dispute Letter",
@@ -581,188 +622,255 @@ Your transferred document will appear here once it is loaded from the generator.
       service_agreement: "Simple Service Agreement"
     };
 
-    function loadTransferDocument() {
-  let storedDoc = localStorage.getItem("verified_send_document") || "";
-  let storedDocType = localStorage.getItem("verified_send_doc_type") || "";
-
-  if (!storedDoc) {
-    const pendingRaw = localStorage.getItem("formatflow_pending_document");
-
-    if (pendingRaw) {
-      try {
-        const pendingData = JSON.parse(pendingRaw);
-        storedDoc = pendingData.content || "";
-        storedDocType = pendingData.docType || storedDocType;
-      } catch (error) {
-        console.error("Could not parse pending document:", error);
-      }
+    function safeValue(value, fallback = "[Not Provided]") {
+      return value && value.trim() ? value.trim() : fallback;
     }
-  }
 
-  if (storedDoc) {
-    previewContent.textContent = storedDoc;
-    previewStatus.textContent = "Document loaded";
+    function generateVerificationID() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const random = Math.floor(100000 + Math.random() * 900000);
+      return "VFY-" + year + "-" + random;
+    }
 
-    if (typeof previewTitle !== "undefined") {
-      if (typeof docTitles !== "undefined" && docTitles[storedDocType]) {
-        previewTitle.textContent = docTitles[storedDocType];
+    function formatTimestamp() {
+      return new Date().toLocaleString();
+    }
+
+    function loadTransferredDocument() {
+      let storedDoc = localStorage.getItem("verified_send_document") || "";
+      let storedDocType = localStorage.getItem("verified_send_doc_type") || "";
+
+      if (!storedDoc) {
+        const pendingRaw = localStorage.getItem("formatflow_pending_document");
+        if (pendingRaw) {
+          try {
+            const pendingData = JSON.parse(pendingRaw);
+            storedDoc = pendingData.content || "";
+            storedDocType = pendingData.docType || storedDocType;
+          } catch (error) {
+            console.error("Could not parse pending document:", error);
+          }
+        }
+      }
+
+      if (storedDoc) {
+        previewContent.textContent = storedDoc;
+        previewStatus.textContent = "Document loaded";
+        previewTitle.textContent = docTitles[storedDocType] || "Document Ready to Send";
       } else {
+        previewContent.textContent = "No document was detected. Return to the generator and retrieve your document first.";
+        previewStatus.textContent = "Waiting for details";
         previewTitle.textContent = "Document Ready to Send";
       }
     }
-  } else {
-    previewContent.textContent = "No document was detected. Return to the generator and retrieve your document first.";
-    previewStatus.textContent = "Waiting for details";
-
-    if (typeof previewTitle !== "undefined") {
-      previewTitle.textContent = "Document Ready to Send";
-    }
-  }
-}
-
-    function generateVerificationId() {
-      const now = new Date();
-      const year = now.getFullYear();
-      const randomBlock = Math.floor(100000 + Math.random() * 900000);
-      return `VFY-${year}-${randomBlock}`;
-    }
-
-    function formatTimestamp(dateObj) {
-      return dateObj.toLocaleString([], {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "numeric",
-        minute: "2-digit"
-      });
-    }
 
     function validateForm() {
-      const requiredFilled =
-        senderFullName.value.trim() &&
-        senderEmail.value.trim() &&
-        senderAddress.value.trim() &&
-        senderCityStateZip.value.trim() &&
-        deliveryTarget.value.trim() &&
-        transferredDocument.trim();
-
-      const checksPassed =
-        confirmAccuracy.checked &&
-        confirmAuthorization.checked &&
-        confirmDisclosure.checked;
-
-      if (requiredFilled && checksPassed) {
-        sendVerifyBtn.disabled = false;
-        sendVerifyBtn.classList.remove("btn-disabled");
-        sendVerifyBtn.classList.add("btn-primary");
-        previewStatus.textContent = "Ready to send";
-        statusCard.innerHTML = `
-          <strong style="display:block; margin-bottom:6px; color:#173b79;">Submission Status</strong>
-          Your document and delivery details are complete. You may now continue with verified sending.
-        `;
-      } else {
-        sendVerifyBtn.disabled = true;
-        sendVerifyBtn.classList.add("btn-disabled");
-        sendVerifyBtn.classList.remove("btn-primary");
-        previewStatus.textContent = transferredDocument ? "Waiting for details" : "No document detected";
-        statusCard.innerHTML = `
-          <strong style="display:block; margin-bottom:6px; color:#173b79;">Submission Status</strong>
-          Complete all required sender and delivery details, and confirm the required checkboxes to enable verified sending.
-        `;
+      if (!previewContent.textContent || previewContent.textContent.indexOf("No document was detected") === 0) {
+        alert("No transferred document was found. Please return to the generator and try again.");
+        return false;
       }
+
+      if (!safeValue(senderName.value, "").trim()) {
+        alert("Please enter your full name.");
+        return false;
+      }
+
+      if (!safeValue(senderEmail.value, "").trim()) {
+        alert("Please enter your email address.");
+        return false;
+      }
+
+      if (!safeValue(recipientCompany.value, "").trim()) {
+        alert("Please enter the recipient, bureau, or company.");
+        return false;
+      }
+
+      if (!confirmAccuracy.checked || !confirmAuthorization.checked || !confirmDisclosure.checked) {
+        alert("Please complete all confirmation checkboxes before sending.");
+        return false;
+      }
+
+      return true;
     }
 
     function buildReceiptObject() {
-      const sentAt = new Date();
+      const storedDocType = localStorage.getItem("verified_send_doc_type") || "";
+
       return {
-        verificationId: generateVerificationId(),
-        timestamp: formatTimestamp(sentAt),
-        senderFullName: senderFullName.value.trim(),
-        senderEmail: senderEmail.value.trim(),
-        senderPhone: senderPhone.value.trim(),
-        senderAddress: senderAddress.value.trim(),
-        senderCityStateZip: senderCityStateZip.value.trim(),
-        deliveryTarget: deliveryTarget.value.trim(),
-        deliveryEmail: deliveryEmail.value.trim(),
-        referenceNumber: referenceNumber.value.trim(),
-        documentType: documentTypeDisplay.value.trim(),
-        deliveryNotes: deliveryNotes.value.trim(),
-        documentContent: transferredDocument
+        verificationId: generateVerificationID(),
+        status: "Submitted",
+        timestamp: formatTimestamp(),
+        docType: docTitles[storedDocType] || "Document",
+        sender: safeValue(senderName.value),
+        senderEmail: safeValue(senderEmail.value),
+        senderPhone: safeValue(senderPhone.value),
+        senderAddress: safeValue(senderAddress.value),
+        senderCityStateZip: safeValue(senderCityStateZip.value),
+        recipient: safeValue(recipientCompany.value),
+        recipientEmail: safeValue(recipientEmail.value),
+        recipientAddress: safeValue(recipientAddress.value),
+        referenceNumber: safeValue(referenceNumber.value),
+        deliveryNotes: safeValue(deliveryNotes.value),
+        documentContent: previewContent.textContent
       };
     }
 
-    function buildReceiptText(receipt) {
+    function buildReceiptText(data) {
       return `FORMATFLOW™ VERIFIED DELIVERY RECEIPT
 
-Verification Number: ${receipt.verificationId}
-Timestamp: ${receipt.timestamp}
-Status: Submission prepared and recorded
+Verification Number:
+${data.verificationId}
 
-Document Type: ${receipt.documentType}
-Recipient / Target: ${receipt.deliveryTarget}
-Delivery Email / Endpoint: ${receipt.deliveryEmail || "[Not Provided]"}
-Reference Number: ${receipt.referenceNumber || "[Not Provided]"}
+Status:
+${data.status}
 
-Sender Name: ${receipt.senderFullName}
-Sender Email: ${receipt.senderEmail}
-Sender Phone: ${receipt.senderPhone || "[Not Provided]"}
-Sender Address: ${receipt.senderAddress}
-Sender City, State, Zip: ${receipt.senderCityStateZip}
+Timestamp:
+${data.timestamp}
 
-Additional Delivery Notes:
-${receipt.deliveryNotes || "[Not Provided]"}
+Document Type:
+${data.docType}
 
-Document Copy:
-${receipt.documentContent}
+Sender:
+${data.sender}
 
-Disclaimer:
-This receipt confirms that the verified delivery workflow was completed inside FormatFlow™ and that a verification record was generated. It does not guarantee review, acceptance, approval, or processing by any receiving party.`;
+Sender Email:
+${data.senderEmail}
+
+Sender Phone:
+${data.senderPhone}
+
+Sender Address:
+${data.senderAddress}
+${data.senderCityStateZip}
+
+Recipient:
+${data.recipient}
+
+Recipient Email / Endpoint:
+${data.recipientEmail}
+
+Recipient Address:
+${data.recipientAddress}
+
+Reference / Account Number:
+${data.referenceNumber}
+
+Delivery Notes:
+${data.deliveryNotes}
+
+Notice:
+This receipt reflects a verified delivery workflow record and confirmation number for organizational purposes. It does not guarantee review, acceptance, approval, or legal outcome.
+`;
+    }
+
+    function buildSentCopyText(data) {
+      return `FORMATFLOW™ VERIFIED DELIVERY COPY
+
+Verification Number: ${data.verificationId}
+Timestamp: ${data.timestamp}
+Document Type: ${data.docType}
+
+Sender:
+${data.sender}
+${data.senderAddress}
+${data.senderCityStateZip}
+${data.senderEmail}
+${data.senderPhone}
+
+Recipient:
+${data.recipient}
+${data.recipientAddress}
+${data.recipientEmail}
+
+Reference:
+${data.referenceNumber}
+
+Delivery Notes:
+${data.deliveryNotes}
+
+------------------------------
+DOCUMENT CONTENT
+------------------------------
+
+${data.documentContent}
+`;
     }
 
     function downloadTextFile(filename, text) {
       const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
       const url = URL.createObjectURL(blob);
-      const anchor = document.createElement("a");
-      anchor.href = url;
-      anchor.download = filename;
-      document.body.appendChild(anchor);
-      anchor.click();
-      document.body.removeChild(anchor);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
       URL.revokeObjectURL(url);
     }
 
-    function printTextDocument(title, text) {
-  const printableWindow = window.open("", "_blank");
-  printableWindow.document.write(`
-    <html>
-      <head>
-        <title>${title}</title>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            padding: 40px;
-            line-height: 1.7;
-            color: #222;
-            white-space: pre-wrap;
-          }
-          h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-          }
-        </style>
-      </head>
-      <body>
-        <h1>${title}</h1>
-        <div>${text.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
-      </body>
-    </html>
-  `);
-  printableWindow.document.close();
-  printableWindow.focus();
-  printableWindow.print();
-}
+    sendVerifiedBtn.addEventListener("click", function () {
+      if (!validateForm()) return;
 
-window.addEventListener("DOMContentLoaded", function () {
-  loadTransferDocument();
-});
-          
+      const receiptData = buildReceiptObject();
+
+      localStorage.setItem("verified_delivery_receipt_data", JSON.stringify(receiptData));
+
+      previewStatus.textContent = "Submitted";
+      successBox.style.display = "block";
+      receiptCard.style.display = "block";
+      downloadReceiptBtn.style.display = "inline-block";
+
+      successMessage.textContent = "Your document has been submitted through the verified delivery workflow. Please download your receipt and save it for your records.";
+
+      receiptVerificationId.textContent = receiptData.verificationId;
+      receiptStatus.textContent = receiptData.status;
+      receiptTimestamp.textContent = receiptData.timestamp;
+      receiptDocType.textContent = receiptData.docType;
+      receiptSender.textContent = receiptData.sender;
+      receiptRecipient.textContent = receiptData.recipient;
+    });
+
+    downloadReceiptBtn.addEventListener("click", function () {
+      const saved = localStorage.getItem("verified_delivery_receipt_data");
+      if (!saved) {
+        alert("No receipt is available yet.");
+        return;
+      }
+
+      const data = JSON.parse(saved);
+      downloadTextFile("verified-delivery-receipt.txt", buildReceiptText(data));
+    });
+
+    downloadDocCopyBtn.addEventListener("click", function () {
+      const savedReceipt = localStorage.getItem("verified_delivery_receipt_data");
+      let exportData;
+
+      if (savedReceipt) {
+        exportData = JSON.parse(savedReceipt);
+      } else {
+        exportData = buildReceiptObject();
+        exportData.verificationId = "Pending";
+        exportData.status = "Not Yet Submitted";
+      }
+
+      downloadTextFile("verified-document-copy.txt", buildSentCopyText(exportData));
+    });
+
+    backToGeneratorBtn.addEventListener("click", function () {
+      window.location.href = "app.html?payment=success";
+    });
+
+    window.addEventListener("DOMContentLoaded", function () {
+      loadTransferredDocument();
+
+      const today = new Date();
+      const mm = String(today.getMonth() + 1).padStart(2, "0");
+      const dd = String(today.getDate()).padStart(2, "0");
+      const yyyy = today.getFullYear();
+      sendDate.value = `${mm}/${dd}/${yyyy}`;
+    });
+  </script>
+
+</body>
+</html>
