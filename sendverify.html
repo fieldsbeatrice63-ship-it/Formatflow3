@@ -934,22 +934,25 @@ ${data.documentContent}
     });
 
     window.addEventListener("DOMContentLoaded", function () {
-      loadTransferredDocument();
+  if (typeof loadTransferDocument === "function") {
+    loadTransferDocument();
+  }
 
-      const today = new Date();
-      const mm = String(today.getMonth() + 1).padStart(2, "0");
-      const dd = String(today.getDate()).padStart(2, "0");
-      const yyyy = today.getFullYear();
-      sendDate.value = `${mm}/${dd}/${yyyy}`;
-    });
-    
-    window.addEventListener("DOMContentLoaded", function () {
   localStorage.setItem("verify_edit_count", "0");
 
   if (editVerifyBtn) {
     editVerifyBtn.style.display = "inline-block";
   }
+
+  if (typeof sendDate !== "undefined" && sendDate) {
+    const today = new Date();
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+    const yyyy = today.getFullYear();
+    sendDate.value = `${mm}/${dd}/${yyyy}`;
+  }
 });
+
   </script>
 
 </body>
