@@ -1000,6 +1000,21 @@ Client`;
       }
     }
 
+       function updatePaidDocument() {
+  const builtDoc = buildDocument();
+
+  previewTitle.textContent = docTitles[docType.value] || "Document Preview";
+  previewStatus.textContent = "Updated after payment";
+  previewContent.textContent = builtDoc;
+  previewPaper.classList.remove("locked");
+
+  localStorage.setItem("formatflow_pending_document", JSON.stringify({
+    content: builtDoc,
+    docType: docType.value,
+    savedAt: new Date().toISOString()
+  }));
+}
+
     function handlePaidEdit() {
   let editCount = parseInt(localStorage.getItem("formatflow_edit_count") || "0", 10);
 
@@ -1048,20 +1063,7 @@ Client`;
             white-space: pre-wrap;
           }
 
-           function updatePaidDocument() {
-  const builtDoc = buildDocument();
-
-  previewTitle.textContent = docTitles[docType.value] || "Document Preview";
-  previewStatus.textContent = "Updated after payment";
-  previewContent.textContent = builtDoc;
-  previewPaper.classList.remove("locked");
-
-  localStorage.setItem("formatflow_pending_document", JSON.stringify({
-    content: builtDoc,
-    docType: docType.value,
-    savedAt: new Date().toISOString()
-  }));
-}
+           
         </style>
       </head>
       <body>
