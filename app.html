@@ -584,6 +584,11 @@ const downloadTools = document.getElementById("downloadTools");
 const downloadPdfBtn = document.getElementById("downloadPdfBtn");
 const printDocBtn = document.getElementById("printDocBtn");
     const verifiedSendBtn = document.getElementById("verifiedSendBtn");
+
+    const confirmVerifyModal = document.getElementById("confirmVerifyModal");
+const closeConfirmVerifyModal = document.getElementById("closeConfirmVerifyModal");
+const continueVerifyPayment = document.getElementById("continueVerifyPayment");
+const cancelVerifyPayment = document.getElementById("cancelVerifyPayment");
     
     const generateBtn = document.getElementById("generateBtn");
     const clearBtn = document.getElementById("clearBtn");
@@ -1057,14 +1062,31 @@ printDocBtn.addEventListener("click", function () {
   openDocumentPrintWindow();
 });
 
-   verifiedSendBtn.addEventListener("click", function () {
+  verifySendBtn.addEventListener("click", function () {
   const docContent = previewContent.textContent || "";
-
   localStorage.setItem("verified_send_document", docContent);
   localStorage.setItem("verified_send_doc_type", docType.value || "");
 
-  window.location.href = "https://buy.stripe.com/eVqcN4erVg7f9JacJb3ks0k";
+  confirmVerifyModal.style.display = "block";
 });
+
+    if (closeConfirmVerifyModal) {
+  closeConfirmVerifyModal.addEventListener("click", function () {
+    confirmVerifyModal.style.display = "none";
+  });
+}
+
+if (cancelVerifyPayment) {
+  cancelVerifyPayment.addEventListener("click", function () {
+    confirmVerifyModal.style.display = "none";
+  });
+}
+
+if (continueVerifyPayment) {
+  continueVerifyPayment.addEventListener("click", function () {
+    window.location.href = "https://buy.stripe.com/eVqcN4erVg7f9JacJb3ks0k";
+  });
+}
 
     window.addEventListener("DOMContentLoaded", function () {
       const params = new URLSearchParams(window.location.search);
@@ -1135,5 +1157,45 @@ printDocBtn.addEventListener("click", function () {
     });
   }
 </script>
+
+  <div id="confirmVerifyModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999;">
+  <div style="max-width:520px; margin:100px auto; background:#fff; border-radius:20px; padding:24px; position:relative;">
+
+    <button id="closeConfirmVerifyModal" style="position:absolute; top:10px; right:10px; border:none; background:#eee; padding:6px 10px; border-radius:8px; cursor:pointer;">
+      ✕
+    </button>
+
+    <div style="margin-bottom:10px;">
+      <span style="background:#28c76f; color:#fff; padding:4px 10px; border-radius:999px; font-size:11px; font-weight:700;">
+        VERIFY
+      </span>
+    </div>
+
+    <h2 style="margin-top:0;">Send with Verify™</h2>
+
+    <p>
+      You are about to purchase verified delivery for this document for <strong>$7.99</strong>.
+    </p>
+
+    <p>
+      After payment, you will be redirected to the Send Verify page to complete the verified sending process.
+    </p>
+
+    <p style="font-size:14px; color:#555;">
+      Do you want to continue to payment?
+    </p>
+
+    <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:18px;">
+      <button id="continueVerifyPayment" style="background:#2c7dff; color:#fff; border:none; border-radius:14px; padding:12px 18px; font-size:15px; font-weight:700; cursor:pointer;">
+        Continue to Payment
+      </button>
+
+      <button id="cancelVerifyPayment" style="background:#ffffff; color:#1e4db7; border:1px solid #cfe0ff; border-radius:14px; padding:12px 18px; font-size:15px; font-weight:700; cursor:pointer;">
+        Cancel
+      </button>
+    </div>
+
+  </div>
+</div>
 </body>
 </html>
