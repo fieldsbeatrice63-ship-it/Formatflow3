@@ -1062,12 +1062,15 @@ printDocBtn.addEventListener("click", function () {
   openDocumentPrintWindow();
 });
 
-  verifiedSendBtn.addEventListener("click", function () {
+ verifiedSendBtn.addEventListener("click", function () {
   const docContent = previewContent.textContent || "";
   localStorage.setItem("verified_send_document", docContent);
   localStorage.setItem("verified_send_doc_type", docType.value || "");
 
-  confirmVerifyModal.style.display = "block";
+  const confirmVerifyModal = document.getElementById("confirmVerifyModal");
+  if (confirmVerifyModal) {
+    confirmVerifyModal.style.display = "block";
+  }
 });
 
     if (closeConfirmVerifyModal) {
@@ -1197,6 +1200,31 @@ if (continueVerifyPayment) {
 
   </div>
 </div>
+
+    <script>
+  const confirmVerifyModalBottom = document.getElementById("confirmVerifyModal");
+  const closeConfirmVerifyModalBottom = document.getElementById("closeConfirmVerifyModal");
+  const continueVerifyPaymentBottom = document.getElementById("continueVerifyPayment");
+  const cancelVerifyPaymentBottom = document.getElementById("cancelVerifyPayment");
+
+  if (closeConfirmVerifyModalBottom) {
+    closeConfirmVerifyModalBottom.addEventListener("click", function () {
+      confirmVerifyModalBottom.style.display = "none";
+    });
+  }
+
+  if (cancelVerifyPaymentBottom) {
+    cancelVerifyPaymentBottom.addEventListener("click", function () {
+      confirmVerifyModalBottom.style.display = "none";
+    });
+  }
+
+  if (continueVerifyPaymentBottom) {
+    continueVerifyPaymentBottom.addEventListener("click", function () {
+      window.location.href = "https://buy.stripe.com/eVqcN4erVg7f9JacJb3ks0k";
+    });
+  }
+</script>
 </script>
 </body>
 </html>
