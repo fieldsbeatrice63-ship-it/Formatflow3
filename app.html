@@ -1056,10 +1056,12 @@ ${documentText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
 
    downloadPdfBtn.addEventListener("click", function () {
   openDocumentPrintWindow();
+     completeDocumentSession();
 });
 
 printDocBtn.addEventListener("click", function () {
   openDocumentPrintWindow();
+  completeDocumentSession();
 });
 
  verifiedSendBtn.addEventListener("click", function () {
@@ -1099,6 +1101,7 @@ if (continueVerifyPayment) {
   successBanner.style.display = "block";
   retrieveBox.style.display = "block";
   restorePendingDocument();
+       localStorage.setItem("formatflow_paid_unlocked", "true");
 }
     });
   </script>
@@ -1192,6 +1195,48 @@ document.getElementById("cancelVerifyPayment")?.addEventListener("click", functi
 document.getElementById("continueVerifyPayment")?.addEventListener("click", function(){
   window.location.href = "https://buy.stripe.com/eVqcN4erVg7f9JacJb3ks0k";
 });
+  window.addEventListener("DOMContentLoaded", function () {
+  const paidUnlocked = localStorage.getItem("formatflow_paid_unlocked");
+
+  if (paidUnlocked === "true") {
+    const previewPaper = document.getElementById("previewPaper");
+    const downloadTools = document.getElementById("downloadTools");
+
+    if (previewPaper) previewPaper.classList.remove("locked");
+    if (downloadTools) downloadTools.style.display = "block";
+  }
+});
+
+
+  window.addEventListener("DOMContentLoaded", function () {
+  const sessionComplete = localStorage.getItem("formatflow_session_complete");
+
+  if (sessionComplete === "true") {
+    const successBanner = document.getElementById("successBanner");
+
+    if (successBanner) {
+      successBanner.innerText = "Thank you for your purchase. Your document session has been completed.";
+      successBanner.style.display = "block";
+    }
+
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 2000);
+  }
+});
+
+  function completeDocumentSession() {
+  if (successBanner) {
+    successBanner.innerText = "Thank you for your purchase. Your document session is now complete.";
+    successBanner.style.display = "block";
+  }
+
+  localStorage.setItem("formatflow_session_complete", "true");
+
+  setTimeout(() => {
+    window.location.href = "index.html";
+  }, 3000);
+}
 </script>
 </body>
 </html>
