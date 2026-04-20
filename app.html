@@ -603,7 +603,8 @@ const cancelVerifyPayment = document.getElementById("cancelVerifyPayment");
     const generateBtn = document.getElementById("generateBtn");
     const clearBtn = document.getElementById("clearBtn");
      const editBtn = document.getElementById("editBtn");
-
+const rewriteBtn = document.getElementById("rewriteBtn");
+    
     const previewTitle = document.getElementById("previewTitle");
     const previewStatus = document.getElementById("previewStatus");
     const previewContent = document.getElementById("previewContent");
@@ -1169,7 +1170,8 @@ if (continueVerifyPayment) {
        localStorage.setItem("formatflow_paid_unlocked", "true");
        localStorage.setItem("formatflow_edit_count", "0");
        if (editBtn) editBtn.style.display = "inline-block";
-
+if (rewriteBtn) rewriteBtn.style.display = "inline-block";
+       
 if (generateBtn) generateBtn.disabled = true;
 if (clearBtn) clearBtn.disabled = true;
 }
