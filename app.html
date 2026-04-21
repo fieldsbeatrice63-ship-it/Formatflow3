@@ -247,17 +247,17 @@
     }
 
     .preview-paper::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(255, 255, 255, 0);
-  pointer-events: none;
-  transition: background 0.2s ease;
-}
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0);
+      pointer-events: none;
+      transition: background 0.2s ease;
+    }
 
-.preview-paper.locked::after {
-  background: rgba(255, 255, 255, 0.14);
-}
+    .preview-paper.locked::after {
+      background: rgba(255, 255, 255, 0.14);
+    }
 
     .paper-content {
       color: #222222;
@@ -267,31 +267,31 @@
       word-wrap: break-word;
     }
 
-  .watermark {
-  position: absolute;
-  inset: 0;
-  display: none;
-  pointer-events: none;
-  opacity: 0.18;
-  font-size: 44px;
-  font-weight: 700;
-  color: #1e4db7;
-  transform: rotate(-28deg);
-  text-align: center;
-  padding-top: 160px;
-  letter-spacing: 3px;
-  user-select: none;
-} 
+    .watermark {
+      position: absolute;
+      inset: 0;
+      display: none;
+      pointer-events: none;
+      opacity: 0.18;
+      font-size: 44px;
+      font-weight: 700;
+      color: #1e4db7;
+      transform: rotate(-28deg);
+      text-align: center;
+      padding-top: 160px;
+      letter-spacing: 3px;
+      user-select: none;
+    }
 
     .locked .watermark {
       display: block;
     }
 
-   .locked .paper-content {
-  filter: blur(2.2px);
-  opacity: 0.72;
-  user-select: none;
-}
+    .locked .paper-content {
+      filter: blur(2.2px);
+      opacity: 0.72;
+      user-select: none;
+    }
 
     .unlock-box {
       margin-top: 16px;
@@ -366,6 +366,48 @@
       line-height: 1.8;
     }
 
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      padding: 20px;
+    }
+
+    .modal-box {
+      background: #fff;
+      padding: 24px;
+      max-width: 460px;
+      width: 100%;
+      border-radius: 18px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+    }
+
+    .modal-box h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      color: #173b79;
+    }
+
+    .modal-box p {
+      color: #355171;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .modal-box button {
+      margin-top: 15px;
+      padding: 12px 16px;
+      background: #2c7dff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
     @media (max-width: 1050px) {
       .app-shell {
         grid-template-columns: 1fr;
@@ -390,41 +432,6 @@
         min-height: 620px;
       }
     }
-
-    .modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.6);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
-.modal-box {
-  background: #fff;
-  padding: 20px;
-  max-width: 400px;
-  width: 90%;
-  border-radius: 10px;
-  text-align: center;
-}
-
-.modal-box h3 {
-  margin-bottom: 10px;
-}
-
-.modal-box button {
-  margin-top: 15px;
-  padding: 10px 15px;
-  background: black;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
   </style>
 </head>
 <body>
@@ -435,17 +442,14 @@
       <div class="nav-links">
         <a href="index.html">Home</a>
         <a href="pricing.html">Pricing</a>
-       <a href="features.html">Features</a>
- <a href="#" id="sendVerifyInfoLink" style="position:relative; display:inline-block;">
-  Send Verify
-  <span style="position:absolute; top:-10px; right:-18px; background:#28c76f; color:#ffffff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:999px; letter-spacing:0.4px;">
-    NEW
-  </span>
- </a>   
+        <a href="features.html">Features</a>
+        <a href="#" id="sendVerifyInfoLink" style="position:relative; display:inline-block;">
+          Send Verify
+          <span style="position:absolute; top:-10px; right:-18px; background:#28c76f; color:#ffffff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:999px; letter-spacing:0.4px;">
+            NEW
+          </span>
+        </a>
         <a class="nav-btn" href="app.html">Generator</a>
-        
-        
-       
       </div>
     </div>
   </div>
@@ -529,9 +533,7 @@
       <div class="button-row">
         <button class="btn-primary" id="generateBtn">Generate Preview</button>
         <button class="btn-secondary" id="clearBtn" type="button">Clear</button>
-        <button id="editBtn" class="btn-secondary" type="button" style="display:none;">
-  Edit
-</button>
+        <button id="editBtn" class="btn-secondary" type="button" style="display:none;">Edit</button>
         <button id="rewriteBtn" class="btn-secondary" type="button" style="display:none;">Rewrite</button>
       </div>
 
@@ -545,29 +547,29 @@
         Payment confirmed. Return access detected. Your document preview has been restored below.
       </div>
 
-      <p style="margin-top:12px; color:#e3efff; font-size:14px; line-height:1.6;">
-  Need help understanding the buttons? Click <strong>Features</strong> to view what each tool does, including Edit, Rewrite, and Send Verify™.
-</p>
-     <div id="retrieveBox" style="display:none; margin-bottom:16px; text-align:center;">
-  <button id="retrieveBtn" style="background:#2c7dff; color:#ffffff; border:0; border-radius:14px; padding:14px 20px; font-size:15px; font-weight:700; cursor:pointer; margin-bottom:10px;">
-    Retrieve My Document
-  </button>
-       
+      <p style="margin-top:12px; color:#355171; font-size:14px; line-height:1.6;">
+        Need help understanding the buttons? Click <strong>Features</strong> to view what each tool does, including Edit, Rewrite, and Send Verify™.
+      </p>
 
-  <div id="downloadTools" style="display:none; margin-top:10px;">
-    <button id="downloadPdfBtn" style="background:#ffffff; color:#1e4db7; border:1px solid #cfe0ff; border-radius:14px; padding:12px 18px; font-size:15px; font-weight:700; cursor:pointer; margin:6px;">
-      Download PDF
-    </button>
+      <div id="retrieveBox" style="display:none; margin-bottom:16px; text-align:center;">
+        <button id="retrieveBtn" style="background:#2c7dff; color:#ffffff; border:0; border-radius:14px; padding:14px 20px; font-size:15px; font-weight:700; cursor:pointer; margin-bottom:10px;">
+          Retrieve My Document
+        </button>
 
-    <button id="printDocBtn" style="background:#ffffff; color:#1e4db7; border:1px solid #cfe0ff; border-radius:14px; padding:12px 18px; font-size:15px; font-weight:700; cursor:pointer; margin:6px;">
-      Print / Save PDF
-    </button>
+        <div id="downloadTools" style="display:none; margin-top:10px;">
+          <button id="downloadPdfBtn" style="background:#ffffff; color:#1e4db7; border:1px solid #cfe0ff; border-radius:14px; padding:12px 18px; font-size:15px; font-weight:700; cursor:pointer; margin:6px;">
+            Download PDF
+          </button>
 
-    <button id="verifiedSendBtn" style="background:#ffffff; color:#1e4db7; border:1px solid #cfe0ff; border-radius:14px; padding:12px 18px; font-size:15px; font-weight:700; cursor:pointer; margin:6px;">
-  Send with Verify
-</button>
-  </div>
-</div>
+          <button id="printDocBtn" style="background:#ffffff; color:#1e4db7; border:1px solid #cfe0ff; border-radius:14px; padding:12px 18px; font-size:15px; font-weight:700; cursor:pointer; margin:6px;">
+            Print / Save PDF
+          </button>
+
+          <button id="verifiedSendBtn" style="background:#ffffff; color:#1e4db7; border:1px solid #cfe0ff; border-radius:14px; padding:12px 18px; font-size:15px; font-weight:700; cursor:pointer; margin:6px;">
+            Send with Verify
+          </button>
+        </div>
+      </div>
 
       <div class="preview-head">
         <div class="preview-title" id="previewTitle">Document Preview</div>
@@ -582,10 +584,10 @@ Choose a document type, complete the form, and click “Generate Preview” to s
           </div>
         </div>
       </div>
-      
+
       <p style="margin:0 0 12px; color:#355171; font-size:14px; line-height:1.6;">
-  Preview available before purchase. Full access remains protected until payment is completed.
-</p>
+        Preview available before purchase. Full access remains protected until payment is completed.
+      </p>
 
       <div class="unlock-box">
         <h3>Unlock Your Document</h3>
@@ -597,10 +599,9 @@ Choose a document type, complete the form, and click “Generate Preview” to s
           <a class="pricing-link pricing-basic" id="basicLink" href="https://buy.stripe.com/8x25kC2Jd7AJ2gIdNf3ks0i" target="_blank">Fast — $19.99</a>
           <a class="pricing-link pricing-pro" id="proLink" href="https://buy.stripe.com/aFa9AS2Jdf3baNe38B3ks02" target="_blank">Approval — $29.99</a>
           <a class="pricing-link pricing-premium" id="premiumLink" href="https://buy.stripe.com/aFa14m2Jd8EN1cEfVn3ks0j" target="_blank">Authority — $49.99</a>
-         
           <p style="margin-top:12px; color:#e3efff; font-size:14px; line-height:1.6;">
-  Send Verify™ is a paid verified delivery add-on. Select this option to purchase verified sending for <strong>$7.99 per document</strong>.
-</p>
+            Send Verify™ is a paid verified delivery add-on. Select this option to purchase verified sending for <strong>$7.99 per document</strong>.
+          </p>
         </div>
       </div>
     </div>
@@ -622,24 +623,24 @@ Choose a document type, complete the form, and click “Generate Preview” to s
     const subjectField = document.getElementById("subjectField");
     const amountField = document.getElementById("amountField");
     const detailsField = document.getElementById("detailsField");
-const retrieveBox = document.getElementById("retrieveBox");
-const retrieveBtn = document.getElementById("retrieveBtn");
-const downloadTools = document.getElementById("downloadTools");
-const downloadPdfBtn = document.getElementById("downloadPdfBtn");
-const printDocBtn = document.getElementById("printDocBtn");
+
+    const retrieveBox = document.getElementById("retrieveBox");
+    const retrieveBtn = document.getElementById("retrieveBtn");
+    const downloadTools = document.getElementById("downloadTools");
+    const downloadPdfBtn = document.getElementById("downloadPdfBtn");
+    const printDocBtn = document.getElementById("printDocBtn");
     const verifiedSendBtn = document.getElementById("verifiedSendBtn");
-   
 
     const confirmVerifyModal = document.getElementById("confirmVerifyModal");
-const closeConfirmVerifyModal = document.getElementById("closeConfirmVerifyModal");
-const continueVerifyPayment = document.getElementById("continueVerifyPayment");
-const cancelVerifyPayment = document.getElementById("cancelVerifyPayment");
-    
+    const closeConfirmVerifyModal = document.getElementById("closeConfirmVerifyModal");
+    const continueVerifyPayment = document.getElementById("continueVerifyPayment");
+    const cancelVerifyPayment = document.getElementById("cancelVerifyPayment");
+
     const generateBtn = document.getElementById("generateBtn");
     const clearBtn = document.getElementById("clearBtn");
-     const editBtn = document.getElementById("editBtn");
-const rewriteBtn = document.getElementById("rewriteBtn");
-    
+    const editBtn = document.getElementById("editBtn");
+    const rewriteBtn = document.getElementById("rewriteBtn");
+
     const previewTitle = document.getElementById("previewTitle");
     const previewStatus = document.getElementById("previewStatus");
     const previewContent = document.getElementById("previewContent");
@@ -677,590 +678,322 @@ const rewriteBtn = document.getElementById("rewriteBtn");
       docNote.textContent = docNotes[docType.value] || "Complete the form to continue.";
     }
 
-    docType.addEventListener("change", updateNote);
-    updateNote();
-
-    function formatLine(value) {
-      return value && value.trim() ? value.trim() : "[Not Provided]";
-    }
-
-   function unlockRetrievedDocument() {
-  previewPaper.classList.remove("locked");
-  previewStatus.textContent = "Document retrieved";
-  if (downloadTools) {
-    downloadTools.style.display = "block";
-  }
-}
-
-    function buildDocument() {
-      const type = docType.value;
-      const data = {
-        fullName: formatLine(fullName.value),
-        address: formatLine(address.value),
-        cityStateZip: formatLine(cityStateZip.value),
-        dateField: formatLine(dateField.value),
-        recipientName: formatLine(recipientName.value),
-        recipientAddress: formatLine(recipientAddress.value),
-        subjectField: formatLine(subjectField.value),
-        amountField: formatLine(amountField.value),
-        detailsField: formatLine(detailsField.value)
-      };
-
-      if (type === "credit_dispute") {
-        return `${data.fullName}
-${data.address}
-${data.cityStateZip}
-${data.dateField}
-
-${data.recipientName}
-${data.recipientAddress}
-
-RE: Formal Dispute of Inaccurate Reporting
-Reference: ${data.subjectField}
-
-To Whom It May Concern,
-
-I am writing to formally dispute inaccurate or questionable reporting connected to the reference listed above.
-
-After reviewing the matter carefully, I believe the information being reported is inaccurate, incomplete, or not properly verified. I respectfully request a prompt review and written verification of the information in question.
-
-Please investigate this matter and provide any available documentation supporting the accuracy of the reporting. If the information cannot be properly verified, I request that it be corrected or removed as appropriate.
-
-${optionalSection("Supporting Details:", detailsField.value)}
-
-Please provide written confirmation of your findings and any updates made.
-
-Sincerely,
-
-${data.fullName}`;
-      }
-
-      if (type === "debt_validation") {
-        return `${data.fullName}
-${data.address}
-${data.cityStateZip}
-${data.dateField}
-
-${data.recipientName}
-${data.recipientAddress}
-
-RE: Request for Debt Validation
-Reference: ${data.subjectField}
-
-To Whom It May Concern,
-
-I am writing in response to communication regarding the account or debt referenced above. I dispute the validity of this matter and request proper validation.
-
-Please provide the name of the original creditor, the basis for the amount claimed, and supporting documentation showing that I am legally responsible for the debt in question.
-
-Additional notes:
-${data.detailsField}
-
-Until proper validation is provided, I request that collection activity and related reporting be handled in accordance with applicable requirements.
-
-Sincerely,
-
-${data.fullName}`;
-      }
-
-      if (type === "resume") {
-        return `${data.fullName}
-${data.address} | ${data.cityStateZip}
-
-PROFESSIONAL SUMMARY
-
-Dependable and results-focused professional with experience relevant to ${data.subjectField}. Recognized for communication, organization, consistency, and the ability to perform effectively in fast-paced environments.
-
-PROFESSIONAL EXPERIENCE
-
-Primary Experience / Role
-${data.recipientName}
-
-- Demonstrated reliability, professionalism, and consistent support in daily responsibilities
-- Maintained a strong work ethic while adapting to shifting priorities and expectations
-- Supported business goals through effective communication, organization, and follow-through
-- Helped improve workflow, accuracy, and overall service quality where applicable
-
-${optionalSection("Supporting Details:", detailsField.value)}
-
-CORE SKILLS
-
-- Communication
-- Organization
-- Time Management
-- Problem-Solving
-- Professionalism
-- Team Collaboration
-
-EDUCATION / TRAINING
-
-${data.subjectField}`;
-      }
-
-      if (type === "cover_letter") {
-        return `${data.fullName}
-${data.address}
-${data.cityStateZip}
-${data.dateField}
-
-${data.recipientName}
-${data.recipientAddress}
-
-RE: Application for ${data.subjectField}
-
-Dear Hiring Manager,
-
-I am writing to express my interest in the ${data.subjectField} position. I bring a professional mindset, a dependable work ethic, and experience that supports strong performance in fast-paced and service-oriented environments.
-
-My background includes strengths in communication, responsibility, organization, and follow-through. I am committed to contributing positively and maintaining a strong standard of professionalism.
-
-Additional experience or relevant details:
-${data.detailsField}
-
-Thank you for your time and consideration. I welcome the opportunity to contribute and discuss my qualifications further.
-
-Sincerely,
-
-${data.fullName}`;
-      }
-
-      if (type === "lease_agreement") {
-        return `RESIDENTIAL LEASE AGREEMENT
-
-This Agreement is entered into on ${data.dateField}, by and between:
-
-LANDLORD: ${data.fullName}
-TENANT: ${data.recipientName}
-
-PROPERTY / REFERENCE:
-${data.subjectField}
-
-PROPERTY ADDRESS:
-${data.address}, ${data.cityStateZip}
-
-1. TERM
-This lease shall remain in effect according to the dates and arrangement agreed upon by the parties.
-
-2. RENT
-The agreed rent, deposit, or related amount is: ${data.amountField}
-
-3. ADDITIONAL TERMS
-${data.detailsField}
-
-4. RESPONSIBILITIES
-The parties agree to maintain professional communication and act in accordance with the terms established for occupancy and payment.
-
-5. GOVERNING LOCATION
-This agreement is associated with:
-${data.cityStateZip}
-
-By signing below, both parties acknowledge and accept the structure of this agreement.
-
-______________________________
-Landlord / Owner
-
-______________________________
-Tenant`;
-      }
-
-      if (type === "eviction_response") {
-        return `${data.fullName}
-${data.address}
-${data.cityStateZip}
-${data.dateField}
-
-${data.recipientName}
-${data.recipientAddress}
-
-RE: Response to Eviction Notice
-Property / Reference: ${data.subjectField}
-
-Dear ${data.recipientName},
-
-I am writing in response to the eviction notice or housing-related matter referenced above. I respectfully request an opportunity to resolve this matter in good faith.
-
-At this time, I am asking for consideration regarding the circumstances affecting my ability to respond or comply as originally expected.
-
-Additional explanation:
-${data.detailsField}
-
-The amount involved, if applicable, is:
-${data.amountField}
-
-I respectfully request a reasonable opportunity to address this matter and receive written guidance on available next steps.
-
-Sincerely,
-
-${data.fullName}`;
-      }
-
-      if (type === "proof_of_income") {
-        return `${data.fullName}
-${data.address}
-${data.cityStateZip}
-${data.dateField}
-
-To Whom It May Concern,
-
-This letter is to verify that I, ${data.fullName}, currently receive income associated with the following work, role, or source:
-
-${data.subjectField}
-
-Reported amount:
-${data.amountField}
-
-Additional details regarding income source, consistency, or verification:
-${data.detailsField}
-
-Please contact me if further clarification is needed.
-
-Sincerely,
-
-${data.fullName}`;
-      }
-
-      if (type === "hardship_letter") {
-        return `${data.fullName}
-${data.address}
-${data.cityStateZip}
-${data.dateField}
-
-${data.recipientName}
-${data.recipientAddress}
-
-RE: Financial Hardship Request
-Reference: ${data.subjectField}
-
-To Whom It May Concern,
-
-I am writing to explain my current financial hardship and respectfully request consideration regarding the matter referenced above.
-
-At this time, I have experienced circumstances that have made it difficult to meet my financial obligations as originally expected.
-
-${optionalSection("Supporting Details:", detailsField.value)}
-Amount or obligation involved:
-${data.amountField}
-
-I am respectfully requesting review, flexibility, or any available relief option that may help me move forward responsibly.
-
-Sincerely,
-
-${data.fullName}`;
-      }
-
-      if (type === "business_funding") {
-        return `${data.fullName}
-${data.address}
-${data.cityStateZip}
-${data.dateField}
-
-${data.recipientName}
-${data.recipientAddress}
-
-RE: Business Funding Request
-Business / Reference: ${data.subjectField}
-
-Dear ${data.recipientName},
-
-I am writing to formally request business funding support related to the opportunity, project, or business matter referenced above.
-
-The requested amount is:
-${data.amountField}
-
-Purpose and supporting details:
-${data.detailsField}
-
-I believe this request supports meaningful growth, continuity, or expansion, and I would welcome the opportunity to provide additional information if needed.
-
-Sincerely,
-
-${data.fullName}`;
-      }
-
-      if (type === "service_agreement") {
-        return `SERVICE AGREEMENT
-
-This Agreement is entered into on ${data.dateField}, by and between:
-
-SERVICE PROVIDER:
-${data.fullName}
-
-CLIENT:
-${data.recipientName}
-
-SERVICE DESCRIPTION:
-${data.subjectField}
-
-PAYMENT / COMPENSATION:
-${data.amountField}
-
-SERVICE LOCATION / ADDRESS:
-${data.address}, ${data.cityStateZip}
-
-ADDITIONAL TERMS:
-${data.detailsField}
-
-Both parties agree to communicate professionally, follow the outlined expectations, and honor the agreed structure of this arrangement.
-
-______________________________
-Service Provider
-
-______________________________
-Client`;
-      }
-
-      return "No document selected.";
+    function buildSourceContent() {
+      return `
+Document Type: ${docTitles[docType.value] || docType.value}
+
+Full Name: ${fullName.value || ""}
+Address: ${address.value || ""}
+City, State, Zip: ${cityStateZip.value || ""}
+Date: ${dateField.value || ""}
+Recipient / Company Name: ${recipientName.value || ""}
+Recipient Address: ${recipientAddress.value || ""}
+Subject / Position / Account / Property: ${subjectField.value || ""}
+Amount / Rent / Income / Funding: ${amountField.value || ""}
+Details: ${detailsField.value || ""}
+      `.trim();
     }
 
     function savePendingDocument(content, selectedDocType) {
-  const pendingDoc = {
-    content: content || "",
-    docType: selectedDocType || "",
-    savedAt: new Date().toISOString(),
-    fields: {
-      fullName: fullName.value || "",
-      address: address.value || "",
-      cityStateZip: cityStateZip.value || "",
-      dateField: dateField.value || "",
-      recipientName: recipientName.value || "",
-      recipientAddress: recipientAddress.value || "",
-      subjectField: subjectField.value || "",
-      amountField: amountField.value || "",
-      detailsField: detailsField.value || ""
+      const pendingDoc = {
+        content: content || "",
+        docType: selectedDocType || "",
+        savedAt: new Date().toISOString(),
+        fields: {
+          fullName: fullName.value || "",
+          address: address.value || "",
+          cityStateZip: cityStateZip.value || "",
+          dateField: dateField.value || "",
+          recipientName: recipientName.value || "",
+          recipientAddress: recipientAddress.value || "",
+          subjectField: subjectField.value || "",
+          amountField: amountField.value || "",
+          detailsField: detailsField.value || ""
+        }
+      };
+
+      localStorage.setItem("formatflow_pending_document", JSON.stringify(pendingDoc));
     }
-  };
 
-  localStorage.setItem("formatflow_pending_document", JSON.stringify(pendingDoc));
-}
+    function restorePendingDocument() {
+      const saved = localStorage.getItem("formatflow_pending_document");
+      if (!saved) return;
 
-   function restorePendingDocument() {
-  const saved = localStorage.getItem("formatflow_pending_document");
-  if (!saved) return;
+      try {
+        const data = JSON.parse(saved);
 
-  try {
-    const data = JSON.parse(saved);
+        if (data.content) {
+          previewContent.textContent = data.content;
+          previewPaper.classList.remove("locked");
+          previewTitle.textContent = docTitles[data.docType] || "Restored Document";
+          previewStatus.textContent = "Restored after payment";
+        }
 
-    if (data.content) {
-      previewContent.textContent = data.content;
+        if (data.docType) {
+          docType.value = data.docType;
+        }
+
+        if (data.fields) {
+          fullName.value = data.fields.fullName || "";
+          address.value = data.fields.address || "";
+          cityStateZip.value = data.fields.cityStateZip || "";
+          dateField.value = data.fields.dateField || "";
+          recipientName.value = data.fields.recipientName || "";
+          recipientAddress.value = data.fields.recipientAddress || "";
+          subjectField.value = data.fields.subjectField || "";
+          amountField.value = data.fields.amountField || "";
+          detailsField.value = data.fields.detailsField || "";
+        }
+      } catch (error) {
+        console.error("Could not restore pending document:", error);
+      }
+    }
+
+    function unlockRetrievedDocument() {
       previewPaper.classList.remove("locked");
-      previewTitle.textContent = docTitles[data.docType] || "Restored Document";
-      previewStatus.textContent = "Restored after payment";
+      previewStatus.textContent = "Document retrieved";
+      if (downloadTools) {
+        downloadTools.style.display = "block";
+      }
     }
 
-    if (data.docType) {
-      docType.value = data.docType;
+    async function generateDocumentFromBackend() {
+      const sourceContent = buildSourceContent();
+
+      const response = await fetch("https://format-flow-backend.onrender.com/api/generate-document", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          content: sourceContent,
+          docType: docType.value,
+          template: docType.value
+        })
+      });
+
+      const data = await response.json();
+
+      if (!data.output) {
+        throw new Error("No document was generated.");
+      }
+
+      return data.output;
     }
 
-    if (data.fields) {
-      fullName.value = data.fields.fullName || "";
-      address.value = data.fields.address || "";
-      cityStateZip.value = data.fields.cityStateZip || "";
-      dateField.value = data.fields.dateField || "";
-      recipientName.value = data.fields.recipientName || "";
-      recipientAddress.value = data.fields.recipientAddress || "";
-      subjectField.value = data.fields.subjectField || "";
-      amountField.value = data.fields.amountField || "";
-      detailsField.value = data.fields.detailsField || "";
-    }
-  } catch (error) {
-    console.error("Could not restore pending document:", error);
-  }
-}
+    async function generateDocument() {
+      const output = await generateDocumentFromBackend();
 
-    function optionalSection(title, value) {
-  const clean = (value || "").trim();
-  return clean ? `
-
-${title}
-${clean}` : "";
-}
-
-       async function updatePaidDocument() {
-  const sourceContent = `
-Document Type: ${docTitles[docType.value] || docType.value}
-
-Full Name: ${fullName.value || ""}
-Address: ${address.value || ""}
-City, State, Zip: ${cityStateZip.value || ""}
-Date: ${dateField.value || ""}
-Recipient / Company Name: ${recipientName.value || ""}
-Recipient Address: ${recipientAddress.value || ""}
-Subject / Position / Account / Property: ${subjectField.value || ""}
-Amount / Rent / Income / Funding: ${amountField.value || ""}
-Details: ${detailsField.value || ""}
-  `.trim();
-
-  try {
-    editBtn.disabled = true;
-    editBtn.textContent = "Updating...";
-
-    const response = await fetch("https://format-flow-backend.onrender.com/api/generate-document", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        content: sourceContent,
-        docType: docType.value,
-        template: docType.value
-      })
-    });
-
-    const data = await response.json();
-
-    if (data.output) {
-      previewContent.textContent = data.output;
-      previewStatus.textContent = "Updated after payment";
-      previewPaper.classList.remove("locked");
-
-      savePendingDocument(data.output, docType.value);
-    }
-  } catch (error) {
-    console.error("Edit error:", error);
-    if (docNote) {
-      docNote.textContent = "There was an error updating your document.";
-    }
-  } finally {
-    editBtn.textContent = "Edit";
-  }
-}
-   async function handlePaidEdit() {
-
-  const editBtn = document.getElementById("editBtn");
-
-  let editCount = parseInt(localStorage.getItem("formatflow_edit_count") || "0");
-
-  if (editCount >= 2) {
-    alert("Your final edit has been used.");
-    editBtn.disabled = true;
-    return;
-  }
-
-  // 🔥 GET CURRENT FORM VALUES
-  const docType = document.getElementById("docType").value;
-  const details = document.getElementById("detailsField").value;
-
-  // Add other fields you use:
-  const name = document.getElementById("name")?.value || "";
-  const address = document.getElementById("address")?.value || "";
-  const amount = document.getElementById("amount")?.value || "";
-
-  try {
-
-    const response = await fetch("/api/generate-document", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        docType,
-        details,
-        name,
-        address,
-        amount
-      })
-    });
-
-    const data = await response.json();
-
-    const previewPaper = document.querySelector(".preview-paper");
-
-    if (previewPaper && data.output) {
-      previewPaper.innerText = data.output;
-    }
-
-    editCount++;
-    localStorage.setItem("formatflow_edit_count", editCount.toString());
-
-    if (editCount >= 2) {
-      editBtn.disabled = true;
-    }
-
-  } catch (error) {
-    console.error("Edit failed:", error);
-  }
-}
-   function openDocumentPrintWindow() {
-  const documentText = previewContent.textContent || "";
-  const printableWindow = window.open("", "_blank");
-
-  printableWindow.document.write(`
-    <html>
-      <head>
-        <title>FormatFlow Document</title>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            padding: 40px;
-            line-height: 1.7;
-            color: #222;
-            white-space: pre-wrap;
-          }
-
-           
-        </style>
-      </head>
-      <body>
-${documentText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
-      </body>
-    </html>
-  `);
-
-  printableWindow.document.close();
-  printableWindow.focus();
-  printableWindow.print();
-}
-
-   generateBtn.addEventListener("click", async function () {
-  const sourceContent = `
-Document Type: ${docTitles[docType.value] || docType.value}
-
-Full Name: ${fullName.value || ""}
-Address: ${address.value || ""}
-City, State, Zip: ${cityStateZip.value || ""}
-Date: ${dateField.value || ""}
-Recipient / Company Name: ${recipientName.value || ""}
-Recipient Address: ${recipientAddress.value || ""}
-Subject / Position / Account / Property: ${subjectField.value || ""}
-Amount / Rent / Income / Funding: ${amountField.value || ""}
-Details: ${detailsField.value || ""}
-  `.trim();
-
-  try {
-    generateBtn.disabled = true;
-    generateBtn.textContent = "Generating...";
-
-    const response = await fetch("https://format-flow-backend.onrender.com/api/generate-document", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        content: sourceContent,
-        docType: docType.value,
-       template: docType.value
-      })
-    });
-
-    const data = await response.json();
-
-    if (data.output) {
       previewTitle.textContent = docTitles[docType.value] || "Document Preview";
       previewStatus.textContent = "Preview ready";
-      previewContent.textContent = data.output;
+      previewContent.textContent = output;
       previewPaper.classList.add("locked");
-      savePendingDocument(data.output, docType.value);
-    } else {
-      alert("No document was generated.");
+
+      savePendingDocument(output, docType.value);
     }
-  } catch (error) {
-    console.error("Generate error:", error);
-    alert("There was an error generating your document.");
-  } finally {
-    generateBtn.disabled = false;
-    generateBtn.textContent = "Generate Preview";
-  }
-});
+
+    async function handlePaidEdit() {
+      let editCount = parseInt(localStorage.getItem("formatflow_edit_count") || "0", 10);
+
+      if (editCount >= 2) {
+        if (docNote) {
+          docNote.textContent = "You have reached your edit limit. Please download your document.";
+        }
+        if (editBtn) {
+          editBtn.disabled = true;
+        }
+        return;
+      }
+
+      try {
+        if (editBtn) {
+          editBtn.disabled = true;
+          editBtn.textContent = "Updating...";
+        }
+
+        const output = await generateDocumentFromBackend();
+
+        previewContent.textContent = output;
+        previewStatus.textContent = "Updated after payment";
+        previewPaper.classList.remove("locked");
+
+        savePendingDocument(output, docType.value);
+
+        editCount += 1;
+        localStorage.setItem("formatflow_edit_count", String(editCount));
+
+        if (docNote) {
+          if (editCount === 1) {
+            docNote.textContent = "Edit complete. You have 1 edit remaining.";
+          } else {
+            docNote.textContent = "Your final edit has been used. Please download your document.";
+          }
+        }
+
+        if (editBtn && editCount >= 2) {
+          editBtn.disabled = true;
+        }
+      } catch (error) {
+        console.error("Edit error:", error);
+        if (docNote) {
+          docNote.textContent = "There was an error updating your document. Please try again.";
+        }
+        if (editBtn) {
+          editBtn.disabled = false;
+        }
+      } finally {
+        if (editBtn && parseInt(localStorage.getItem("formatflow_edit_count") || "0", 10) < 2) {
+          editBtn.textContent = "Edit";
+          editBtn.disabled = false;
+        }
+      }
+    }
+
+    let rewriteCount = 0;
+    const MAX_REWRITES = 2;
+
+    async function handleRewrite() {
+      if (rewriteCount >= MAX_REWRITES) {
+        if (docNote) {
+          docNote.textContent = "You have reached your rewrite limit. Please download your document.";
+        }
+        if (rewriteBtn) {
+          rewriteBtn.disabled = true;
+        }
+        return;
+      }
+
+      const currentText = previewContent.textContent;
+      if (!currentText || !currentText.trim()) return;
+
+      try {
+        rewriteBtn.disabled = true;
+        rewriteBtn.textContent = "Rewriting...";
+
+        const response = await fetch("https://format-flow-backend.onrender.com/api/rewrite-document", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            content: currentText,
+            type: "professional"
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.output) {
+          previewContent.textContent = data.output;
+          previewStatus.textContent = "Rewritten after payment";
+          previewPaper.classList.remove("locked");
+
+          savePendingDocument(data.output, docType.value);
+
+          rewriteCount += 1;
+          localStorage.setItem("formatflow_rewrite_count", String(rewriteCount));
+
+          if (editBtn) {
+            editBtn.disabled = true;
+          }
+
+          if (docNote) {
+            if (rewriteCount === 1) {
+              docNote.textContent = "Rewrite complete. You have 1 rewrite remaining. Editing is now locked.";
+            } else {
+              docNote.textContent = "Final rewrite used. Please download your document.";
+            }
+          }
+
+          if (rewriteCount >= MAX_REWRITES) {
+            rewriteBtn.disabled = true;
+          }
+        }
+      } catch (error) {
+        console.error("Rewrite error:", error);
+        if (docNote) {
+          docNote.textContent = "There was an error rewriting your document. Please try again.";
+        }
+      } finally {
+        if (rewriteCount < MAX_REWRITES) {
+          rewriteBtn.disabled = false;
+        }
+        rewriteBtn.textContent = "Rewrite";
+      }
+    }
+
+    function openDocumentPrintWindow() {
+      const documentText = previewContent.textContent || "";
+      const printableWindow = window.open("", "_blank");
+
+      printableWindow.document.write(`
+        <html>
+          <head>
+            <title>FormatFlow Document</title>
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                padding: 40px;
+                line-height: 1.7;
+                color: #222;
+                white-space: pre-wrap;
+              }
+            </style>
+          </head>
+          <body>
+${documentText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
+          </body>
+        </html>
+      `);
+
+      printableWindow.document.close();
+      printableWindow.focus();
+      printableWindow.print();
+    }
+
+    function completeDocumentSession() {
+      if (successBanner) {
+        successBanner.innerText = "Thank you for your purchase. Your document session is now complete.";
+        successBanner.style.display = "block";
+      }
+
+      localStorage.setItem("formatflow_session_complete", "true");
+
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 5000);
+    }
+
+    document.getElementById("sendVerifyInfoLink")?.addEventListener("click", function (e) {
+      e.preventDefault();
+      document.getElementById("sendVerifyModal").style.display = "flex";
+    });
+
+    document.getElementById("closeSendVerifyModal")?.addEventListener("click", function () {
+      document.getElementById("sendVerifyModal").style.display = "none";
+    });
+
+    document.getElementById("closeEditModal")?.addEventListener("click", function () {
+      document.getElementById("editModal").style.display = "none";
+    });
+
+    document.getElementById("closeRewriteModal")?.addEventListener("click", function () {
+      document.getElementById("rewriteModal").style.display = "none";
+    });
+
+    generateBtn.addEventListener("click", async function () {
+      try {
+        generateBtn.disabled = true;
+        generateBtn.textContent = "Generating...";
+        await generateDocument();
+      } catch (error) {
+        console.error("Generate error:", error);
+        alert("There was an error generating your document.");
+      } finally {
+        generateBtn.disabled = false;
+        generateBtn.textContent = "Generate Preview";
+      }
+    });
 
     clearBtn.addEventListener("click", function () {
       fullName.value = "";
@@ -1278,412 +1011,202 @@ Details: ${detailsField.value || ""}
       previewContent.textContent = "Choose a document type, complete the form, and click “Generate Preview” to see your draft here.";
       previewPaper.classList.add("locked");
       localStorage.removeItem("formatflow_pending_document");
+      localStorage.removeItem("formatflow_edit_count");
+      localStorage.removeItem("formatflow_rewrite_count");
     });
+
     retrieveBtn.addEventListener("click", function () {
-  unlockRetrievedDocument();
-});
+      unlockRetrievedDocument();
+    });
 
-   downloadPdfBtn.addEventListener("click", function () {
-  openDocumentPrintWindow();
-     completeDocumentSession();
-});
+    downloadPdfBtn.addEventListener("click", function () {
+      openDocumentPrintWindow();
+      completeDocumentSession();
+    });
 
-printDocBtn.addEventListener("click", function () {
-  openDocumentPrintWindow();
-  completeDocumentSession();
-});
+    printDocBtn.addEventListener("click", function () {
+      openDocumentPrintWindow();
+      completeDocumentSession();
+    });
 
-  if (editBtn) {
-  editBtn.addEventListener("click", async function () {
-  await handlePaidEdit();
-});
-}
-
-   
-
-let rewriteCount = 0;
-const MAX_REWRITES = 2;
-let rewriteConfirmed = false;
-
-if (rewriteBtn) {
-  rewriteBtn.addEventListener("click", async function () {
-    const rewriteModal = document.getElementById("rewriteModal");
-    const confirmRewriteBtn = document.getElementById("confirmRewriteBtn");
-
-    if (!rewriteConfirmed && rewriteModal && confirmRewriteBtn) {
-      rewriteModal.style.display = "flex";
-
-      confirmRewriteBtn.onclick = async function () {
-        rewriteModal.style.display = "none";
-        rewriteConfirmed = true;
-        rewriteBtn.click();
-      };
-      return;
-    }
-
-    rewriteConfirmed = false;
-
-    if (rewriteCount >= MAX_REWRITES) {
-      if (docNote) {
-        docNote.textContent = "You have reached your rewrite limit. Please download your document.";
-      }
-      rewriteBtn.disabled = true;
-      return;
-    }
-
-    const currentText = previewContent.textContent;
-    if (!currentText || !currentText.trim()) return;
-
-    try {
-      rewriteBtn.disabled = true;
-      rewriteBtn.textContent = "Rewriting...";
-
-      const response = await fetch("https://format-flow-backend.onrender.com/api/rewrite-document", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          content: currentText,
-          type: "professional"
-        })
+    if (verifiedSendBtn) {
+      verifiedSendBtn.addEventListener("click", function () {
+        const docContent = previewContent.textContent || "";
+        localStorage.setItem("verified_send_document", docContent);
+        localStorage.setItem("verified_send_doc_type", docType.value || "");
+        if (confirmVerifyModal) {
+          confirmVerifyModal.style.display = "flex";
+        }
       });
-
-      const data = await response.json();
-
-      if (data.output) {
-        previewContent.textContent = data.output;
-        previewStatus.textContent = "Rewritten after payment";
-        previewPaper.classList.remove("locked");
-
-        savePendingDocument(data.output, docType.value);
-
-        rewriteCount += 1;
-        localStorage.setItem("formatflow_rewrite_count", String(rewriteCount));
-
-        if (editBtn) {
-          editBtn.disabled = true;
-        }
-
-        if (docNote) {
-          if (rewriteCount === 1) {
-            docNote.textContent = "Rewrite complete. You have 1 rewrite remaining. Editing is now locked.";
-          } else {
-            docNote.textContent = "Final rewrite used. Please download your document.";
-          }
-        }
-
-        if (rewriteCount >= MAX_REWRITES) {
-          rewriteBtn.disabled = true;
-        }
-      }
-    } catch (error) {
-      console.error("Rewrite error:", error);
-      if (docNote) {
-        docNote.textContent = "There was an error rewriting your document. Please try again.";
-      }
-    } finally {
-      if (rewriteCount < MAX_REWRITES) {
-        rewriteBtn.disabled = false;
-      }
-      rewriteBtn.textContent = "Rewrite";
     }
-  });
-}
- verifiedSendBtn.addEventListener("click", function () {
-  const docContent = previewContent.textContent || "";
-  localStorage.setItem("verified_send_document", docContent);
-  localStorage.setItem("verified_send_doc_type", docType.value || "");
-
-  const confirmVerifyModal = document.getElementById("confirmVerifyModal");
-  if (confirmVerifyModal) {
-    confirmVerifyModal.style.display = "block";
-  }
-});
 
     if (closeConfirmVerifyModal) {
-  closeConfirmVerifyModal.addEventListener("click", function () {
-    confirmVerifyModal.style.display = "none";
-  });
-}
+      closeConfirmVerifyModal.addEventListener("click", function () {
+        confirmVerifyModal.style.display = "none";
+      });
+    }
 
-if (cancelVerifyPayment) {
-  cancelVerifyPayment.addEventListener("click", function () {
-    confirmVerifyModal.style.display = "none";
-  });
-}
+    if (cancelVerifyPayment) {
+      cancelVerifyPayment.addEventListener("click", function () {
+        confirmVerifyModal.style.display = "none";
+      });
+    }
 
-if (continueVerifyPayment) {
-  continueVerifyPayment.addEventListener("click", function () {
-    window.location.href = "https://buy.stripe.com/eVqcN4erVg7f9JacJb3ks0k";
-  });
-}
+    if (continueVerifyPayment) {
+      continueVerifyPayment.addEventListener("click", function () {
+        window.location.href = "https://buy.stripe.com/eVqcN4erVg7f9JacJb3ks0k";
+      });
+    }
 
     window.addEventListener("DOMContentLoaded", function () {
+      updateNote();
+
       const params = new URLSearchParams(window.location.search);
       const paymentStatus = params.get("payment");
 
-     if (paymentStatus === "success") {
-  successBanner.style.display = "block";
-  retrieveBox.style.display = "block";
-  restorePendingDocument();
-       localStorage.setItem("formatflow_paid_unlocked", "true");
-       localStorage.setItem("formatflow_edit_count", "0");
+      if (paymentStatus === "success") {
+        successBanner.style.display = "block";
+        retrieveBox.style.display = "block";
+        restorePendingDocument();
+
+        localStorage.setItem("formatflow_paid_unlocked", "true");
+        localStorage.setItem("formatflow_edit_count", "0");
+        localStorage.setItem("formatflow_rewrite_count", "0");
+
+        rewriteCount = 0;
+
+        if (editBtn) {
+          editBtn.style.display = "inline-block";
+          editBtn.disabled = false;
+        }
+
+        if (rewriteBtn) {
+          rewriteBtn.style.display = "inline-block";
+          rewriteBtn.disabled = false;
+        }
+
+        if (generateBtn) generateBtn.disabled = true;
+        if (clearBtn) clearBtn.disabled = true;
+        if (docType) docType.disabled = true;
+      }
+
+      const paidUnlocked = localStorage.getItem("formatflow_paid_unlocked");
+      if (paidUnlocked === "true") {
+        if (previewPaper) previewPaper.classList.remove("locked");
+        if (downloadTools) downloadTools.style.display = "block";
+      }
+
+      const sessionComplete = localStorage.getItem("formatflow_session_complete");
+      if (sessionComplete === "true") {
+        if (successBanner) {
+          successBanner.innerText = "Thank you for your purchase. Your document session has been completed.";
+          successBanner.style.display = "block";
+        }
+
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 2000);
+      }
+
+      const editModal = document.getElementById("editModal");
+      const rewriteModal = document.getElementById("rewriteModal");
+      const confirmEditBtn = document.getElementById("confirmEditBtn");
+      const confirmRewriteBtn = document.getElementById("confirmRewriteBtn");
+
       if (editBtn) {
-  editBtn.style.display = "inline-block";
-  editBtn.disabled = false;
-}
+        editBtn.addEventListener("click", function () {
+          if (editModal) {
+            editModal.style.display = "flex";
+          } else {
+            handlePaidEdit();
+          }
+        });
+      }
 
-if (rewriteBtn) {
-  rewriteBtn.style.display = "inline-block";
-  rewriteBtn.disabled = false;
-}
+      if (confirmEditBtn) {
+        confirmEditBtn.addEventListener("click", async function () {
+          if (editModal) editModal.style.display = "none";
+          await handlePaidEdit();
+        });
+      }
 
-if (generateBtn) generateBtn.disabled = true;
-if (clearBtn) clearBtn.disabled = true;
-if (docType) docType.disabled = true;
-}
+      if (rewriteBtn) {
+        rewriteBtn.addEventListener("click", function () {
+          if (rewriteModal) {
+            rewriteModal.style.display = "flex";
+          } else {
+            handleRewrite();
+          }
+        });
+      }
+
+      if (confirmRewriteBtn) {
+        confirmRewriteBtn.addEventListener("click", async function () {
+          if (rewriteModal) rewriteModal.style.display = "none";
+          await handleRewrite();
+        });
+      }
     });
   </script>
 
-
-  <!-- SEND VERIFY MODAL -->
-<!-- SEND VERIFY INFO MODAL -->
-<div id="sendVerifyModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999;">
-  <div style="max-width:520px; margin:100px auto; background:#fff; border-radius:20px; padding:24px; position:relative;">
-
-    <button id="closeSendVerifyModal" style="position:absolute; top:10px; right:10px; border:none; background:#eee; padding:6px 10px; border-radius:8px; cursor:pointer;">
-      ✕
-    </button>
-
-    <div style="margin-bottom:10px;">
-      <span style="background:#28c76f; color:#fff; padding:4px 10px; border-radius:999px; font-size:11px; font-weight:700;">
-        NEW
-      </span>
+  <div id="sendVerifyModal" class="modal-overlay">
+    <div class="modal-box">
+      <button id="closeSendVerifyModal" style="position:absolute; top:10px; right:10px; border:none; background:#eee; padding:6px 10px; border-radius:8px; cursor:pointer;">✕</button>
+      <div style="margin-bottom:10px;">
+        <span style="background:#28c76f; color:#fff; padding:4px 10px; border-radius:999px; font-size:11px; font-weight:700;">
+          NEW
+        </span>
+      </div>
+      <h3>Send Verify™</h3>
+      <p>Send Verify™ allows you to move your completed document into a verified delivery workflow.</p>
+      <p><strong>Best use for credit dispute letters.</strong></p>
+      <p>Verification number, structured delivery workflow, downloadable receipt, and document record copy.</p>
+      <p><strong>Price: $7.99 per document</strong></p>
+      <p style="font-size:14px; color:#555;">Available after your document has been purchased and retrieved.</p>
     </div>
-
-    <h2>Send Verify™</h2>
-    <p>Send Verify™ allows you to move your completed document into a verified delivery workflow.</p>
-    <p><strong>Best use for credit dispute letters.</strong></p>
-
-    <ul>
-      <li>Verification number</li>
-      <li>Structured delivery workflow</li>
-      <li>Downloadable receipt (PDF)</li>
-      <li>Document record copy</li>
-    </ul>
-
-    <p><strong>Price: $7.99 per document</strong></p>
-    <p style="font-size:14px; color:#555;">Available after your document has been purchased and retrieved.</p>
-
   </div>
-</div>
 
-<!-- CONFIRM VERIFY MODAL -->
-<!-- SEND VERIFY INFO MODAL -->
-<!-- SEND VERIFY INFO MODAL -->
-<div id="sendVerifyModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999;">
-  <div style="max-width:520px; margin:100px auto; background:#fff; border-radius:20px; padding:24px;">
-    <button id="closeSendVerifyModal">✕</button>
-    <h2>Send Verify™</h2>
-    <p><strong>Best use for credit dispute letters.</strong></p>
-    <p>Verified delivery workflow with receipt.</p>
-    <p><strong>$7.99 per document</strong></p>
+  <div id="confirmVerifyModal" class="modal-overlay">
+    <div class="modal-box">
+      <button id="closeConfirmVerifyModal" style="position:absolute; top:10px; right:10px; border:none; background:#eee; padding:6px 10px; border-radius:8px; cursor:pointer;">✕</button>
+      <h3>Send with Verify™</h3>
+      <p>This will send your document with verified delivery for <strong>$7.99</strong>.</p>
+      <button id="continueVerifyPayment">Continue</button>
+      <button id="cancelVerifyPayment" class="btn-secondary" style="margin-left:10px;">Cancel</button>
+    </div>
   </div>
-</div>
 
-<!-- CONFIRM VERIFY MODAL -->
-<div id="confirmVerifyModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999;">
-  <div style="max-width:520px; margin:100px auto; background:#fff; border-radius:20px; padding:24px;">
-    <button id="closeConfirmVerifyModal">✕</button>
-    <h2>Send with Verify™</h2>
-    <p>This will send your document with verified delivery for <strong>$7.99</strong>.</p>
-
-    <button id="continueVerifyPayment">Continue</button>
-    <button id="cancelVerifyPayment">Cancel</button>
+  <div id="editModal" class="modal-overlay">
+    <div class="modal-box" style="position:relative;">
+      <button id="closeEditModal" style="position:absolute; top:10px; right:10px; border:none; background:#eee; padding:6px 10px; border-radius:8px; cursor:pointer;">✕</button>
+      <h3>Edit Document</h3>
+      <p>
+        You have <strong>2 edit uses</strong> to update your document.
+        <br><br>
+        You may edit personal and document information such as name, address, amount, and recipient.
+        <br><br>
+        Once your edits are used, you must download your document.
+      </p>
+      <button id="confirmEditBtn">Continue</button>
+    </div>
   </div>
-</div>
 
-<script>
-document.getElementById("sendVerifyInfoLink")?.addEventListener("click", function(e){
-  e.preventDefault();
-  document.getElementById("sendVerifyModal").style.display = "block";
-});
-
-document.getElementById("closeSendVerifyModal")?.addEventListener("click", function(){
-  document.getElementById("sendVerifyModal").style.display = "none";
-});
-
-document.getElementById("verifiedSendBtn")?.addEventListener("click", function () {
-  const content = document.getElementById("previewContent").textContent || "";
-  const type = document.getElementById("docType").value || "";
-
-  localStorage.setItem("verified_send_document", content);
-  localStorage.setItem("verified_send_doc_type", type);
-
-  document.getElementById("confirmVerifyModal").style.display = "block";
-});
-
-document.getElementById("closeConfirmVerifyModal")?.addEventListener("click", function(){
-  document.getElementById("confirmVerifyModal").style.display = "none";
-});
-
-document.getElementById("cancelVerifyPayment")?.addEventListener("click", function(){
-  document.getElementById("confirmVerifyModal").style.display = "none";
-});
-
-document.getElementById("continueVerifyPayment")?.addEventListener("click", function(){
-  window.location.href = "https://buy.stripe.com/eVqcN4erVg7f9JacJb3ks0k";
-});
-  window.addEventListener("DOMContentLoaded", function () {
-  const paidUnlocked = localStorage.getItem("formatflow_paid_unlocked");
-
-  if (paidUnlocked === "true") {
-    const previewPaper = document.getElementById("previewPaper");
-    const downloadTools = document.getElementById("downloadTools");
-
-    if (previewPaper) previewPaper.classList.remove("locked");
-    if (downloadTools) downloadTools.style.display = "block";
-  }
-});
-
-
-  window.addEventListener("DOMContentLoaded", function () {
-  const sessionComplete = localStorage.getItem("formatflow_session_complete");
-
-  if (sessionComplete === "true") {
-    const successBanner = document.getElementById("successBanner");
-
-    if (successBanner) {
-      successBanner.innerText = "Thank you for your purchase. Your document session has been completed.";
-      successBanner.style.display = "block";
-    }
-
-    setTimeout(() => {
-      window.location.href = "index.html";
-    }, 2000);
-  }
-});
- 
-
-    // 🔥 EDIT MODAL CONTROL
-if (editBtn && editModal) {
-  editBtn.addEventListener("click", function () {
-    editModal.style.display = "flex";
-  });
-}
-
-if (confirmEditBtn && editModal) {
-  confirmEditBtn.addEventListener("click", async function () {
-    editModal.style.display = "none";
-    await handlePaidEdit();
-  });
-}
-
-// 🔥 REWRITE MODAL CONTROL
-if (rewriteBtn && rewriteModal) {
-  rewriteBtn.addEventListener("click", function () {
-    rewriteModal.style.display = "flex";
-  });
-}
-
-if (confirmRewriteBtn && rewriteModal) {
-  confirmRewriteBtn.addEventListener("click", async function () {
-    rewriteModal.style.display = "none";
-    await handleRewrite(); // make sure this matches your actual rewrite function
-  });
-}
-
-  function completeDocumentSession() {
-  if (successBanner) {
-    successBanner.innerText = "Thank you for your purchase. Your document session is now complete.";
-    successBanner.style.display = "block";
-  }
-
-  localStorage.setItem("formatflow_session_complete", "true");
-
- setTimeout(() => {
-  window.location.href = "index.html";
-}, 5000);
-}
-
-  function completeDocumentSession() {
-  if (successBanner) {
-    successBanner.innerText = "Thank you for your purchase. Your document session is now complete.";
-    successBanner.style.display = "block";
-  }
-
-  localStorage.setItem("formatflow_session_complete", "true");
-
-  setTimeout(() => {
-    window.location.href = "index.html";
-  }, 5000);
-}
-
-window.addEventListener("DOMContentLoaded", function () {
-  const editModal = document.getElementById("editModal");
-  const rewriteModal = document.getElementById("rewriteModal");
-  const confirmEditBtn = document.getElementById("confirmEditBtn");
-  const confirmRewriteBtn = document.getElementById("confirmRewriteBtn");
-
-  if (editBtn && editModal) {
-    editBtn.addEventListener("click", function () {
-      editModal.style.display = "flex";
-    });
-  }
-
-  if (confirmEditBtn && editModal) {
-    confirmEditBtn.addEventListener("click", async function () {
-      editModal.style.display = "none";
-      await handlePaidEdit();
-    });
-  }
-
-  if (rewriteBtn && rewriteModal) {
-    rewriteBtn.addEventListener("click", function () {
-      rewriteModal.style.display = "flex";
-    });
-  }
-
-  if (confirmRewriteBtn && rewriteModal) {
-    confirmRewriteBtn.addEventListener("click", function () {
-      rewriteModal.style.display = "none";
-      rewriteBtn.click();
-    });
-  }
-});
-</script>
-
-  <!-- EDIT MODAL -->
-<div id="editModal" class="modal-overlay">
-  <div class="modal-box">
-    <h3>Edit Document</h3>
-    <p>
-      You have <strong>2 edit uses</strong> to update your document.
-      <br><br>
-      You may edit personal and document information such as name, address, amount, and recipient.
-      <br><br>
-      Once your edits are used, you must download your document.
-    </p>
-    <button id="confirmEditBtn">Continue</button>
+  <div id="rewriteModal" class="modal-overlay">
+    <div class="modal-box" style="position:relative;">
+      <button id="closeRewriteModal" style="position:absolute; top:10px; right:10px; border:none; background:#eee; padding:6px 10px; border-radius:8px; cursor:pointer;">✕</button>
+      <h3>Rewrite Document</h3>
+      <p>
+        You have <strong>2 rewrites</strong> available.
+        <br><br>
+        Rewrite improves wording and professionalism only.
+        <br><br>
+        It does <strong>not</strong> change personal information.
+        <br><br>
+        After rewrites are used, you must download your document.
+      </p>
+      <button id="confirmRewriteBtn">Continue</button>
+    </div>
   </div>
-</div>
 
-<!-- REWRITE MODAL -->
-<div id="rewriteModal" class="modal-overlay">
-  <div class="modal-box">
-    <h3>Rewrite Document</h3>
-    <p>
-      You have <strong>2 rewrites</strong> available.
-      <br><br>
-      Rewrite improves wording and professionalism only.
-      <br><br>
-      It does <strong>NOT</strong> change personal information.
-      <br><br>
-      After rewrites are used, you must download your document.
-    </p>
-    <button id="confirmRewriteBtn">Continue</button>
-  </div>
-</div>
 </body>
 </html>
