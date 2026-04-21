@@ -691,8 +691,7 @@ After reviewing the matter carefully, I believe the information being reported i
 
 Please investigate this matter and provide any available documentation supporting the accuracy of the reporting. If the information cannot be properly verified, I request that it be corrected or removed as appropriate.
 
-Additional context:
-${data.detailsField}
+${optionalSection("Supporting Details:", detailsField.value)}
 
 Please provide written confirmation of your findings and any updates made.
 
@@ -747,8 +746,7 @@ ${data.recipientName}
 - Supported business goals through effective communication, organization, and follow-through
 - Helped improve workflow, accuracy, and overall service quality where applicable
 
-ADDITIONAL DETAILS
-${data.detailsField}
+${optionalSection("Supporting Details:", detailsField.value)}
 
 CORE SKILLS
 
@@ -904,9 +902,7 @@ I am writing to explain my current financial hardship and respectfully request c
 
 At this time, I have experienced circumstances that have made it difficult to meet my financial obligations as originally expected.
 
-Additional hardship details:
-${data.detailsField}
-
+${optionalSection("Supporting Details:", detailsField.value)}
 Amount or obligation involved:
 ${data.amountField}
 
@@ -982,30 +978,67 @@ Client`;
     }
 
     function savePendingDocument(content, selectedDocType) {
-      const pendingDoc = {
-        content: content || "",
-        docType: selectedDocType || "",
-        savedAt: new Date().toISOString()
-      };
-      localStorage.setItem("formatflow_pending_document", JSON.stringify(pendingDoc));
+  const pendingDoc = {
+    content: content || "",
+    docType: selectedDocType || "",
+    savedAt: new Date().toISOString(),
+    fields: {
+      fullName: fullName.value || "",
+      address: address.value || "",
+      cityStateZip: cityStateZip.value || "",
+      dateField: dateField.value || "",
+      recipientName: recipientName.value || "",
+      recipientAddress: recipientAddress.value || "",
+      subjectField: subjectField.value || "",
+      amountField: amountField.value || "",
+      detailsField: detailsField.value || ""
+    }
+  };
+
+  localStorage.setItem("formatflow_pending_document", JSON.stringify(pendingDoc));
+}
+
+   function restorePendingDocument() {
+  const saved = localStorage.getItem("formatflow_pending_document");
+  if (!saved) return;
+
+  try {
+    const data = JSON.parse(saved);
+
+    if (data.content) {
+      previewContent.textContent = data.content;
+      previewPaper.classList.remove("locked");
+      previewTitle.textContent = docTitles[data.docType] || "Restored Document";
+      previewStatus.textContent = "Restored after payment";
     }
 
-    function restorePendingDocument() {
-      const saved = localStorage.getItem("formatflow_pending_document");
-      if (!saved) return;
-
-      try {
-        const data = JSON.parse(saved);
-        if (data.content) {
-          previewContent.textContent = data.content;
-          previewPaper.classList.remove("locked");
-          previewTitle.textContent = docTitles[data.docType] || "Restored Document";
-          previewStatus.textContent = "Restored after payment";
-        }
-      } catch (error) {
-        console.error("Could not restore pending document:", error);
-      }
+    if (data.docType) {
+      docType.value = data.docType;
     }
+
+    if (data.fields) {
+      fullName.value = data.fields.fullName || "";
+      address.value = data.fields.address || "";
+      cityStateZip.value = data.fields.cityStateZip || "";
+      dateField.value = data.fields.dateField || "";
+      recipientName.value = data.fields.recipientName || "";
+      recipientAddress.value = data.fields.recipientAddress || "";
+      subjectField.value = data.fields.subjectField || "";
+      amountField.value = data.fields.amountField || "";
+      detailsField.value = data.fields.detailsField || "";
+    }
+  } catch (error) {
+    console.error("Could not restore pending document:", error);
+  }
+}
+
+    function optionalSection(title, value) {
+  const clean = (value || "").trim();
+  return clean ? `
+
+${title}
+${clean}` : "";
+}
 
        function updatePaidDocument() {
   const builtDoc = buildDocument();
@@ -1144,7 +1177,7 @@ if (rewriteBtn) {
     const previewPaper = document.getElementById("previewPaper");
     if (!previewPaper) return;
 
-    const currentText = previewPaper.innerText;
+    const currentText = previewContent.textContent;
 
     try {
       rewriteBtn.disabled = true;
@@ -1164,7 +1197,7 @@ if (rewriteBtn) {
       const data = await response.json();
 
       if (data.output) {
-        previewPaper.innerText = data.output;
+        previewContent.textContent = data.output;
         rewriteCount++;
 
         if (rewriteCount === 1) {
