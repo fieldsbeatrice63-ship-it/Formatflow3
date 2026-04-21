@@ -1117,14 +1117,56 @@ ${documentText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
   printableWindow.print();
 }
 
-    generateBtn.addEventListener("click", function () {
-      const builtDoc = buildDocument();
+   generateBtn.addEventListener("click", async function () {
+  const sourceContent = `
+Document Type: ${docTitles[docType.value] || docType.value}
+
+Full Name: ${fullName.value || ""}
+Address: ${address.value || ""}
+City, State, Zip: ${cityStateZip.value || ""}
+Date: ${dateField.value || ""}
+Recipient / Company Name: ${recipientName.value || ""}
+Recipient Address: ${recipientAddress.value || ""}
+Subject / Position / Account / Property: ${subjectField.value || ""}
+Amount / Rent / Income / Funding: ${amountField.value || ""}
+Details: ${detailsField.value || ""}
+  `.trim();
+
+  try {
+    generateBtn.disabled = true;
+    generateBtn.textContent = "Generating...";
+
+    const response = await fetch("https://format-flow-backend.onrender.com/api/generate-document", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        content: sourceContent,
+        docType: docType.value,
+       template: docType.value
+      })
+    });
+
+    const data = await response.json();
+
+    if (data.output) {
       previewTitle.textContent = docTitles[docType.value] || "Document Preview";
       previewStatus.textContent = "Preview ready";
-      previewContent.textContent = builtDoc;
+      previewContent.textContent = data.output;
       previewPaper.classList.add("locked");
-      savePendingDocument(builtDoc, docType.value);
-    });
+      savePendingDocument(data.output, docType.value);
+    } else {
+      alert("No document was generated.");
+    }
+  } catch (error) {
+    console.error("Generate error:", error);
+    alert("There was an error generating your document.");
+  } finally {
+    generateBtn.disabled = false;
+    generateBtn.textContent = "Generate Preview";
+  }
+});
 
     clearBtn.addEventListener("click", function () {
       fullName.value = "";
