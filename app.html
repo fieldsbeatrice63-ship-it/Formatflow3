@@ -1464,6 +1464,21 @@ document.getElementById("continueVerifyPayment")?.addEventListener("click", func
     }, 2000);
   }
 });
+  window.addEventListener("DOMContentLoaded", function () {
+  const editBtn = document.getElementById("editBtn");
+
+  if (editBtn) {
+    editBtn.addEventListener("click", async function () {
+      console.log("Edit button clicked"); // debug
+
+      if (typeof handlePaidEdit === "function") {
+        await handlePaidEdit();
+      } else {
+        console.error("handlePaidEdit not found");
+      }
+    });
+  }
+});
 
   function completeDocumentSession() {
   if (successBanner) {
