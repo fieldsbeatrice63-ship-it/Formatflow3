@@ -1130,6 +1130,61 @@ printDocBtn.addEventListener("click", function () {
   });
 }
 
+    let rewriteCount = 0;
+const MAX_REWRITES = 2;
+
+if (rewriteBtn) {
+  rewriteBtn.addEventListener("click", async function () {
+
+    if (rewriteCount >= MAX_REWRITES) {
+      alert("You have reached your rewrite limit. Please download your document.");
+      return;
+    }
+
+    const previewPaper = document.getElementById("previewPaper");
+    if (!previewPaper) return;
+
+    const currentText = previewPaper.innerText;
+
+    try {
+      rewriteBtn.disabled = true;
+      rewriteBtn.textContent = "Rewriting...";
+
+      const response = await fetch("https://format-flow-backend.onrender.com/api/rewrite-document", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          content: currentText,
+          type: "professional"
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.output) {
+        previewPaper.innerText = data.output;
+        rewriteCount++;
+
+        if (rewriteCount === 1) {
+          alert("Rewrite complete. You have 1 rewrite remaining.");
+        } else {
+          alert("Final rewrite used. Please download your document.");
+          rewriteBtn.disabled = true;
+        }
+      }
+
+    } catch (error) {
+      console.error("Rewrite error:", error);
+      alert("Error rewriting document.");
+    }
+
+    rewriteBtn.textContent = "Rewrite";
+    rewriteBtn.disabled = false;
+  });
+}
+
  verifiedSendBtn.addEventListener("click", function () {
   const docContent = previewContent.textContent || "";
   localStorage.setItem("verified_send_document", docContent);
