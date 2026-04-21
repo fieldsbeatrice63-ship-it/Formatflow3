@@ -1299,14 +1299,30 @@ printDocBtn.addEventListener("click", function () {
 });
 }
 
-    let rewriteCount = 0;
-const MAX_REWRITES = 2;
+   
 
 let rewriteCount = 0;
 const MAX_REWRITES = 2;
+let rewriteConfirmed = false;
 
 if (rewriteBtn) {
   rewriteBtn.addEventListener("click", async function () {
+    const rewriteModal = document.getElementById("rewriteModal");
+    const confirmRewriteBtn = document.getElementById("confirmRewriteBtn");
+
+    if (!rewriteConfirmed && rewriteModal && confirmRewriteBtn) {
+      rewriteModal.style.display = "flex";
+
+      confirmRewriteBtn.onclick = async function () {
+        rewriteModal.style.display = "none";
+        rewriteConfirmed = true;
+        rewriteBtn.click();
+      };
+      return;
+    }
+
+    rewriteConfirmed = false;
+
     if (rewriteCount >= MAX_REWRITES) {
       if (docNote) {
         docNote.textContent = "You have reached your rewrite limit. Please download your document.";
@@ -1363,7 +1379,6 @@ if (rewriteBtn) {
       }
     } catch (error) {
       console.error("Rewrite error:", error);
-
       if (docNote) {
         docNote.textContent = "There was an error rewriting your document. Please try again.";
       }
@@ -1371,7 +1386,6 @@ if (rewriteBtn) {
       if (rewriteCount < MAX_REWRITES) {
         rewriteBtn.disabled = false;
       }
-
       rewriteBtn.textContent = "Rewrite";
     }
   });
@@ -1550,28 +1564,7 @@ document.getElementById("continueVerifyPayment")?.addEventListener("click", func
     }, 2000);
   }
 });
-  window.addEventListener("DOMContentLoaded", function () {
-
-const editModal = document.getElementById("editModal");
-const rewriteModal = document.getElementById("rewriteModal");
-
-const confirmEditBtn = document.getElementById("confirmEditBtn");
-const confirmRewriteBtn = document.getElementById("confirmRewriteBtn");
-    
-  const editBtn = document.getElementById("editBtn");
-
- if (editBtn) {
-  editBtn.addEventListener("click", function () {
-    editModal.style.display = "flex";
-  });
-}
-
-if (confirmEditBtn) {
-  confirmEditBtn.addEventListener("click", async function () {
-    editModal.style.display = "none";
-    await handlePaidEdit();
-  });
-}
+ 
 
     // 🔥 EDIT MODAL CONTROL
 if (editBtn && editModal) {
@@ -1613,6 +1606,52 @@ if (confirmRewriteBtn && rewriteModal) {
   window.location.href = "index.html";
 }, 5000);
 }
+
+  function completeDocumentSession() {
+  if (successBanner) {
+    successBanner.innerText = "Thank you for your purchase. Your document session is now complete.";
+    successBanner.style.display = "block";
+  }
+
+  localStorage.setItem("formatflow_session_complete", "true");
+
+  setTimeout(() => {
+    window.location.href = "index.html";
+  }, 5000);
+}
+
+window.addEventListener("DOMContentLoaded", function () {
+  const editModal = document.getElementById("editModal");
+  const rewriteModal = document.getElementById("rewriteModal");
+  const confirmEditBtn = document.getElementById("confirmEditBtn");
+  const confirmRewriteBtn = document.getElementById("confirmRewriteBtn");
+
+  if (editBtn && editModal) {
+    editBtn.addEventListener("click", function () {
+      editModal.style.display = "flex";
+    });
+  }
+
+  if (confirmEditBtn && editModal) {
+    confirmEditBtn.addEventListener("click", async function () {
+      editModal.style.display = "none";
+      await handlePaidEdit();
+    });
+  }
+
+  if (rewriteBtn && rewriteModal) {
+    rewriteBtn.addEventListener("click", function () {
+      rewriteModal.style.display = "flex";
+    });
+  }
+
+  if (confirmRewriteBtn && rewriteModal) {
+    confirmRewriteBtn.addEventListener("click", function () {
+      rewriteModal.style.display = "none";
+      rewriteBtn.click();
+    });
+  }
+});
 </script>
 
   <!-- EDIT MODAL -->
