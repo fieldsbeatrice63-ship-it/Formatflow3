@@ -1040,52 +1040,79 @@ ${title}
 ${clean}` : "";
 }
 
-       function updatePaidDocument() {
-  const builtDoc = buildDocument();
+       async function updatePaidDocument() {
+  const sourceContent = `
+Document Type: ${docTitles[docType.value] || docType.value}
 
-  previewTitle.textContent = docTitles[docType.value] || "Document Preview";
-  previewStatus.textContent = "Updated after payment";
-  previewContent.textContent = builtDoc;
-  previewPaper.classList.remove("locked");
+Full Name: ${fullName.value || ""}
+Address: ${address.value || ""}
+City, State, Zip: ${cityStateZip.value || ""}
+Date: ${dateField.value || ""}
+Recipient / Company Name: ${recipientName.value || ""}
+Recipient Address: ${recipientAddress.value || ""}
+Subject / Position / Account / Property: ${subjectField.value || ""}
+Amount / Rent / Income / Funding: ${amountField.value || ""}
+Details: ${detailsField.value || ""}
+  `.trim();
 
-  localStorage.setItem("formatflow_pending_document", JSON.stringify({
-    content: builtDoc,
-    docType: docType.value,
-    savedAt: new Date().toISOString()
-  }));
-}
+  try {
+    editBtn.disabled = true;
+    editBtn.textContent = "Updating...";
 
-    function handlePaidEdit() {
-  let editCount = parseInt(localStorage.getItem("formatflow_edit_count") || "0", 10);
+    const response = await fetch("https://format-flow-backend.onrender.com/api/generate-document", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        content: sourceContent,
+        docType: docType.value,
+        template: docType.value
+      })
+    });
 
-  if (editCount >= 2) {
-    if (docNote) {
-      docNote.textContent = "You have reached your edit limit. Please download your document or return to the homepage to generate a new document.";
+    const data = await response.json();
+
+    if (data.output) {
+      previewContent.textContent = data.output;
+      previewStatus.textContent = "Updated after payment";
+      previewPaper.classList.remove("locked");
+
+      savePendingDocument(data.output, docType.value);
     }
-    if (editBtn) {
-      editBtn.disabled = true;
+  } catch (error) {
+    console.error("Edit error:", error);
+    if (docNote) {
+      docNote.textContent = "There was an error updating your document.";
+    }
+  } finally {
+    editBtn.textContent = "Edit";
+  }
+}
+    async function handlePaidEdit() {
+  if (editCount >= MAX_EDITS) {
+    if (docNote) {
+      docNote.textContent = "You have reached your edit limit. Please download your document.";
     }
     return;
   }
 
-  updatePaidDocument();
+  await updatePaidDocument();
 
   editCount += 1;
   localStorage.setItem("formatflow_edit_count", String(editCount));
 
-  if (docNote) {
-    if (editCount === 1) {
-      docNote.textContent = "Your document has been updated. You have 1 edit remaining.";
-    } else {
-      docNote.textContent = "Your final edit has been used. Please download your document. Changes will not be saved beyond this session.";
+  if (editCount >= MAX_EDITS) {
+    editBtn.disabled = true;
+    if (docNote) {
+      docNote.textContent = "Your final edit has been used. Please download your document.";
+    }
+  } else {
+    if (docNote) {
+      docNote.textContent = `Edit ${editCount} of ${MAX_EDITS} applied.`;
     }
   }
-
-  if (editCount >= 2 && editBtn) {
-    editBtn.disabled = true;
-  }
 }
-
    function openDocumentPrintWindow() {
   const documentText = previewContent.textContent || "";
   const printableWindow = window.open("", "_blank");
