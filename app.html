@@ -1198,6 +1198,9 @@ if (rewriteBtn) {
 
       if (data.output) {
         previewContent.textContent = data.output;
+        if (editBtn) {
+  editBtn.disabled = true;
+}
         rewriteCount++;
 
         if (rewriteCount === 1) {
@@ -1257,11 +1260,19 @@ if (continueVerifyPayment) {
   restorePendingDocument();
        localStorage.setItem("formatflow_paid_unlocked", "true");
        localStorage.setItem("formatflow_edit_count", "0");
-       if (editBtn) editBtn.style.display = "inline-block";
-if (rewriteBtn) rewriteBtn.style.display = "inline-block";
-       
+      if (editBtn) {
+  editBtn.style.display = "inline-block";
+  editBtn.disabled = false;
+}
+
+if (rewriteBtn) {
+  rewriteBtn.style.display = "inline-block";
+  rewriteBtn.disabled = false;
+}
+
 if (generateBtn) generateBtn.disabled = true;
 if (clearBtn) clearBtn.disabled = true;
+if (docType) docType.disabled = true;
 }
     });
   </script>
