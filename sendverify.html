@@ -151,6 +151,11 @@
       margin-bottom: 16px;
     }
 
+    input[readonly] {
+      background: #f8fbff;
+      color: #355171;
+    }
+
     textarea {
       min-height: 96px;
       resize: vertical;
@@ -470,67 +475,66 @@
     <div class="panel">
       <h2 class="section-title">Verified Delivery Setup</h2>
       <p class="section-subtitle">
-        Complete the fields below before sending. This page is designed to help organize sender information,
-        delivery details, and confirmation records in one place.
+        Review the transferred information below. The document itself is finalized. Only the Cover Note / Delivery Notes section is applied through Edit on this page.
       </p>
 
       <div class="field-row">
         <div>
           <label for="senderName">Full Name</label>
-          <input id="senderName" type="text" placeholder="Enter your full name" />
+          <input id="senderName" type="text" readonly />
         </div>
         <div>
           <label for="senderEmail">Email Address</label>
-          <input id="senderEmail" type="email" placeholder="Enter your email address" />
+          <input id="senderEmail" type="text" readonly />
         </div>
       </div>
 
       <div class="field-row">
         <div>
           <label for="senderPhone">Phone Number</label>
-          <input id="senderPhone" type="text" placeholder="Enter your phone number" />
+          <input id="senderPhone" type="text" readonly />
         </div>
         <div>
           <label for="sendDate">Date</label>
-          <input id="sendDate" type="text" placeholder="MM/DD/YYYY" />
+          <input id="sendDate" type="text" readonly />
         </div>
       </div>
 
       <div class="field-row">
         <div>
           <label for="senderAddress">Mailing Address</label>
-          <input id="senderAddress" type="text" placeholder="Enter your mailing address" />
+          <input id="senderAddress" type="text" readonly />
         </div>
         <div>
           <label for="senderCityStateZip">City, State, Zip</label>
-          <input id="senderCityStateZip" type="text" placeholder="City, State, Zip" />
+          <input id="senderCityStateZip" type="text" readonly />
         </div>
       </div>
 
       <div class="field-row">
         <div>
           <label for="recipientCompany">Recipient / Bureau / Company</label>
-          <input id="recipientCompany" type="text" placeholder="Recipient, bureau, company, or department" />
+          <input id="recipientCompany" type="text" readonly />
         </div>
         <div>
           <label for="recipientEmail">Delivery Email / Endpoint</label>
-          <input id="recipientEmail" type="text" placeholder="Recipient email or delivery endpoint" />
+          <input id="recipientEmail" type="text" readonly />
         </div>
       </div>
 
       <div class="field-row">
         <div>
           <label for="recipientAddress">Recipient Address</label>
-          <input id="recipientAddress" type="text" placeholder="Recipient mailing address" />
+          <input id="recipientAddress" type="text" readonly />
         </div>
         <div>
           <label for="referenceNumber">Reference / Account Number</label>
-          <input id="referenceNumber" type="text" placeholder="Reference or account number" />
+          <input id="referenceNumber" type="text" readonly />
         </div>
       </div>
 
       <label for="deliveryNotes">Cover Note / Delivery Notes</label>
-      <textarea id="deliveryNotes" placeholder="Add a short cover note, delivery instruction, or submission comment to accompany this document. This note is separate from the main document itself."></textarea>
+      <textarea id="deliveryNotes" placeholder="Add a short cover note, delivery instruction, or submission comment. Click Edit to apply it before sending."></textarea>
 
       <div class="check-wrap">
         <label>
@@ -550,7 +554,7 @@
       </div>
 
       <div class="doc-note" id="docNote">
-        Your finalized document has been transferred. Only personal details may be adjusted here. The main document wording stays the same.
+        Your finalized document has been transferred. If you add a cover note, you must click Edit to apply it before sending.
       </div>
 
       <div class="button-row">
@@ -623,15 +627,13 @@
   <div id="editVerifyModal" class="modal-overlay">
     <div class="modal-box">
       <button id="closeEditVerifyModal" class="modal-close">✕</button>
-      <h3>Edit Verified Document</h3>
+      <h3>Apply Cover Note</h3>
       <p>
-        You have <strong>3 edits</strong> available.
+        You have <strong>3 note edits</strong> available.
         <br><br>
-        You may update personal information only.
+        Edit on this page applies your Cover Note / Delivery Notes only.
         <br><br>
-        The document wording remains unchanged.
-        <br><br>
-        After edits are used, proceed with verified delivery.
+        The main document remains unchanged.
       </p>
       <button id="confirmEditVerifyBtn" class="modal-action">Continue</button>
     </div>
@@ -692,6 +694,11 @@
       service_agreement: "Simple Service Agreement"
     };
 
+    let originalDocumentContent = "";
+    let originalDocumentType = "";
+    let appliedDeliveryNote = "";
+    let verifyEditCount = 0;
+
     function safeValue(value, fallback = "[Not Provided]") {
       return value && value.trim() ? value.trim() : fallback;
     }
@@ -707,12 +714,28 @@
       return new Date().toLocaleString();
     }
 
+    function populateVerifyFieldsFromGenerator(pendingFields) {
+      senderName.value = pendingFields.fullName || "";
+      senderAddress.value = pendingFields.address || "";
+      senderCityStateZip.value = pendingFields.cityStateZip || "";
+      sendDate.value = pendingFields.dateField || "";
+      recipientCompany.value = pendingFields.recipientName || "";
+      recipientAddress.value = pendingFields.recipientAddress || "";
+      referenceNumber.value = pendingFields.subjectField || "";
+
+      senderEmail.value = "";
+      senderPhone.value = "";
+      recipientEmail.value = "";
+      deliveryNotes.value = "";
+    }
+
     function loadTransferDocument() {
       const verifiedDoc = localStorage.getItem("verified_send_document");
       const verifiedDocType = localStorage.getItem("verified_send_doc_type");
 
       let fallbackContent = "";
       let fallbackDocType = "";
+      let fallbackFields = {};
 
       const pendingDocRaw = localStorage.getItem("formatflow_pending_document");
       if (pendingDocRaw) {
@@ -720,23 +743,28 @@
           const pendingDoc = JSON.parse(pendingDocRaw);
           fallbackContent = pendingDoc.content || "";
           fallbackDocType = pendingDoc.docType || "";
+          fallbackFields = pendingDoc.fields || {};
         } catch (error) {
           console.error("Could not read pending document:", error);
         }
       }
 
-      const finalContent = verifiedDoc || fallbackContent;
-      const finalDocType = verifiedDocType || fallbackDocType;
+      originalDocumentContent = verifiedDoc || fallbackContent || "";
+      originalDocumentType = verifiedDocType || fallbackDocType || "";
 
-      if (finalContent && finalContent.trim()) {
-        previewContent.textContent = finalContent;
+      if (fallbackFields && Object.keys(fallbackFields).length > 0) {
+        populateVerifyFieldsFromGenerator(fallbackFields);
+      }
+
+      if (originalDocumentContent.trim()) {
+        previewContent.textContent = originalDocumentContent;
         previewStatus.textContent = "Document loaded for verified delivery";
-        previewTitle.textContent = finalDocType
-          ? (docTitles[finalDocType] || "Document Ready to Send")
+        previewTitle.textContent = originalDocumentType
+          ? (docTitles[originalDocumentType] || "Document Ready to Send")
           : "Document Ready to Send";
 
         if (docNote) {
-          docNote.textContent = "Your finalized document has been transferred. Only personal details may be adjusted here. The main document wording stays the same.";
+          docNote.textContent = "Your finalized document has been transferred. If you add a cover note, you must click Edit to apply it before sending.";
         }
       } else {
         previewContent.textContent = "No transferred document was found. Please return to the generator and retrieve your document first.";
@@ -748,76 +776,51 @@
       }
     }
 
-    function saveVerifyFormData() {
-      const verifyFormData = {
-        senderName: senderName.value || "",
-        senderEmail: senderEmail.value || "",
-        senderPhone: senderPhone.value || "",
-        sendDate: sendDate.value || "",
-        senderAddress: senderAddress.value || "",
-        senderCityStateZip: senderCityStateZip.value || "",
-        recipientCompany: recipientCompany.value || "",
-        recipientEmail: recipientEmail.value || "",
-        recipientAddress: recipientAddress.value || "",
-        referenceNumber: referenceNumber.value || "",
-        deliveryNotes: deliveryNotes.value || ""
-      };
+    function buildCoverNotePage(noteText) {
+      return `FORMATFLOW™ VERIFIED DELIVERY COVER NOTE
 
-      localStorage.setItem("verified_delivery_form_data", JSON.stringify(verifyFormData));
+Date:
+${safeValue(sendDate.value)}
+
+Sender:
+${safeValue(senderName.value)}
+${safeValue(senderAddress.value)}
+${safeValue(senderCityStateZip.value)}
+
+Recipient:
+${safeValue(recipientCompany.value)}
+${safeValue(recipientAddress.value)}
+
+Reference:
+${safeValue(referenceNumber.value)}
+
+Delivery Note:
+${noteText}`;
     }
 
-    function restoreVerifyFormData() {
-      const saved = localStorage.getItem("verified_delivery_form_data");
-      if (!saved) return;
+    function buildFinalPackageDocument() {
+      if (appliedDeliveryNote && appliedDeliveryNote.trim()) {
+        return `${buildCoverNotePage(appliedDeliveryNote)}
 
-      try {
-        const data = JSON.parse(saved);
+----------------------------------------
+ATTACHED DOCUMENT
+----------------------------------------
 
-        senderName.value = data.senderName || "";
-        senderEmail.value = data.senderEmail || "";
-        senderPhone.value = data.senderPhone || "";
-        sendDate.value = data.sendDate || "";
-        senderAddress.value = data.senderAddress || "";
-        senderCityStateZip.value = data.senderCityStateZip || "";
-        recipientCompany.value = data.recipientCompany || "";
-        recipientEmail.value = data.recipientEmail || "";
-        recipientAddress.value = data.recipientAddress || "";
-        referenceNumber.value = data.referenceNumber || "";
-        deliveryNotes.value = data.deliveryNotes || "";
-      } catch (error) {
-        console.error("Could not restore verify form data:", error);
+${originalDocumentContent}`;
       }
+
+      return originalDocumentContent;
     }
 
-    function bindVerifyFormAutosave() {
-      const fields = [
-        senderName,
-        senderEmail,
-        senderPhone,
-        sendDate,
-        senderAddress,
-        senderCityStateZip,
-        recipientCompany,
-        recipientEmail,
-        recipientAddress,
-        referenceNumber,
-        deliveryNotes
-      ];
-
-      fields.forEach((field) => {
-        if (field) {
-          field.addEventListener("input", saveVerifyFormData);
-          field.addEventListener("change", saveVerifyFormData);
-        }
-      });
+    function applyDeliveryNoteToPreview() {
+      previewContent.textContent = buildFinalPackageDocument();
+      previewStatus.textContent = "Note applied for verified delivery";
     }
 
     function handleVerifyEdit() {
-      let editCount = parseInt(localStorage.getItem("verify_edit_count") || "0", 10);
-
-      if (editCount >= 3) {
+      if (verifyEditCount >= 3) {
         if (docNote) {
-          docNote.textContent = "You have reached your edit limit. Please proceed with verified delivery.";
+          docNote.textContent = "You have reached your note edit limit. Please proceed with verified delivery.";
         }
         if (editVerifyBtn) {
           editVerifyBtn.disabled = true;
@@ -825,22 +828,32 @@
         return;
       }
 
-      saveVerifyFormData();
+      const noteText = (deliveryNotes.value || "").trim();
 
-      editCount += 1;
-      localStorage.setItem("verify_edit_count", String(editCount));
+      if (!noteText) {
+        if (docNote) {
+          docNote.textContent = "Add a cover note or delivery note before clicking Edit.";
+        }
+        return;
+      }
+
+      appliedDeliveryNote = noteText;
+      verifyEditCount += 1;
+      localStorage.setItem("verify_edit_count", String(verifyEditCount));
+
+      applyDeliveryNoteToPreview();
 
       if (docNote) {
-        if (editCount === 1) {
-          docNote.textContent = "Your verified delivery details have been saved. You have 2 edits remaining.";
-        } else if (editCount === 2) {
-          docNote.textContent = "Your verified delivery details have been saved. You have 1 edit remaining.";
+        if (verifyEditCount === 1) {
+          docNote.textContent = "Your cover note has been applied. You have 2 note edits remaining.";
+        } else if (verifyEditCount === 2) {
+          docNote.textContent = "Your cover note has been updated. You have 1 note edit remaining.";
         } else {
-          docNote.textContent = "Final edit used. Please proceed with verified delivery.";
+          docNote.textContent = "Final note edit used. Please proceed with verified delivery.";
         }
       }
 
-      if (editCount >= 3 && editVerifyBtn) {
+      if (verifyEditCount >= 3 && editVerifyBtn) {
         editVerifyBtn.disabled = true;
       }
     }
@@ -853,18 +866,8 @@
         return false;
       }
 
-      if (!safeValue(senderName.value, "").trim()) {
-        alert("Please enter your full name.");
-        return false;
-      }
-
-      if (!safeValue(senderEmail.value, "").trim()) {
-        alert("Please enter your email address.");
-        return false;
-      }
-
-      if (!safeValue(recipientCompany.value, "").trim()) {
-        alert("Please enter the recipient, bureau, or company.");
+      if ((deliveryNotes.value || "").trim() && (deliveryNotes.value || "").trim() !== appliedDeliveryNote.trim()) {
+        alert("You entered a cover note or delivery note. Please click Edit to apply it before sending.");
         return false;
       }
 
@@ -877,13 +880,11 @@
     }
 
     function buildReceiptObject() {
-      const storedDocType = localStorage.getItem("verified_send_doc_type") || "";
-
       return {
         verificationId: generateVerificationID(),
         status: "Submitted",
         timestamp: formatTimestamp(),
-        docType: docTitles[storedDocType] || "Document",
+        docType: docTitles[originalDocumentType] || "Document",
         sender: safeValue(senderName.value),
         senderEmail: safeValue(senderEmail.value),
         senderPhone: safeValue(senderPhone.value),
@@ -893,8 +894,8 @@
         recipientEmail: safeValue(recipientEmail.value),
         recipientAddress: safeValue(recipientAddress.value),
         referenceNumber: safeValue(referenceNumber.value),
-        deliveryNotes: safeValue(deliveryNotes.value),
-        documentContent: previewContent.textContent || ""
+        deliveryNotes: safeValue(appliedDeliveryNote, "None"),
+        documentContent: buildFinalPackageDocument()
       };
     }
 
@@ -971,9 +972,9 @@ ${data.referenceNumber}
 Delivery Notes:
 ${data.deliveryNotes}
 
-------------------------------
-DOCUMENT CONTENT
-------------------------------
+----------------------------------------
+DOCUMENT PACKAGE
+----------------------------------------
 
 ${data.documentContent}
 `;
@@ -1033,8 +1034,8 @@ ${data.documentContent}
 
     if (downloadDocCopyBtn) {
       downloadDocCopyBtn.addEventListener("click", function () {
-        const savedReceipt = localStorage.getItem("verified_delivery_receipt_data");
         let exportData;
+        const savedReceipt = localStorage.getItem("verified_delivery_receipt_data");
 
         if (savedReceipt) {
           exportData = JSON.parse(savedReceipt);
@@ -1074,26 +1075,16 @@ ${data.documentContent}
     }
 
     window.addEventListener("DOMContentLoaded", function () {
+      localStorage.removeItem("verified_delivery_receipt_data");
+      localStorage.setItem("verify_edit_count", "0");
+      verifyEditCount = 0;
+      appliedDeliveryNote = "";
+
       loadTransferDocument();
-
-localStorage.removeItem("verified_delivery_form_data");
-localStorage.removeItem("verified_delivery_receipt_data");
-localStorage.setItem("verify_edit_count", "0");
-
-bindVerifyFormAutosave();
 
       if (editVerifyBtn) {
         editVerifyBtn.style.display = "inline-block";
         editVerifyBtn.disabled = false;
-      }
-
-      if (sendDate && !sendDate.value) {
-        const today = new Date();
-        const mm = String(today.getMonth() + 1).padStart(2, "0");
-        const dd = String(today.getDate()).padStart(2, "0");
-        const yyyy = today.getFullYear();
-        sendDate.value = `${mm}/${dd}/${yyyy}`;
-        saveVerifyFormData();
       }
     });
   </script>
