@@ -1075,12 +1075,12 @@ ${data.documentContent}
 
     window.addEventListener("DOMContentLoaded", function () {
       loadTransferDocument();
-      restoreVerifyFormData();
-      bindVerifyFormAutosave();
 
-      if (!localStorage.getItem("verify_edit_count")) {
-        localStorage.setItem("verify_edit_count", "0");
-      }
+localStorage.removeItem("verified_delivery_form_data");
+localStorage.removeItem("verified_delivery_receipt_data");
+localStorage.setItem("verify_edit_count", "0");
+
+bindVerifyFormAutosave();
 
       if (editVerifyBtn) {
         editVerifyBtn.style.display = "inline-block";
