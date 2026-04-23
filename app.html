@@ -654,17 +654,23 @@ Choose a document type, complete the form, and click “Generate Preview” to s
     const successBanner = document.getElementById("successBanner");
 
     const docNotes = {
-      credit_dispute: "Use this for disputing inaccurate late payments or questionable reporting tied to a credit account.",
-      debt_validation: "Use this to request validation of a debt from a collection agency and place the burden of proof on the collector.",
-      resume: "Use this to generate a clean, professional resume draft for employment opportunities.",
-      cover_letter: "Use this to build a polished cover letter for a specific position or employer.",
-      lease_agreement: "Use this to create a simple residential lease agreement structure between landlord and tenant.",
-      eviction_response: "Use this to respond to an eviction notice and request time, resolution, or a payment arrangement.",
-      proof_of_income: "Use this to verify employment, self-employment, or general income for housing or application purposes.",
-      hardship_letter: "Use this to explain hardship and request consideration, flexibility, or relief from a creditor or company.",
-      business_funding: "Use this to request funding for business launch, operations, or growth.",
-      service_agreement: "Use this to define services, payment terms, and responsibilities between provider and client."
-    };
+  credit_dispute: "Use this to dispute inaccurate late payments or questionable reporting tied to a credit account.",
+  debt_validation: "Use this to request validation of a debt and confirm the collector’s authority.",
+  resume: "Use this to create a professional resume tailored to your experience and job goals.",
+  cover_letter: "Use this to introduce yourself and highlight your qualifications for a specific job.",
+  lease_agreement: "Use this to outline rental terms between a landlord and tenant.",
+  eviction_response: "Use this to respond to an eviction notice and present your position or defense.",
+  proof_of_income: "Use this to verify your income for applications such as housing or financing.",
+  hardship_letter: "Use this to explain financial hardship and request consideration or assistance.",
+  business_funding: "Use this to request funding for your business with clear financial intent.",
+  service_agreement: "Use this to define terms between two parties for a service being provided.",
+
+  resignation_letter: "Use this to formally notify your employer of your resignation.",
+  child_illness_letter: "Use this to notify a school or employer of a child’s illness or absence.",
+  sick_leave_letter: "Use this to request time off due to medical or health-related reasons.",
+  employment_verification_letter: "Use this to confirm employment status for housing, loans, or verification purposes.",
+  character_reference_letter: "Use this to provide a personal or professional reference for an individual."
+};
 
     const docTitles = {
       credit_dispute: "Credit Dispute Letter",
@@ -1065,6 +1071,9 @@ ${documentText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
 
     window.addEventListener("DOMContentLoaded", function () {
       updateNote();
+      if (docNote && docNotes[docType.value]) {
+  docNote.textContent = docNotes[docType.value];
+}
 
       const params = new URLSearchParams(window.location.search);
       const paymentStatus = params.get("payment");
@@ -1186,7 +1195,7 @@ ${documentText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
       <button id="closeEditModal" style="position:absolute; top:10px; right:10px; border:none; background:#eee; padding:6px 10px; border-radius:8px; cursor:pointer;">✕</button>
       <h3>Edit Document</h3>
       <p>
-        You have <strong>2 edit uses</strong> to update your document.
+        You have <strong>3 edit uses</strong> to update your document.
         <br><br>
         You may edit personal and document information such as name, address, amount, and recipient.
         <br><br>
