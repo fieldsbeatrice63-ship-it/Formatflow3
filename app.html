@@ -673,21 +673,28 @@ Choose a document type, complete the form, and click “Generate Preview” to s
 };
 
     const docTitles = {
-      credit_dispute: "Credit Dispute Letter",
-      debt_validation: "Debt Validation Letter",
-      resume: "Professional Resume",
-      cover_letter: "Job-Specific Cover Letter",
-      lease_agreement: "Residential Lease Agreement",
-      eviction_response: "Eviction Response Letter",
-      proof_of_income: "Proof of Income Letter",
-      hardship_letter: "Financial Hardship Letter",
-      business_funding: "Business Funding Request Letter",
-      service_agreement: "Simple Service Agreement"
-    };
+  credit_dispute: "Credit Dispute Letter",
+  debt_validation: "Debt Validation Letter",
+  resume: "Professional Resume",
+  cover_letter: "Job-Specific Cover Letter",
+  lease_agreement: "Residential Lease Agreement",
+  eviction_response: "Eviction Response Letter",
+  proof_of_income: "Proof of Income Letter",
+  hardship_letter: "Financial Hardship Letter",
+  business_funding: "Business Funding Request Letter",
+  service_agreement: "Simple Service Agreement",
 
-    function updateNote() {
-      docNote.textContent = docNotes[docType.value] || "Complete the form to continue.";
-    }
+  resignation_letter: "Resignation Letter",
+  child_illness_letter: "Child Illness / Absence Letter",
+  sick_leave_letter: "Medical Leave / Sick Leave Letter",
+  employment_verification_letter: "Employment Verification Letter",
+  character_reference_letter: "Character Reference Letter"
+};
+   function updateNote() {
+  if (docNote && docNotes[docType.value]) {
+    docNote.textContent = docNotes[docType.value];
+  }
+}
 
     function buildSourceContent() {
       return `
@@ -1069,11 +1076,10 @@ ${documentText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
   });
 }
 
+    docType.addEventListener("change", updateNote);
+
     window.addEventListener("DOMContentLoaded", function () {
-      updateNote();
-      if (docNote && docNotes[docType.value]) {
-  docNote.textContent = docNotes[docType.value];
-}
+      updateNote()
 
       const params = new URLSearchParams(window.location.search);
       const paymentStatus = params.get("payment");
