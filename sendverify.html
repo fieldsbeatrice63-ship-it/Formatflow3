@@ -138,8 +138,7 @@
     }
 
     input,
-    textarea,
-    select {
+    textarea {
       width: 100%;
       border: 1px solid #cfe0ff;
       border-radius: 14px;
@@ -270,13 +269,6 @@
       font-size: 15px;
       font-weight: 700;
       cursor: pointer;
-    }
-
-    .send-btn {
-      background: #2c7dff;
-      color: #ffffff;
-      border: 0;
-      box-shadow: 0 10px 24px rgba(44, 125, 255, 0.18);
     }
 
     .preview-frame {
@@ -649,7 +641,6 @@
     const previewTitle = document.getElementById("previewTitle");
     const previewStatus = document.getElementById("previewStatus");
     const previewContent = document.getElementById("previewContent");
-    const previewPaper = document.querySelector(".preview-paper");
     const docNote = document.getElementById("docNote");
 
     const senderName = document.getElementById("senderName");
@@ -701,214 +692,214 @@
       service_agreement: "Simple Service Agreement"
     };
 
-   function safeValue(value, fallback = "[Not Provided]") {
-  return value && value.trim() ? value.trim() : fallback;
-}
-
-function generateVerificationID() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const random = Math.floor(100000 + Math.random() * 900000);
-  return "VFY-" + year + "-" + random;
-}
-
-function formatTimestamp() {
-  return new Date().toLocaleString();
-}
-
-function loadTransferDocument() {
-  const verifiedDoc = localStorage.getItem("verified_send_document");
-  const verifiedDocType = localStorage.getItem("verified_send_doc_type");
-
-  let fallbackContent = "";
-  let fallbackDocType = "";
-
-  const pendingDocRaw = localStorage.getItem("formatflow_pending_document");
-  if (pendingDocRaw) {
-    try {
-      const pendingDoc = JSON.parse(pendingDocRaw);
-      fallbackContent = pendingDoc.content || "";
-      fallbackDocType = pendingDoc.docType || "";
-    } catch (error) {
-      console.error("Could not read pending document:", error);
+    function safeValue(value, fallback = "[Not Provided]") {
+      return value && value.trim() ? value.trim() : fallback;
     }
-  }
 
-  const finalContent = verifiedDoc || fallbackContent;
-  const finalDocType = verifiedDocType || fallbackDocType;
-
-  if (finalContent && finalContent.trim()) {
-    previewContent.textContent = finalContent;
-    previewStatus.textContent = "Document loaded for verified delivery";
-    previewTitle.textContent = finalDocType
-      ? (docTitles[finalDocType] || "Document Ready to Send")
-      : "Document Ready to Send";
-
-    if (docNote) {
-      docNote.textContent = "Your finalized document has been transferred. Only personal details may be adjusted here. The main document wording stays the same.";
+    function generateVerificationID() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const random = Math.floor(100000 + Math.random() * 900000);
+      return "VFY-" + year + "-" + random;
     }
-  } else {
-    previewContent.textContent = "No transferred document was found. Please return to the generator and retrieve your document first.";
-    previewStatus.textContent = "No transferred document found";
 
-    if (docNote) {
-      docNote.textContent = "No document was found to transfer. Please return to the generator and retrieve your document first.";
+    function formatTimestamp() {
+      return new Date().toLocaleString();
     }
-  }
-}
 
-function saveVerifyFormData() {
-  const verifyFormData = {
-    senderName: senderName.value || "",
-    senderEmail: senderEmail.value || "",
-    senderPhone: senderPhone.value || "",
-    sendDate: sendDate.value || "",
-    senderAddress: senderAddress.value || "",
-    senderCityStateZip: senderCityStateZip.value || "",
-    recipientCompany: recipientCompany.value || "",
-    recipientEmail: recipientEmail.value || "",
-    recipientAddress: recipientAddress.value || "",
-    referenceNumber: referenceNumber.value || "",
-    deliveryNotes: deliveryNotes.value || ""
-  };
+    function loadTransferDocument() {
+      const verifiedDoc = localStorage.getItem("verified_send_document");
+      const verifiedDocType = localStorage.getItem("verified_send_doc_type");
 
-  localStorage.setItem("verified_delivery_form_data", JSON.stringify(verifyFormData));
-}
+      let fallbackContent = "";
+      let fallbackDocType = "";
 
-function restoreVerifyFormData() {
-  const saved = localStorage.getItem("verified_delivery_form_data");
-  if (!saved) return;
+      const pendingDocRaw = localStorage.getItem("formatflow_pending_document");
+      if (pendingDocRaw) {
+        try {
+          const pendingDoc = JSON.parse(pendingDocRaw);
+          fallbackContent = pendingDoc.content || "";
+          fallbackDocType = pendingDoc.docType || "";
+        } catch (error) {
+          console.error("Could not read pending document:", error);
+        }
+      }
 
-  try {
-    const data = JSON.parse(saved);
+      const finalContent = verifiedDoc || fallbackContent;
+      const finalDocType = verifiedDocType || fallbackDocType;
 
-    senderName.value = data.senderName || "";
-    senderEmail.value = data.senderEmail || "";
-    senderPhone.value = data.senderPhone || "";
-    sendDate.value = data.sendDate || "";
-    senderAddress.value = data.senderAddress || "";
-    senderCityStateZip.value = data.senderCityStateZip || "";
-    recipientCompany.value = data.recipientCompany || "";
-    recipientEmail.value = data.recipientEmail || "";
-    recipientAddress.value = data.recipientAddress || "";
-    referenceNumber.value = data.referenceNumber || "";
-    deliveryNotes.value = data.deliveryNotes || "";
-  } catch (error) {
-    console.error("Could not restore verify form data:", error);
-  }
-}
+      if (finalContent && finalContent.trim()) {
+        previewContent.textContent = finalContent;
+        previewStatus.textContent = "Document loaded for verified delivery";
+        previewTitle.textContent = finalDocType
+          ? (docTitles[finalDocType] || "Document Ready to Send")
+          : "Document Ready to Send";
 
-function bindVerifyFormAutosave() {
-  const fields = [
-    senderName,
-    senderEmail,
-    senderPhone,
-    sendDate,
-    senderAddress,
-    senderCityStateZip,
-    recipientCompany,
-    recipientEmail,
-    recipientAddress,
-    referenceNumber,
-    deliveryNotes
-  ];
+        if (docNote) {
+          docNote.textContent = "Your finalized document has been transferred. Only personal details may be adjusted here. The main document wording stays the same.";
+        }
+      } else {
+        previewContent.textContent = "No transferred document was found. Please return to the generator and retrieve your document first.";
+        previewStatus.textContent = "No transferred document found";
 
-  fields.forEach((field) => {
-    if (field) {
-      field.addEventListener("input", saveVerifyFormData);
-      field.addEventListener("change", saveVerifyFormData);
+        if (docNote) {
+          docNote.textContent = "No document was found to transfer. Please return to the generator and retrieve your document first.";
+        }
+      }
     }
-  });
-}
 
-function handleVerifyEdit() {
-  let editCount = parseInt(localStorage.getItem("verify_edit_count") || "0", 10);
+    function saveVerifyFormData() {
+      const verifyFormData = {
+        senderName: senderName.value || "",
+        senderEmail: senderEmail.value || "",
+        senderPhone: senderPhone.value || "",
+        sendDate: sendDate.value || "",
+        senderAddress: senderAddress.value || "",
+        senderCityStateZip: senderCityStateZip.value || "",
+        recipientCompany: recipientCompany.value || "",
+        recipientEmail: recipientEmail.value || "",
+        recipientAddress: recipientAddress.value || "",
+        referenceNumber: referenceNumber.value || "",
+        deliveryNotes: deliveryNotes.value || ""
+      };
 
-  if (editCount >= 3) {
-    if (docNote) {
-      docNote.textContent = "You have reached your edit limit. Please proceed with verified delivery.";
+      localStorage.setItem("verified_delivery_form_data", JSON.stringify(verifyFormData));
     }
-    if (editVerifyBtn) {
-      editVerifyBtn.disabled = true;
+
+    function restoreVerifyFormData() {
+      const saved = localStorage.getItem("verified_delivery_form_data");
+      if (!saved) return;
+
+      try {
+        const data = JSON.parse(saved);
+
+        senderName.value = data.senderName || "";
+        senderEmail.value = data.senderEmail || "";
+        senderPhone.value = data.senderPhone || "";
+        sendDate.value = data.sendDate || "";
+        senderAddress.value = data.senderAddress || "";
+        senderCityStateZip.value = data.senderCityStateZip || "";
+        recipientCompany.value = data.recipientCompany || "";
+        recipientEmail.value = data.recipientEmail || "";
+        recipientAddress.value = data.recipientAddress || "";
+        referenceNumber.value = data.referenceNumber || "";
+        deliveryNotes.value = data.deliveryNotes || "";
+      } catch (error) {
+        console.error("Could not restore verify form data:", error);
+      }
     }
-    return;
-  }
 
-  saveVerifyFormData();
+    function bindVerifyFormAutosave() {
+      const fields = [
+        senderName,
+        senderEmail,
+        senderPhone,
+        sendDate,
+        senderAddress,
+        senderCityStateZip,
+        recipientCompany,
+        recipientEmail,
+        recipientAddress,
+        referenceNumber,
+        deliveryNotes
+      ];
 
-  editCount += 1;
-  localStorage.setItem("verify_edit_count", String(editCount));
-
-  if (docNote) {
-    if (editCount === 1) {
-      docNote.textContent = "Your verified delivery details have been saved. You have 2 edits remaining.";
-    } else if (editCount === 2) {
-      docNote.textContent = "Your verified delivery details have been saved. You have 1 edit remaining.";
-    } else {
-      docNote.textContent = "Final edit used. Please proceed with verified delivery.";
+      fields.forEach((field) => {
+        if (field) {
+          field.addEventListener("input", saveVerifyFormData);
+          field.addEventListener("change", saveVerifyFormData);
+        }
+      });
     }
-  }
 
-  if (editCount >= 3 && editVerifyBtn) {
-    editVerifyBtn.disabled = true;
-  }
-}
+    function handleVerifyEdit() {
+      let editCount = parseInt(localStorage.getItem("verify_edit_count") || "0", 10);
 
-function validateForm() {
-  const previewText = (previewContent.textContent || "").trim();
+      if (editCount >= 3) {
+        if (docNote) {
+          docNote.textContent = "You have reached your edit limit. Please proceed with verified delivery.";
+        }
+        if (editVerifyBtn) {
+          editVerifyBtn.disabled = true;
+        }
+        return;
+      }
 
-  if (!previewText || previewText.indexOf("No transferred document was found") === 0) {
-    alert("No transferred document was found. Please return to the generator and try again.");
-    return false;
-  }
+      saveVerifyFormData();
 
-  if (!safeValue(senderName.value, "").trim()) {
-    alert("Please enter your full name.");
-    return false;
-  }
+      editCount += 1;
+      localStorage.setItem("verify_edit_count", String(editCount));
 
-  if (!safeValue(senderEmail.value, "").trim()) {
-    alert("Please enter your email address.");
-    return false;
-  }
+      if (docNote) {
+        if (editCount === 1) {
+          docNote.textContent = "Your verified delivery details have been saved. You have 2 edits remaining.";
+        } else if (editCount === 2) {
+          docNote.textContent = "Your verified delivery details have been saved. You have 1 edit remaining.";
+        } else {
+          docNote.textContent = "Final edit used. Please proceed with verified delivery.";
+        }
+      }
 
-  if (!safeValue(recipientCompany.value, "").trim()) {
-    alert("Please enter the recipient, bureau, or company.");
-    return false;
-  }
+      if (editCount >= 3 && editVerifyBtn) {
+        editVerifyBtn.disabled = true;
+      }
+    }
 
-  if (!confirmAccuracy.checked || !confirmAuthorization.checked || !confirmDisclosure.checked) {
-    alert("Please complete all confirmation checkboxes before sending.");
-    return false;
-  }
+    function validateForm() {
+      const previewText = (previewContent.textContent || "").trim();
 
-  return true;
-}
+      if (!previewText || previewText.indexOf("No transferred document was found") === 0) {
+        alert("No transferred document was found. Please return to the generator and try again.");
+        return false;
+      }
 
-function buildReceiptObject() {
-  const storedDocType = localStorage.getItem("verified_send_doc_type") || "";
+      if (!safeValue(senderName.value, "").trim()) {
+        alert("Please enter your full name.");
+        return false;
+      }
 
-  return {
-    verificationId: generateVerificationID(),
-    status: "Submitted",
-    timestamp: formatTimestamp(),
-    docType: docTitles[storedDocType] || "Document",
-    sender: safeValue(senderName.value),
-    senderEmail: safeValue(senderEmail.value),
-    senderPhone: safeValue(senderPhone.value),
-    senderAddress: safeValue(senderAddress.value),
-    senderCityStateZip: safeValue(senderCityStateZip.value),
-    recipient: safeValue(recipientCompany.value),
-    recipientEmail: safeValue(recipientEmail.value),
-    recipientAddress: safeValue(recipientAddress.value),
-    referenceNumber: safeValue(referenceNumber.value),
-    deliveryNotes: safeValue(deliveryNotes.value),
-    documentContent: previewContent.textContent || ""
-  };
-}
+      if (!safeValue(senderEmail.value, "").trim()) {
+        alert("Please enter your email address.");
+        return false;
+      }
 
-function buildReceiptText(data) {
-  return `FORMATFLOW™ VERIFIED DELIVERY RECEIPT
+      if (!safeValue(recipientCompany.value, "").trim()) {
+        alert("Please enter the recipient, bureau, or company.");
+        return false;
+      }
+
+      if (!confirmAccuracy.checked || !confirmAuthorization.checked || !confirmDisclosure.checked) {
+        alert("Please complete all confirmation checkboxes before sending.");
+        return false;
+      }
+
+      return true;
+    }
+
+    function buildReceiptObject() {
+      const storedDocType = localStorage.getItem("verified_send_doc_type") || "";
+
+      return {
+        verificationId: generateVerificationID(),
+        status: "Submitted",
+        timestamp: formatTimestamp(),
+        docType: docTitles[storedDocType] || "Document",
+        sender: safeValue(senderName.value),
+        senderEmail: safeValue(senderEmail.value),
+        senderPhone: safeValue(senderPhone.value),
+        senderAddress: safeValue(senderAddress.value),
+        senderCityStateZip: safeValue(senderCityStateZip.value),
+        recipient: safeValue(recipientCompany.value),
+        recipientEmail: safeValue(recipientEmail.value),
+        recipientAddress: safeValue(recipientAddress.value),
+        referenceNumber: safeValue(referenceNumber.value),
+        deliveryNotes: safeValue(deliveryNotes.value),
+        documentContent: previewContent.textContent || ""
+      };
+    }
+
+    function buildReceiptText(data) {
+      return `FORMATFLOW™ VERIFIED DELIVERY RECEIPT
 
 Verification Number:
 ${data.verificationId}
@@ -953,10 +944,10 @@ ${data.deliveryNotes}
 Notice:
 This receipt reflects a verified delivery workflow record and confirmation number for organizational purposes. It does not guarantee review, acceptance, approval, or legal outcome.
 `;
-}
+    }
 
-function buildSentCopyText(data) {
-  return `FORMATFLOW™ VERIFIED DELIVERY COPY
+    function buildSentCopyText(data) {
+      return `FORMATFLOW™ VERIFIED DELIVERY COPY
 
 Verification Number: ${data.verificationId}
 Timestamp: ${data.timestamp}
@@ -986,126 +977,125 @@ DOCUMENT CONTENT
 
 ${data.documentContent}
 `;
-}
+    }
 
-function downloadTextFile(filename, text) {
-  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = filename;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
-}
+    function downloadTextFile(filename, text) {
+      const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
 
-if (sendVerifiedBtn) {
-  sendVerifiedBtn.addEventListener("click", function () {
-    if (!validateForm()) return;
+    if (sendVerifiedBtn) {
+      sendVerifiedBtn.addEventListener("click", function () {
+        if (!validateForm()) return;
 
-    const receiptData = buildReceiptObject();
-    localStorage.setItem("verified_delivery_receipt_data", JSON.stringify(receiptData));
+        const receiptData = buildReceiptObject();
+        localStorage.setItem("verified_delivery_receipt_data", JSON.stringify(receiptData));
 
-    previewStatus.textContent = "Submitted";
-    successBox.style.display = "block";
-    receiptCard.style.display = "block";
-    downloadReceiptBtn.style.display = "inline-block";
+        previewStatus.textContent = "Submitted";
+        successBox.style.display = "block";
+        receiptCard.style.display = "block";
+        downloadReceiptBtn.style.display = "inline-block";
 
-    successMessage.textContent = "Your document has been submitted through the verified delivery workflow. Please download your receipt and save it for your records.";
+        successMessage.textContent = "Your document has been submitted through the verified delivery workflow. Please download your receipt and save it for your records.";
 
-    receiptVerificationId.textContent = receiptData.verificationId;
-    receiptStatus.textContent = receiptData.status;
-    receiptTimestamp.textContent = receiptData.timestamp;
-    receiptDocType.textContent = receiptData.docType;
-    receiptSender.textContent = receiptData.sender;
-    receiptRecipient.textContent = receiptData.recipient;
+        receiptVerificationId.textContent = receiptData.verificationId;
+        receiptStatus.textContent = receiptData.status;
+        receiptTimestamp.textContent = receiptData.timestamp;
+        receiptDocType.textContent = receiptData.docType;
+        receiptSender.textContent = receiptData.sender;
+        receiptRecipient.textContent = receiptData.recipient;
+
+        if (editVerifyBtn) {
+          editVerifyBtn.disabled = true;
+        }
+      });
+    }
+
+    if (downloadReceiptBtn) {
+      downloadReceiptBtn.addEventListener("click", function () {
+        const saved = localStorage.getItem("verified_delivery_receipt_data");
+        if (!saved) {
+          alert("No receipt is available yet.");
+          return;
+        }
+
+        const data = JSON.parse(saved);
+        downloadTextFile("verified-delivery-receipt.txt", buildReceiptText(data));
+      });
+    }
+
+    if (downloadDocCopyBtn) {
+      downloadDocCopyBtn.addEventListener("click", function () {
+        const savedReceipt = localStorage.getItem("verified_delivery_receipt_data");
+        let exportData;
+
+        if (savedReceipt) {
+          exportData = JSON.parse(savedReceipt);
+        } else {
+          exportData = buildReceiptObject();
+          exportData.verificationId = "Pending";
+          exportData.status = "Not Yet Submitted";
+        }
+
+        downloadTextFile("verified-document-copy.txt", buildSentCopyText(exportData));
+      });
+    }
 
     if (editVerifyBtn) {
-      editVerifyBtn.disabled = true;
-    }
-  });
-}
-
-if (downloadReceiptBtn) {
-  downloadReceiptBtn.addEventListener("click", function () {
-    const saved = localStorage.getItem("verified_delivery_receipt_data");
-    if (!saved) {
-      alert("No receipt is available yet.");
-      return;
+      editVerifyBtn.addEventListener("click", function () {
+        if (editVerifyModal) {
+          editVerifyModal.style.display = "flex";
+        }
+      });
     }
 
-    const data = JSON.parse(saved);
-    downloadTextFile("verified-delivery-receipt.txt", buildReceiptText(data));
-  });
-}
-
-if (downloadDocCopyBtn) {
-  downloadDocCopyBtn.addEventListener("click", function () {
-    const savedReceipt = localStorage.getItem("verified_delivery_receipt_data");
-    let exportData;
-
-    if (savedReceipt) {
-      exportData = JSON.parse(savedReceipt);
-    } else {
-      exportData = buildReceiptObject();
-      exportData.verificationId = "Pending";
-      exportData.status = "Not Yet Submitted";
+    if (confirmEditVerifyBtn) {
+      confirmEditVerifyBtn.addEventListener("click", function () {
+        if (editVerifyModal) {
+          editVerifyModal.style.display = "none";
+        }
+        handleVerifyEdit();
+      });
     }
 
-    downloadTextFile("verified-document-copy.txt", buildSentCopyText(exportData));
-  });
-}
-
-if (editVerifyBtn) {
-  editVerifyBtn.addEventListener("click", function () {
-    if (editVerifyModal) {
-      editVerifyModal.style.display = "flex";
+    if (closeEditVerifyModal) {
+      closeEditVerifyModal.addEventListener("click", function () {
+        if (editVerifyModal) {
+          editVerifyModal.style.display = "none";
+        }
+      });
     }
-  });
-}
 
-if (confirmEditVerifyBtn) {
-  confirmEditVerifyBtn.addEventListener("click", function () {
-    if (editVerifyModal) {
-      editVerifyModal.style.display = "none";
-    }
-    handleVerifyEdit();
-  });
-}
+    window.addEventListener("DOMContentLoaded", function () {
+      loadTransferDocument();
+      restoreVerifyFormData();
+      bindVerifyFormAutosave();
 
-if (closeEditVerifyModal) {
-  closeEditVerifyModal.addEventListener("click", function () {
-    if (editVerifyModal) {
-      editVerifyModal.style.display = "none";
-    }
-  });
-}
+      if (!localStorage.getItem("verify_edit_count")) {
+        localStorage.setItem("verify_edit_count", "0");
+      }
 
-window.addEventListener("DOMContentLoaded", function () {
-  loadTransferDocument();
-  restoreVerifyFormData();
-  bindVerifyFormAutosave();
+      if (editVerifyBtn) {
+        editVerifyBtn.style.display = "inline-block";
+        editVerifyBtn.disabled = false;
+      }
 
-  if (!localStorage.getItem("verify_edit_count")) {
-    localStorage.setItem("verify_edit_count", "0");
-  }
-
-  if (editVerifyBtn) {
-    editVerifyBtn.style.display = "inline-block";
-    editVerifyBtn.disabled = false;
-  }
-
-  if (sendDate && !sendDate.value) {
-    const today = new Date();
-    const mm = String(today.getMonth() + 1).padStart(2, "0");
-    const dd = String(today.getDate()).padStart(2, "0");
-    const yyyy = today.getFullYear();
-    sendDate.value = `${mm}/${dd}/${yyyy}`;
-    saveVerifyFormData();
-  }
-});
-      
+      if (sendDate && !sendDate.value) {
+        const today = new Date();
+        const mm = String(today.getMonth() + 1).padStart(2, "0");
+        const dd = String(today.getDate()).padStart(2, "0");
+        const yyyy = today.getFullYear();
+        sendDate.value = `${mm}/${dd}/${yyyy}`;
+        saveVerifyFormData();
+      }
+    });
   </script>
 </body>
 </html>
