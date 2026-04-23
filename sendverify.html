@@ -717,33 +717,45 @@
     }
 
     function loadTransferDocument() {
-      const verifiedDoc = localStorage.getItem("verified_send_document");
-      const verifiedDocType = localStorage.getItem("verified_send_doc_type");
+  const verifiedDoc = localStorage.getItem("verified_send_document");
+  const verifiedDocType = localStorage.getItem("verified_send_doc_type");
 
-      if (verifiedDoc) {
-        previewContent.textContent = verifiedDoc;
-        previewStatus.textContent = "Document loaded for verified delivery";
-        previewTitle.textContent = verifiedDocType
-          ? (docTitles[verifiedDocType] || "Document Ready to Send")
-          : "Document Ready to Send";
+  let fallbackContent = "";
+  let fallbackDocType = "";
 
-        if (previewPaper) {
-          previewPaper.classList.remove("locked");
-        }
-
-        if (docNote) {
-          docNote.textContent = "Your finalized document has been transferred. Only personal details may be adjusted here. The document wording stays the same.";
-        }
-      } else {
-        previewContent.textContent = "No transferred document was found. Please return to the generator and retrieve your document first.";
-        previewStatus.textContent = "No transferred document found";
-
-        if (docNote) {
-          docNote.textContent = "No document was found to transfer. Please return to the generator and retrieve your document first.";
-        }
-      }
+  const pendingDocRaw = localStorage.getItem("formatflow_pending_document");
+  if (pendingDocRaw) {
+    try {
+      const pendingDoc = JSON.parse(pendingDocRaw);
+      fallbackContent = pendingDoc.content || "";
+      fallbackDocType = pendingDoc.docType || "";
+    } catch (error) {
+      console.error("Could not read pending document:", error);
     }
+  }
 
+  const finalContent = verifiedDoc || fallbackContent;
+  const finalDocType = verifiedDocType || fallbackDocType;
+
+  if (finalContent && finalContent.trim()) {
+    previewContent.textContent = finalContent;
+    previewStatus.textContent = "Document loaded for verified delivery";
+    previewTitle.textContent = finalDocType
+      ? (docTitles[finalDocType] || "Document Ready to Send")
+      : "Document Ready to Send";
+
+    if (docNote) {
+      docNote.textContent = "Your finalized document has been transferred. Only personal details may be adjusted here. The main document wording stays the same.";
+    }
+  } else {
+    previewContent.textContent = "No transferred document was found. Please return to the generator and retrieve your document first.";
+    previewStatus.textContent = "No transferred document found";
+
+    if (docNote) {
+      docNote.textContent = "No document was found to transfer. Please return to the generator and retrieve your document first.";
+    }
+  }
+}
     function handleVerifyEdit() {
       let editCount = parseInt(localStorage.getItem("verify_edit_count") || "0", 10);
 
