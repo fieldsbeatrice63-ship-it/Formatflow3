@@ -1089,6 +1089,10 @@ ${documentText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
         retrieveBox.style.display = "block";
         restorePendingDocument();
 
+        if (postPaymentWarningModal) {
+  postPaymentWarningModal.style.display = "flex";
+}
+
         localStorage.setItem("formatflow_paid_unlocked", "true");
         localStorage.setItem("formatflow_edit_count", "0");
         localStorage.setItem("formatflow_rewrite_count", "0");
@@ -1132,6 +1136,8 @@ ${documentText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
       const rewriteModal = document.getElementById("rewriteModal");
       const confirmEditBtn = document.getElementById("confirmEditBtn");
       const confirmRewriteBtn = document.getElementById("confirmRewriteBtn");
+      const postPaymentWarningModal = document.getElementById("postPaymentWarningModal");
+const closePostPaymentWarningModal = document.getElementById("closePostPaymentWarningModal");
 
       if (editBtn) {
         editBtn.addEventListener("click", function () {
@@ -1166,7 +1172,14 @@ ${documentText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
           await handleRewrite();
         });
       }
+
+      if (closePostPaymentWarningModal) {
+  closePostPaymentWarningModal.addEventListener("click", function () {
+    postPaymentWarningModal.style.display = "none";
+  });
+}
     });
+   
   </script>
 
   <div id="sendVerifyModal" class="modal-overlay">
@@ -1227,6 +1240,21 @@ ${documentText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
       <button id="confirmRewriteBtn">Continue</button>
     </div>
   </div>
+  <div id="postPaymentWarningModal" class="modal-overlay">
+  <div class="modal-box" style="position:relative;">
+    <h3>Review Your Document Carefully</h3>
+    <p>
+      Payment has been received and your document is now available for final review.
+      <br><br>
+      Please make sure all information entered in the document setup form is accurate to the best of your ability before moving forward.
+      <br><br>
+      You may still use your available <strong>Edit</strong> and <strong>Rewrite</strong> options to make final corrections. These tools should be used now, before downloading your document or moving into the next stage.
+      <br><br>
+      Once your document is downloaded or sent forward, no further changes can be made to the finalized version except where specifically allowed in the next stage.
+    </p>
+    <button id="closePostPaymentWarningModal">Continue</button>
+  </div>
+</div>
 
 </body>
 </html>
