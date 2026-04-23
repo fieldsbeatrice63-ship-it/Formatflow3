@@ -757,35 +757,51 @@
   }
 }
     function handleVerifyEdit() {
-      let editCount = parseInt(localStorage.getItem("verify_edit_count") || "0", 10);
+  let editCount = parseInt(localStorage.getItem("verify_edit_count") || "0", 10);
 
-      if (editCount >= 3) {
-        if (docNote) {
-          docNote.textContent = "You have reached your edit limit. Please proceed with verified delivery.";
-        }
-        if (editVerifyBtn) {
-          editVerifyBtn.disabled = true;
-        }
-        return;
-      }
-
-      editCount += 1;
-      localStorage.setItem("verify_edit_count", String(editCount));
-
-      if (docNote) {
-        if (editCount === 1) {
-          docNote.textContent = "Your verified delivery details have been updated. You have 2 edits remaining.";
-        } else if (editCount === 2) {
-          docNote.textContent = "Your verified delivery details have been updated. You have 1 edit remaining.";
-        } else {
-          docNote.textContent = "Final edit used. Please proceed with verified delivery.";
-        }
-      }
-
-      if (editCount >= 3 && editVerifyBtn) {
-        editVerifyBtn.disabled = true;
-      }
+  if (editCount >= 3) {
+    if (docNote) {
+      docNote.textContent = "You have reached your edit limit. Please proceed with verified delivery.";
     }
+    if (editVerifyBtn) {
+      editVerifyBtn.disabled = true;
+    }
+    return;
+  }
+
+  const verifyFormData = {
+    senderName: senderName.value || "",
+    senderEmail: senderEmail.value || "",
+    senderPhone: senderPhone.value || "",
+    sendDate: sendDate.value || "",
+    senderAddress: senderAddress.value || "",
+    senderCityStateZip: senderCityStateZip.value || "",
+    recipientCompany: recipientCompany.value || "",
+    recipientEmail: recipientEmail.value || "",
+    recipientAddress: recipientAddress.value || "",
+    referenceNumber: referenceNumber.value || "",
+    deliveryNotes: deliveryNotes.value || ""
+  };
+
+  localStorage.setItem("verified_delivery_form_data", JSON.stringify(verifyFormData));
+
+  editCount += 1;
+  localStorage.setItem("verify_edit_count", String(editCount));
+
+  if (docNote) {
+    if (editCount === 1) {
+      docNote.textContent = "Your verified delivery details have been updated. You have 2 edits remaining.";
+    } else if (editCount === 2) {
+      docNote.textContent = "Your verified delivery details have been updated. You have 1 edit remaining.";
+    } else {
+      docNote.textContent = "Final edit used. Please proceed with verified delivery.";
+    }
+  }
+
+  if (editCount >= 3 && editVerifyBtn) {
+    editVerifyBtn.disabled = true;
+  }
+}
 
     function validateForm() {
       const previewText = (previewContent.textContent || "").trim();
@@ -1015,9 +1031,32 @@ ${data.documentContent}
       });
     }
 
+    function restoreVerifyFormData() {
+  const saved = localStorage.getItem("verified_delivery_form_data");
+  if (!saved) return;
+
+  try {
+    const data = JSON.parse(saved);
+
+    senderName.value = data.senderName || "";
+    senderEmail.value = data.senderEmail || "";
+    senderPhone.value = data.senderPhone || "";
+    sendDate.value = data.sendDate || "";
+    senderAddress.value = data.senderAddress || "";
+    senderCityStateZip.value = data.senderCityStateZip || "";
+    recipientCompany.value = data.recipientCompany || "";
+    recipientEmail.value = data.recipientEmail || "";
+    recipientAddress.value = data.recipientAddress || "";
+    referenceNumber.value = data.referenceNumber || "";
+    deliveryNotes.value = data.deliveryNotes || "";
+  } catch (error) {
+    console.error("Could not restore verify form data:", error);
+  }
+}
+
     window.addEventListener("DOMContentLoaded", function () {
       loadTransferDocument();
-
+restoreVerifyFormData();
       localStorage.setItem("verify_edit_count", "0");
 
       if (editVerifyBtn) {
