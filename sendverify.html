@@ -369,6 +369,62 @@
       line-height: 1.8;
     }
 
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      padding: 20px;
+    }
+
+    .modal-box {
+      background: #fff;
+      padding: 24px;
+      max-width: 460px;
+      width: 100%;
+      border-radius: 18px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.18);
+      position: relative;
+    }
+
+    .modal-box h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      color: #173b79;
+    }
+
+    .modal-box p {
+      margin: 0;
+      color: #355171;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      border: none;
+      background: #eee;
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #173b79;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .modal-action {
+      margin-top: 16px;
+      background: #2c7dff;
+      color: #fff;
+      border: none;
+    }
+
     @media (max-width: 1050px) {
       .app-shell {
         grid-template-columns: 1fr;
@@ -482,7 +538,8 @@
       </div>
 
       <label for="deliveryNotes">Cover Note / Delivery Notes</label>
-<textarea id="deliveryNotes" placeholder="Add a short cover note, delivery instruction, or submission comment to accompany this document. This note is separate from the main document itself."></textarea>
+      <textarea id="deliveryNotes" placeholder="Add a short cover note, delivery instruction, or submission comment to accompany this document. This note is separate from the main document itself."></textarea>
+
       <div class="check-wrap">
         <label>
           <input type="checkbox" id="confirmAccuracy" />
@@ -500,14 +557,13 @@
         </label>
       </div>
 
-      <div class="doc-note">
-        Once submitted, you will receive a verification number and be encouraged to download your receipt for your records.
+      <div class="doc-note" id="docNote">
+        Your finalized document has been transferred. Only personal details may be adjusted here. The main document wording stays the same.
       </div>
 
       <div class="button-row">
         <button class="btn-primary" id="sendVerifiedBtn">Send with Verified Delivery</button>
-       <button id="editVerifyBtn" class="btn-secondary" type="button">Edit</button>
-        
+        <button id="editVerifyBtn" class="btn-secondary" type="button">Edit</button>
       </div>
     </div>
 
@@ -572,210 +628,208 @@
     Verified delivery records are intended for organizational and recordkeeping purposes and do not guarantee review, acceptance, approval, or legal outcome.
   </footer>
 
- <script>
-  const previewTitle = document.getElementById("previewTitle");
-  const previewStatus = document.getElementById("previewStatus");
-  const previewContent = document.getElementById("previewContent");
-  const previewPaper = document.querySelector(".preview-paper");
-  const docNote = document.querySelector(".doc-note");
+  <div id="editVerifyModal" class="modal-overlay">
+    <div class="modal-box">
+      <button id="closeEditVerifyModal" class="modal-close">✕</button>
+      <h3>Edit Verified Document</h3>
+      <p>
+        You have <strong>3 edits</strong> available.
+        <br><br>
+        You may update personal information only.
+        <br><br>
+        The document wording remains unchanged.
+        <br><br>
+        After edits are used, proceed with verified delivery.
+      </p>
+      <button id="confirmEditVerifyBtn" class="modal-action">Continue</button>
+    </div>
+  </div>
 
-  const senderName = document.getElementById("senderName");
-  const senderEmail = document.getElementById("senderEmail");
-  const senderPhone = document.getElementById("senderPhone");
-  const sendDate = document.getElementById("sendDate");
-  const senderAddress = document.getElementById("senderAddress");
-  const senderCityStateZip = document.getElementById("senderCityStateZip");
-  const recipientCompany = document.getElementById("recipientCompany");
-  const recipientEmail = document.getElementById("recipientEmail");
-  const recipientAddress = document.getElementById("recipientAddress");
-  const referenceNumber = document.getElementById("referenceNumber");
-  const deliveryNotes = document.getElementById("deliveryNotes");
+  <script>
+    const previewTitle = document.getElementById("previewTitle");
+    const previewStatus = document.getElementById("previewStatus");
+    const previewContent = document.getElementById("previewContent");
+    const previewPaper = document.querySelector(".preview-paper");
+    const docNote = document.getElementById("docNote");
 
-  const confirmAccuracy = document.getElementById("confirmAccuracy");
-  const confirmAuthorization = document.getElementById("confirmAuthorization");
-  const confirmDisclosure = document.getElementById("confirmDisclosure");
+    const senderName = document.getElementById("senderName");
+    const senderEmail = document.getElementById("senderEmail");
+    const senderPhone = document.getElementById("senderPhone");
+    const sendDate = document.getElementById("sendDate");
+    const senderAddress = document.getElementById("senderAddress");
+    const senderCityStateZip = document.getElementById("senderCityStateZip");
+    const recipientCompany = document.getElementById("recipientCompany");
+    const recipientEmail = document.getElementById("recipientEmail");
+    const recipientAddress = document.getElementById("recipientAddress");
+    const referenceNumber = document.getElementById("referenceNumber");
+    const deliveryNotes = document.getElementById("deliveryNotes");
 
-  const sendVerifiedBtn = document.getElementById("sendVerifiedBtn");
-  const downloadDocCopyBtn = document.getElementById("downloadDocCopyBtn");
-  const downloadReceiptBtn = document.getElementById("downloadReceiptBtn");
-  const editVerifyBtn = document.getElementById("editVerifyBtn");
+    const confirmAccuracy = document.getElementById("confirmAccuracy");
+    const confirmAuthorization = document.getElementById("confirmAuthorization");
+    const confirmDisclosure = document.getElementById("confirmDisclosure");
 
-  const successBox = document.getElementById("successBox");
-  const successMessage = document.getElementById("successMessage");
-  const receiptCard = document.getElementById("receiptCard");
+    const sendVerifiedBtn = document.getElementById("sendVerifiedBtn");
+    const downloadDocCopyBtn = document.getElementById("downloadDocCopyBtn");
+    const downloadReceiptBtn = document.getElementById("downloadReceiptBtn");
+    const editVerifyBtn = document.getElementById("editVerifyBtn");
 
-  const receiptVerificationId = document.getElementById("receiptVerificationId");
-  const receiptStatus = document.getElementById("receiptStatus");
-  const receiptTimestamp = document.getElementById("receiptTimestamp");
-  const receiptDocType = document.getElementById("receiptDocType");
-  const receiptSender = document.getElementById("receiptSender");
-  const receiptRecipient = document.getElementById("receiptRecipient");
+    const successBox = document.getElementById("successBox");
+    const successMessage = document.getElementById("successMessage");
+    const receiptCard = document.getElementById("receiptCard");
 
-  const docTitles = {
-    credit_dispute: "Credit Dispute Letter",
-    debt_validation: "Debt Validation Letter",
-    resume: "Professional Resume",
-    cover_letter: "Job-Specific Cover Letter",
-    lease_agreement: "Residential Lease Agreement",
-    eviction_response: "Eviction Response Letter",
-    proof_of_income: "Proof of Income Letter",
-    hardship_letter: "Financial Hardship Letter",
-    business_funding: "Business Funding Request Letter",
-    service_agreement: "Simple Service Agreement"
-  };
+    const receiptVerificationId = document.getElementById("receiptVerificationId");
+    const receiptStatus = document.getElementById("receiptStatus");
+    const receiptTimestamp = document.getElementById("receiptTimestamp");
+    const receiptDocType = document.getElementById("receiptDocType");
+    const receiptSender = document.getElementById("receiptSender");
+    const receiptRecipient = document.getElementById("receiptRecipient");
 
-  function safeValue(value, fallback = "[Not Provided]") {
-    return value && value.trim() ? value.trim() : fallback;
-  }
+    const editVerifyModal = document.getElementById("editVerifyModal");
+    const confirmEditVerifyBtn = document.getElementById("confirmEditVerifyBtn");
+    const closeEditVerifyModal = document.getElementById("closeEditVerifyModal");
 
-  function generateVerificationID() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const random = Math.floor(100000 + Math.random() * 900000);
-    return "VFY-" + year + "-" + random;
-  }
+    const docTitles = {
+      credit_dispute: "Credit Dispute Letter",
+      debt_validation: "Debt Validation Letter",
+      resume: "Professional Resume",
+      cover_letter: "Job-Specific Cover Letter",
+      lease_agreement: "Residential Lease Agreement",
+      eviction_response: "Eviction Response Letter",
+      proof_of_income: "Proof of Income Letter",
+      hardship_letter: "Financial Hardship Letter",
+      business_funding: "Business Funding Request Letter",
+      service_agreement: "Simple Service Agreement"
+    };
 
-  function formatTimestamp() {
-    return new Date().toLocaleString();
-  }
+    function safeValue(value, fallback = "[Not Provided]") {
+      return value && value.trim() ? value.trim() : fallback;
+    }
 
-  function loadTransferDocument() {
-    const verifiedDoc = localStorage.getItem("verified_send_document");
-    const verifiedDocType = localStorage.getItem("verified_send_doc_type");
+    function generateVerificationID() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const random = Math.floor(100000 + Math.random() * 900000);
+      return "VFY-" + year + "-" + random;
+    }
 
-    let fallbackContent = "";
-    let fallbackDocType = "";
+    function formatTimestamp() {
+      return new Date().toLocaleString();
+    }
 
-    const pendingDocRaw = localStorage.getItem("formatflow_pending_document");
-    if (pendingDocRaw) {
-      try {
-        const pendingDoc = JSON.parse(pendingDocRaw);
-        fallbackContent = pendingDoc.content || "";
-        fallbackDocType = pendingDoc.docType || "";
-      } catch (error) {
-        console.error("Could not read pending document:", error);
+    function loadTransferDocument() {
+      const verifiedDoc = localStorage.getItem("verified_send_document");
+      const verifiedDocType = localStorage.getItem("verified_send_doc_type");
+
+      if (verifiedDoc) {
+        previewContent.textContent = verifiedDoc;
+        previewStatus.textContent = "Document loaded for verified delivery";
+        previewTitle.textContent = verifiedDocType
+          ? (docTitles[verifiedDocType] || "Document Ready to Send")
+          : "Document Ready to Send";
+
+        if (previewPaper) {
+          previewPaper.classList.remove("locked");
+        }
+
+        if (docNote) {
+          docNote.textContent = "Your finalized document has been transferred. Only personal details may be adjusted here. The document wording stays the same.";
+        }
+      } else {
+        previewContent.textContent = "No transferred document was found. Please return to the generator and retrieve your document first.";
+        previewStatus.textContent = "No transferred document found";
+
+        if (docNote) {
+          docNote.textContent = "No document was found to transfer. Please return to the generator and retrieve your document first.";
+        }
       }
     }
 
-    const finalContent = verifiedDoc || fallbackContent;
-    const finalDocType = verifiedDocType || fallbackDocType;
+    function handleVerifyEdit() {
+      let editCount = parseInt(localStorage.getItem("verify_edit_count") || "0", 10);
 
-    if (finalContent) {
-      previewContent.textContent = finalContent;
-      previewStatus.textContent = "Document loaded for verified delivery";
-      previewTitle.textContent = finalDocType ? (docTitles[finalDocType] || "Document Ready to Send") : "Document Ready to Send";
-
-      if (previewPaper) {
-        previewPaper.classList.remove("locked");
+      if (editCount >= 3) {
+        if (docNote) {
+          docNote.textContent = "You have reached your edit limit. Please proceed with verified delivery.";
+        }
+        if (editVerifyBtn) {
+          editVerifyBtn.disabled = true;
+        }
+        return;
       }
+
+      editCount += 1;
+      localStorage.setItem("verify_edit_count", String(editCount));
 
       if (docNote) {
-        docNote.textContent = "Your document has been loaded into the verified delivery window. Review your details, make final edits if needed, and continue when ready.";
+        if (editCount === 1) {
+          docNote.textContent = "Your verified delivery details have been updated. You have 2 edits remaining.";
+        } else if (editCount === 2) {
+          docNote.textContent = "Your verified delivery details have been updated. You have 1 edit remaining.";
+        } else {
+          docNote.textContent = "Final edit used. Please proceed with verified delivery.";
+        }
       }
-    } else {
-      previewContent.textContent = "No transferred document was found. Please return to the generator and retrieve your document first.";
-      previewStatus.textContent = "No transferred document found";
 
-      if (docNote) {
-        docNote.textContent = "No document was found to transfer. Please return to the generator and retrieve your document first.";
-      }
-    }
-  }
-
-  function updateVerifyDocument() {
-    const updatedContent = previewContent.textContent || "";
-    localStorage.setItem("verified_send_document", updatedContent);
-    previewStatus.textContent = "Updated for verification";
-  }
-
-  function handleVerifyEdit() {
-    let editCount = parseInt(localStorage.getItem("verify_edit_count") || "0", 10);
-
-    if (editCount >= 3) {
-      if (docNote) {
-        docNote.textContent = "You have reached your edit limit. Please proceed with verified delivery.";
-      }
-      if (editVerifyBtn) {
+      if (editCount >= 3 && editVerifyBtn) {
         editVerifyBtn.disabled = true;
       }
-      return;
     }
 
-    updateVerifyDocument();
+    function validateForm() {
+      const previewText = (previewContent.textContent || "").trim();
 
-    editCount += 1;
-    localStorage.setItem("verify_edit_count", String(editCount));
-
-    if (docNote) {
-      if (editCount === 1) {
-        docNote.textContent = "Your document has been updated. You have 2 edits remaining.";
-      } else if (editCount === 2) {
-        docNote.textContent = "Your document has been updated. You have 1 edit remaining.";
-      } else {
-        docNote.textContent = "Final edit used. Please proceed with verified delivery.";
+      if (!previewText || previewText.indexOf("No transferred document was found") === 0) {
+        alert("No transferred document was found. Please return to the generator and try again.");
+        return false;
       }
+
+      if (!safeValue(senderName.value, "").trim()) {
+        alert("Please enter your full name.");
+        return false;
+      }
+
+      if (!safeValue(senderEmail.value, "").trim()) {
+        alert("Please enter your email address.");
+        return false;
+      }
+
+      if (!safeValue(recipientCompany.value, "").trim()) {
+        alert("Please enter the recipient, bureau, or company.");
+        return false;
+      }
+
+      if (!confirmAccuracy.checked || !confirmAuthorization.checked || !confirmDisclosure.checked) {
+        alert("Please complete all confirmation checkboxes before sending.");
+        return false;
+      }
+
+      return true;
     }
 
-    if (editCount >= 3 && editVerifyBtn) {
-      editVerifyBtn.disabled = true;
-    }
-  }
+    function buildReceiptObject() {
+      const storedDocType = localStorage.getItem("verified_send_doc_type") || "";
 
-  function validateForm() {
-    const previewText = (previewContent.textContent || "").trim();
-
-    if (!previewText || previewText.indexOf("No transferred document was found") === 0) {
-      alert("No transferred document was found. Please return to the generator and try again.");
-      return false;
-    }
-
-    if (!safeValue(senderName.value, "").trim()) {
-      alert("Please enter your full name.");
-      return false;
-    }
-
-    if (!safeValue(senderEmail.value, "").trim()) {
-      alert("Please enter your email address.");
-      return false;
-    }
-
-    if (!safeValue(recipientCompany.value, "").trim()) {
-      alert("Please enter the recipient, bureau, or company.");
-      return false;
+      return {
+        verificationId: generateVerificationID(),
+        status: "Submitted",
+        timestamp: formatTimestamp(),
+        docType: docTitles[storedDocType] || "Document",
+        sender: safeValue(senderName.value),
+        senderEmail: safeValue(senderEmail.value),
+        senderPhone: safeValue(senderPhone.value),
+        senderAddress: safeValue(senderAddress.value),
+        senderCityStateZip: safeValue(senderCityStateZip.value),
+        recipient: safeValue(recipientCompany.value),
+        recipientEmail: safeValue(recipientEmail.value),
+        recipientAddress: safeValue(recipientAddress.value),
+        referenceNumber: safeValue(referenceNumber.value),
+        deliveryNotes: safeValue(deliveryNotes.value),
+        documentContent: previewContent.textContent || ""
+      };
     }
 
-    if (!confirmAccuracy.checked || !confirmAuthorization.checked || !confirmDisclosure.checked) {
-      alert("Please complete all confirmation checkboxes before sending.");
-      return false;
-    }
-
-    return true;
-  }
-
-  function buildReceiptObject() {
-    const storedDocType = localStorage.getItem("verified_send_doc_type") || "";
-
-    return {
-      verificationId: generateVerificationID(),
-      status: "Submitted",
-      timestamp: formatTimestamp(),
-      docType: docTitles[storedDocType] || "Document",
-      sender: safeValue(senderName.value),
-      senderEmail: safeValue(senderEmail.value),
-      senderPhone: safeValue(senderPhone.value),
-      senderAddress: safeValue(senderAddress.value),
-      senderCityStateZip: safeValue(senderCityStateZip.value),
-      recipient: safeValue(recipientCompany.value),
-      recipientEmail: safeValue(recipientEmail.value),
-      recipientAddress: safeValue(recipientAddress.value),
-      referenceNumber: safeValue(referenceNumber.value),
-      deliveryNotes: safeValue(deliveryNotes.value),
-      documentContent: previewContent.textContent || ""
-    };
-  }
-
-  function buildReceiptText(data) {
-    return `FORMATFLOW™ VERIFIED DELIVERY RECEIPT
+    function buildReceiptText(data) {
+      return `FORMATFLOW™ VERIFIED DELIVERY RECEIPT
 
 Verification Number:
 ${data.verificationId}
@@ -820,10 +874,10 @@ ${data.deliveryNotes}
 Notice:
 This receipt reflects a verified delivery workflow record and confirmation number for organizational purposes. It does not guarantee review, acceptance, approval, or legal outcome.
 `;
-  }
+    }
 
-  function buildSentCopyText(data) {
-    return `FORMATFLOW™ VERIFIED DELIVERY COPY
+    function buildSentCopyText(data) {
+      return `FORMATFLOW™ VERIFIED DELIVERY COPY
 
 Verification Number: ${data.verificationId}
 Timestamp: ${data.timestamp}
@@ -853,102 +907,120 @@ DOCUMENT CONTENT
 
 ${data.documentContent}
 `;
-  }
+    }
 
-  function downloadTextFile(filename, text) {
-    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  }
+    function downloadTextFile(filename, text) {
+      const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
 
-  if (sendVerifiedBtn) {
-    sendVerifiedBtn.addEventListener("click", function () {
-      if (!validateForm()) return;
+    if (sendVerifiedBtn) {
+      sendVerifiedBtn.addEventListener("click", function () {
+        if (!validateForm()) return;
 
-      const receiptData = buildReceiptObject();
+        const receiptData = buildReceiptObject();
+        localStorage.setItem("verified_delivery_receipt_data", JSON.stringify(receiptData));
 
-      localStorage.setItem("verified_delivery_receipt_data", JSON.stringify(receiptData));
+        previewStatus.textContent = "Submitted";
+        successBox.style.display = "block";
+        receiptCard.style.display = "block";
+        downloadReceiptBtn.style.display = "inline-block";
 
-      previewStatus.textContent = "Submitted";
-      successBox.style.display = "block";
-      receiptCard.style.display = "block";
-      downloadReceiptBtn.style.display = "inline-block";
+        successMessage.textContent = "Your document has been submitted through the verified delivery workflow. Please download your receipt and save it for your records.";
 
-      successMessage.textContent = "Your document has been submitted through the verified delivery workflow. Please download your receipt and save it for your records.";
+        receiptVerificationId.textContent = receiptData.verificationId;
+        receiptStatus.textContent = receiptData.status;
+        receiptTimestamp.textContent = receiptData.timestamp;
+        receiptDocType.textContent = receiptData.docType;
+        receiptSender.textContent = receiptData.sender;
+        receiptRecipient.textContent = receiptData.recipient;
 
-      receiptVerificationId.textContent = receiptData.verificationId;
-      receiptStatus.textContent = receiptData.status;
-      receiptTimestamp.textContent = receiptData.timestamp;
-      receiptDocType.textContent = receiptData.docType;
-      receiptSender.textContent = receiptData.sender;
-      receiptRecipient.textContent = receiptData.recipient;
+        if (editVerifyBtn) {
+          editVerifyBtn.disabled = true;
+        }
+      });
+    }
 
-      if (editVerifyBtn) {
-        editVerifyBtn.disabled = true;
-      }
-    });
-  }
+    if (downloadReceiptBtn) {
+      downloadReceiptBtn.addEventListener("click", function () {
+        const saved = localStorage.getItem("verified_delivery_receipt_data");
+        if (!saved) {
+          alert("No receipt is available yet.");
+          return;
+        }
 
-  if (downloadReceiptBtn) {
-    downloadReceiptBtn.addEventListener("click", function () {
-      const saved = localStorage.getItem("verified_delivery_receipt_data");
-      if (!saved) {
-        alert("No receipt is available yet.");
-        return;
-      }
+        const data = JSON.parse(saved);
+        downloadTextFile("verified-delivery-receipt.txt", buildReceiptText(data));
+      });
+    }
 
-      const data = JSON.parse(saved);
-      downloadTextFile("verified-delivery-receipt.txt", buildReceiptText(data));
-    });
-  }
+    if (downloadDocCopyBtn) {
+      downloadDocCopyBtn.addEventListener("click", function () {
+        const savedReceipt = localStorage.getItem("verified_delivery_receipt_data");
+        let exportData;
 
-  if (editVerifyBtn) {
-    editVerifyBtn.addEventListener("click", function () {
-      handleVerifyEdit();
-    });
-  }
+        if (savedReceipt) {
+          exportData = JSON.parse(savedReceipt);
+        } else {
+          exportData = buildReceiptObject();
+          exportData.verificationId = "Pending";
+          exportData.status = "Not Yet Submitted";
+        }
 
-  if (downloadDocCopyBtn) {
-    downloadDocCopyBtn.addEventListener("click", function () {
-      const savedReceipt = localStorage.getItem("verified_delivery_receipt_data");
-      let exportData;
-
-      if (savedReceipt) {
-        exportData = JSON.parse(savedReceipt);
-      } else {
-        exportData = buildReceiptObject();
-        exportData.verificationId = "Pending";
-        exportData.status = "Not Yet Submitted";
-      }
-
-      downloadTextFile("verified-document-copy.txt", buildSentCopyText(exportData));
-    });
-  }
-
-  window.addEventListener("DOMContentLoaded", function () {
-    loadTransferDocument();
-
-    localStorage.setItem("verify_edit_count", "0");
+        downloadTextFile("verified-document-copy.txt", buildSentCopyText(exportData));
+      });
+    }
 
     if (editVerifyBtn) {
-      editVerifyBtn.style.display = "inline-block";
-      editVerifyBtn.disabled = false;
+      editVerifyBtn.addEventListener("click", function () {
+        if (editVerifyModal) {
+          editVerifyModal.style.display = "flex";
+        }
+      });
     }
 
-    if (sendDate) {
-      const today = new Date();
-      const mm = String(today.getMonth() + 1).padStart(2, "0");
-      const dd = String(today.getDate()).padStart(2, "0");
-      const yyyy = today.getFullYear();
-      sendDate.value = `${mm}/${dd}/${yyyy}`;
+    if (confirmEditVerifyBtn) {
+      confirmEditVerifyBtn.addEventListener("click", function () {
+        if (editVerifyModal) {
+          editVerifyModal.style.display = "none";
+        }
+        handleVerifyEdit();
+      });
     }
-  });
-</script>
+
+    if (closeEditVerifyModal) {
+      closeEditVerifyModal.addEventListener("click", function () {
+        if (editVerifyModal) {
+          editVerifyModal.style.display = "none";
+        }
+      });
+    }
+
+    window.addEventListener("DOMContentLoaded", function () {
+      loadTransferDocument();
+
+      localStorage.setItem("verify_edit_count", "0");
+
+      if (editVerifyBtn) {
+        editVerifyBtn.style.display = "inline-block";
+        editVerifyBtn.disabled = false;
+      }
+
+      if (sendDate) {
+        const today = new Date();
+        const mm = String(today.getMonth() + 1).padStart(2, "0");
+        const dd = String(today.getDate()).padStart(2, "0");
+        const yyyy = today.getFullYear();
+        sendDate.value = `${mm}/${dd}/${yyyy}`;
+      }
+    });
+  </script>
 </body>
 </html>
