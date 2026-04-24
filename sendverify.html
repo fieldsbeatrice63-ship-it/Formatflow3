@@ -1019,6 +1019,7 @@ ${data.documentContent}
 
     if (sendVerifiedBtn) {
       sendVerifiedBtn.addEventListener("click", function () {
+        if (!countSendVerifyDocumentOnce()) return;
         if (!validateForm()) return;
 
         const receiptData = buildReceiptObject();
@@ -1059,6 +1060,7 @@ ${data.documentContent}
 
     if (downloadDocCopyBtn) {
       downloadDocCopyBtn.addEventListener("click", function () {
+        if (!countSendVerifyDocumentOnce()) return;
         let exportData;
         const savedReceipt = localStorage.getItem("verified_delivery_receipt_data");
 
