@@ -137,7 +137,7 @@
     </div>
 
     <div class="actions">
-      <a class="btn btn-primary" href="app.html?payment=success">Return to My Document</a>
+      <a class="btn btn-primary" id="returnToAppBtn" href="app.html?payment=success">Return to My Document</a>
       <a class="btn btn-secondary" href="index.html">Back to Home</a>
       
     </div>
@@ -146,6 +146,14 @@
      
     </div>
   </div>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const plan = params.get("plan") || "";
+  const returnToAppBtn = document.getElementById("returnToAppBtn");
 
+  if (returnToAppBtn && plan) {
+    returnToAppBtn.href = "app.html?payment=success&plan=" + plan;
+  }
+</script>
 </body>
 </html>
