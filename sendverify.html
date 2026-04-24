@@ -1054,15 +1054,15 @@ ${text.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          document: buildFinalPackageDocument(),
-          docType: originalDocumentType,
-          senderName: senderName.value || "",
-          senderEmail: senderEmail.value || "",
-          recipientName: recipientCompany.value || "",
-          recipientEmail: recipientEmail.value || "",
-          deliveryNote: appliedDeliveryNote || ""
-          deliveryType: localStorage.getItem("sendverify_delivery_type") || "standard",
-        })
+  document: buildFinalPackageDocument(),
+  docType: originalDocumentType,
+  senderName: senderName.value || "",
+  senderEmail: senderEmail.value || "",
+  recipientName: recipientCompany.value || "",
+  recipientEmail: recipientEmail.value || "",
+  deliveryNote: appliedDeliveryNote || "",
+  deliveryType: localStorage.getItem("sendverify_delivery_type") || "standard"
+})
       });
 
       const data = await response.json();
