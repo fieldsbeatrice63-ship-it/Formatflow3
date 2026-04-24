@@ -857,7 +857,32 @@ ${originalDocumentContent}`;
         editVerifyBtn.disabled = true;
       }
     }
+function useDocumentCredit() {
+  let used = parseInt(localStorage.getItem("docUsed") || "0", 10);
+  let limit = parseInt(localStorage.getItem("docLimit") || "0", 10);
 
+  if (limit > 0 && used >= limit) {
+    alert("You have reached your document limit for this plan.");
+    return false;
+  }
+
+  localStorage.setItem("docUsed", String(used + 1));
+  return true;
+}
+
+function countSendVerifyDocumentOnce() {
+  if (localStorage.getItem("sendverify_doc_counted") === "true") {
+    return true;
+  }
+
+  const counted = useDocumentCredit();
+
+  if (counted) {
+    localStorage.setItem("sendverify_doc_counted", "true");
+  }
+
+  return counted;
+}
     function validateForm() {
       const previewText = (previewContent.textContent || "").trim();
 
@@ -1081,7 +1106,7 @@ ${data.documentContent}
       appliedDeliveryNote = "";
 
       loadTransferDocument();
-
+localStorage.removeItem("sendverify_doc_counted");
       if (editVerifyBtn) {
         editVerifyBtn.style.display = "inline-block";
         editVerifyBtn.disabled = false;
