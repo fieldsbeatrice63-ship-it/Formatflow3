@@ -1005,17 +1005,40 @@ ${data.documentContent}
 `;
     }
 
-    function downloadTextFile(filename, text) {
-      const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    }
+   function openPdfPrintWindow(title, text) {
+  const printableWindow = window.open("", "_blank");
+
+  printableWindow.document.write(`
+    <html>
+      <head>
+        <title>${title}</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            line-height: 1.7;
+            color: #222;
+            white-space: pre-wrap;
+          }
+
+          h1 {
+            color: #173b79;
+            font-size: 22px;
+            margin-bottom: 24px;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>${title}</h1>
+${text.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
+      </body>
+    </html>
+  `);
+
+  printableWindow.document.close();
+  printableWindow.focus();
+  printableWindow.print();
+}
 
     if (sendVerifiedBtn) {
       sendVerifiedBtn.addEventListener("click", function () {
@@ -1054,7 +1077,7 @@ ${data.documentContent}
         }
 
         const data = JSON.parse(saved);
-        downloadTextFile("verified-delivery-receipt.txt", buildReceiptText(data));
+       openPdfPrintWindow("FormatFlow™ Verified Delivery Receipt", buildReceiptText(data));
       });
     }
 
@@ -1072,7 +1095,7 @@ ${data.documentContent}
           exportData.status = "Not Yet Submitted";
         }
 
-        downloadTextFile("verified-document-copy.txt", buildSentCopyText(exportData));
+       openPdfPrintWindow("FormatFlow™ Verified Document Copy", buildSentCopyText(exportData));
       });
     }
 
