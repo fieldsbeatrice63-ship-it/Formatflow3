@@ -1098,6 +1098,12 @@ if (used >= limit) {
     localStorage.setItem("sendverify_delivery_type", "certified");
     window.location.href = "https://buy.stripe.com/00weVcdnR1cl1cE5gJ3ks0o";
   }
+    if (e.target && e.target.id === "cancelVerifyPayment") {
+  const modal = document.getElementById("confirmVerifyModal");
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
 });
 
     docType.addEventListener("change", updateNote);
