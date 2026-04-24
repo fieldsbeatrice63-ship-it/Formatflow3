@@ -1088,20 +1088,15 @@ if (used >= limit) {
   });
 }
 
-   document.addEventListener("click", function (e) {
-  if (e.target && e.target.id === "closeConfirmVerifyModal") {
-    const modal = document.getElementById("confirmVerifyModal");
-    if (modal) modal.style.display = "none";
+  document.addEventListener("click", function (e) {
+  if (e.target && e.target.id === "continueStandardVerifyPayment") {
+    localStorage.setItem("sendverify_delivery_type", "standard");
+    window.location.href = "https://buy.stripe.com/9B6aEW2JdbQZ3kM9wZ3ks0n";
   }
 
-  if (e.target && e.target.id === "cancelVerifyPayment") {
-    const modal = document.getElementById("confirmVerifyModal");
-    if (modal) modal.style.display = "none";
-  }
-});
-  document.addEventListener("click", function (e) {
-  if (e.target && e.target.id === "continueVerifyPayment") {
-    window.location.href = "https://buy.stripe.com/eVqcN4erVg7f9JacJb3ks0k";
+  if (e.target && e.target.id === "continueCertifiedVerifyPayment") {
+    localStorage.setItem("sendverify_delivery_type", "certified");
+    window.location.href = "https://buy.stripe.com/00weVcdnR1cl1cE5gJ3ks0o";
   }
 });
 
@@ -1249,16 +1244,33 @@ const closeDownloadCompleteModal = document.getElementById("closeDownloadComplet
       <p style="font-size:14px; color:#555;">Available after your document has been purchased and retrieved.</p>
     </div>
   </div>
+<div id="confirmVerifyModal" class="modal-overlay">
+  <div class="modal-box">
+    <button id="closeConfirmVerifyModal" style="position:absolute; top:10px; right:10px; border:none; background:#eee; padding:6px 10px; border-radius:8px; cursor:pointer;">✕</button>
 
-  <div id="confirmVerifyModal" class="modal-overlay">
-    <div class="modal-box">
-      <button id="closeConfirmVerifyModal" style="position:absolute; top:10px; right:10px; border:none; background:#eee; padding:6px 10px; border-radius:8px; cursor:pointer;">✕</button>
-      <h3>Send with Verify™</h3>
-      <p>This will send your document with verified delivery for <strong>$7.99</strong>.</p>
-      <button id="continueVerifyPayment">Continue</button>
-      <button id="cancelVerifyPayment" class="btn-secondary" style="margin-left:10px;">Cancel</button>
-    </div>
+   <h3>Send with Verify™</h3>
+
+<p>Choose your delivery option for this finalized document.</p>
+
+<p>
+  <strong>Standard Delivery — $9.99</strong><br>
+  Automated document mailing with a FormatFlow™ verified submission record and downloadable receipt.
+</p>
+
+<p>
+  <strong>Certified Delivery — $14.99</strong><br>
+  Certified mail delivery with tracking and stronger proof of delivery. Recommended for credit, legal, financial, and time-sensitive documents.
+</p>
+
+<p style="font-size:14px; color:#555;">
+  FormatFlow™ provides delivery processing and verification records. Delivery confirmation does not guarantee review, approval, deletion, acceptance, or legal outcome.
+</p>
+
+    <button id="continueStandardVerifyPayment">Standard — $9.99</button>
+<button id="continueCertifiedVerifyPayment" class="btn-secondary" style="margin-left:10px;">Certified — $14.99</button>
+<button id="cancelVerifyPayment" class="btn-secondary" style="margin-left:10px;">Cancel</button>
   </div>
+</div>
 
   <div id="editModal" class="modal-overlay">
     <div class="modal-box" style="position:relative;">
