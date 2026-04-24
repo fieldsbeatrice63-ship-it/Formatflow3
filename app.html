@@ -1051,7 +1051,12 @@ if (used >= limit) {
         let updatedUsed = used + 1;
   let remaining = limit - updatedUsed;
 
-  alert("Download complete. You have " + remaining + " document(s) remaining.");
+ if (downloadCompleteModal && downloadCompleteMessage) {
+  downloadCompleteMessage.innerHTML =
+    "Thank you for using FormatFlow™ to build your professional document.<br><br>" +
+    "You have <strong>" + remaining + "</strong> document(s) remaining in your current plan.";
+  downloadCompleteModal.style.display = "flex";
+}
 });
 
 
@@ -1157,6 +1162,10 @@ if (paymentStatus === "success") {
       const confirmRewriteBtn = document.getElementById("confirmRewriteBtn");
       const postPaymentWarningModal = document.getElementById("postPaymentWarningModal");
 const closePostPaymentWarningModal = document.getElementById("closePostPaymentWarningModal");
+const downloadCompleteModal = document.getElementById("downloadCompleteModal");
+const downloadCompleteMessage = document.getElementById("downloadCompleteMessage");
+const closeDownloadCompleteModal = document.getElementById("closeDownloadCompleteModal");
+      
 
       if (editBtn) {
         editBtn.addEventListener("click", function () {
@@ -1195,6 +1204,11 @@ const closePostPaymentWarningModal = document.getElementById("closePostPaymentWa
       if (closePostPaymentWarningModal) {
   closePostPaymentWarningModal.addEventListener("click", function () {
     postPaymentWarningModal.style.display = "none";
+  });
+}
+      if (closeDownloadCompleteModal) {
+  closeDownloadCompleteModal.addEventListener("click", function () {
+    downloadCompleteModal.style.display = "none";
   });
 }
     });
@@ -1274,6 +1288,14 @@ const closePostPaymentWarningModal = document.getElementById("closePostPaymentWa
     <button id="closePostPaymentWarningModal">Continue</button>
   </div>
 </div>
-
+<div id="downloadCompleteModal" class="modal-overlay">
+  <div class="modal-box" style="position:relative;">
+    <h3>Download Complete</h3>
+    <p id="downloadCompleteMessage">
+      Thank you for using FormatFlow™.
+    </p>
+    <button id="closeDownloadCompleteModal">Continue</button>
+  </div>
+</div>
 </body>
 </html>
