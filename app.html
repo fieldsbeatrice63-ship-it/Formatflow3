@@ -1206,9 +1206,16 @@ const closeDownloadCompleteModal = document.getElementById("closeDownloadComplet
     postPaymentWarningModal.style.display = "none";
   });
 }
-      if (closeDownloadCompleteModal) {
+    if (closeDownloadCompleteModal) {
   closeDownloadCompleteModal.addEventListener("click", function () {
     downloadCompleteModal.style.display = "none";
+
+    localStorage.removeItem("formatflow_pending_document");
+    localStorage.removeItem("formatflow_paid_unlocked");
+    localStorage.removeItem("formatflow_edit_count");
+    localStorage.removeItem("formatflow_rewrite_count");
+
+    window.location.href = "app.html";
   });
 }
     });
