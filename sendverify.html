@@ -1061,6 +1061,7 @@ ${text.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
           recipientName: recipientCompany.value || "",
           recipientEmail: recipientEmail.value || "",
           deliveryNote: appliedDeliveryNote || ""
+          deliveryType: localStorage.getItem("sendverify_delivery_type") || "standard",
         })
       });
 
