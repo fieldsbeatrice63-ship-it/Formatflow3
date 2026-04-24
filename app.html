@@ -1040,6 +1040,14 @@ ${documentText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
     downloadPdfBtn.addEventListener("click", function () {
       openDocumentPrintWindow();
       completeDocumentSession();
+let used = parseInt(localStorage.getItem("docUsed") || "0");
+let limit = parseInt(localStorage.getItem("docLimit") || "0");
+
+if (used >= limit) {
+  alert("You have reached your document limit for this plan.");
+  return;
+}
+      localStorage.setItem("docUsed", used + 1);
     });
 
     printDocBtn.addEventListener("click", function () {
