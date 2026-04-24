@@ -1065,7 +1065,7 @@ if (used >= limit) {
      
     });
 
-    if (verifiedSendBtn) {
+  if (verifiedSendBtn) {
   verifiedSendBtn.addEventListener("click", function () {
     const docContent = previewContent.textContent || "";
 
@@ -1076,34 +1076,34 @@ if (used >= limit) {
 
     localStorage.setItem("verified_send_document", docContent);
     localStorage.setItem("verified_send_doc_type", docType.value || "");
-
     localStorage.removeItem("verified_delivery_receipt_data");
 
-    if (confirmVerifyModal) {
-      confirmVerifyModal.style.display = "flex";
+    const modal = document.getElementById("confirmVerifyModal");
+
+    if (modal) {
+      modal.style.display = "flex";
     } else {
-      window.location.href = "sendverify.html";
+      alert("Send Verify payment window could not open. Please try again.");
     }
   });
 }
 
-    if (closeConfirmVerifyModal) {
-      closeConfirmVerifyModal.addEventListener("click", function () {
-        confirmVerifyModal.style.display = "none";
-      });
-    }
+   document.addEventListener("click", function (e) {
+  if (e.target && e.target.id === "closeConfirmVerifyModal") {
+    const modal = document.getElementById("confirmVerifyModal");
+    if (modal) modal.style.display = "none";
+  }
 
-    if (cancelVerifyPayment) {
-      cancelVerifyPayment.addEventListener("click", function () {
-        confirmVerifyModal.style.display = "none";
-      });
-    }
-
-  if (continueVerifyPayment) {
-  continueVerifyPayment.addEventListener("click", function () {
+  if (e.target && e.target.id === "cancelVerifyPayment") {
+    const modal = document.getElementById("confirmVerifyModal");
+    if (modal) modal.style.display = "none";
+  }
+});
+  document.addEventListener("click", function (e) {
+  if (e.target && e.target.id === "continueVerifyPayment") {
     window.location.href = "https://buy.stripe.com/eVqcN4erVg7f9JacJb3ks0k";
-  });
-}
+  }
+});
 
     docType.addEventListener("change", updateNote);
 
