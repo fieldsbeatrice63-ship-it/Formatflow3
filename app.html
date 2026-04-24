@@ -1083,37 +1083,43 @@ ${documentText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
 
       const params = new URLSearchParams(window.location.search);
       const paymentStatus = params.get("payment");
+if (paymentStatus === "success") {
+  successBanner.style.display = "block";
+  retrieveBox.style.display = "block";
+  restorePendingDocument();
 
-      if (paymentStatus === "success") {
-        successBanner.style.display = "block";
-        retrieveBox.style.display = "block";
-        restorePendingDocument();
+  localStorage.setItem("formatflow_paid_unlocked", "true");
+  localStorage.setItem("formatflow_edit_count", "0");
+  localStorage.setItem("formatflow_rewrite_count", "0");
 
-        if (postPaymentWarningModal) {
-  postPaymentWarningModal.style.display = "flex";
+  const plan = params.get("plan");
+
+  if (plan === "fast") {
+    localStorage.setItem("docLimit", "5");
+  } else if (plan === "approval") {
+    localStorage.setItem("docLimit", "10");
+  } else if (plan === "authority") {
+    localStorage.setItem("docLimit", "15");
+  }
+
+  localStorage.setItem("docUsed", "0");
+
+  rewriteCount = 0;
+
+  if (editBtn) {
+    editBtn.style.display = "inline-block";
+    editBtn.disabled = false;
+  }
+
+  if (rewriteBtn) {
+    rewriteBtn.style.display = "inline-block";
+    rewriteBtn.disabled = false;
+  }
+
+  if (generateBtn) generateBtn.disabled = true;
+  if (clearBtn) clearBtn.disabled = true;
+  if (docType) docType.disabled = true;
 }
-
-        localStorage.setItem("formatflow_paid_unlocked", "true");
-        localStorage.setItem("formatflow_edit_count", "0");
-        localStorage.setItem("formatflow_rewrite_count", "0");
-
-        rewriteCount = 0;
-
-        if (editBtn) {
-          editBtn.style.display = "inline-block";
-          editBtn.disabled = false;
-        }
-
-        if (rewriteBtn) {
-          rewriteBtn.style.display = "inline-block";
-          rewriteBtn.disabled = false;
-        }
-
-        if (generateBtn) generateBtn.disabled = true;
-        if (clearBtn) clearBtn.disabled = true;
-        if (docType) docType.disabled = true;
-      }
-
       const paidUnlocked = localStorage.getItem("formatflow_paid_unlocked");
       if (paidUnlocked === "true") {
         if (previewPaper) previewPaper.classList.remove("locked");
