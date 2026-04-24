@@ -1041,33 +1041,80 @@ ${text.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
 }
 
     if (sendVerifiedBtn) {
-      sendVerifiedBtn.addEventListener("click", function () {
-        if (!countSendVerifyDocumentOnce()) return;
-        if (!validateForm()) return;
+  sendVerifiedBtn.addEventListener("click", async function () {
+    if (!validateForm()) return;
 
-        const receiptData = buildReceiptObject();
-        localStorage.setItem("verified_delivery_receipt_data", JSON.stringify(receiptData));
+    try {
+      sendVerifiedBtn.disabled = true;
+      sendVerifiedBtn.textContent = "Submitting...";
 
-        previewStatus.textContent = "Submitted";
-        successBox.style.display = "block";
-        receiptCard.style.display = "block";
-        downloadReceiptBtn.style.display = "inline-block";
-
-        successMessage.textContent = "Your document has been submitted through the verified delivery workflow. Please download your receipt and save it for your records.";
-
-        receiptVerificationId.textContent = receiptData.verificationId;
-        receiptStatus.textContent = receiptData.status;
-        receiptTimestamp.textContent = receiptData.timestamp;
-        receiptDocType.textContent = receiptData.docType;
-        receiptSender.textContent = receiptData.sender;
-        receiptRecipient.textContent = receiptData.recipient;
-
-        if (editVerifyBtn) {
-          editVerifyBtn.disabled = true;
-        }
+      const response = await fetch("https://format-flow-backend.onrender.com/api/send-verify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          document: buildFinalPackageDocument(),
+          docType: originalDocumentType,
+          senderName: senderName.value || "",
+          senderEmail: senderEmail.value || "",
+          recipientName: recipientCompany.value || "",
+          recipientEmail: recipientEmail.value || "",
+          deliveryNote: appliedDeliveryNote || ""
+        })
       });
-    }
 
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || "Send Verify submission failed.");
+      }
+
+      const receiptData = {
+        verificationId: data.receipt.verificationId,
+        status: "Submitted",
+        timestamp: data.receipt.timestamp,
+        docType: docTitles[originalDocumentType] || "Document",
+        sender: safeValue(senderName.value),
+        senderEmail: safeValue(senderEmail.value),
+        senderPhone: safeValue(senderPhone.value),
+        senderAddress: safeValue(senderAddress.value),
+        senderCityStateZip: safeValue(senderCityStateZip.value),
+        recipient: safeValue(recipientCompany.value),
+        recipientEmail: safeValue(recipientEmail.value),
+        recipientAddress: safeValue(recipientAddress.value),
+        referenceNumber: safeValue(referenceNumber.value),
+        deliveryNotes: safeValue(appliedDeliveryNote, "None"),
+        documentContent: buildFinalPackageDocument()
+      };
+
+      localStorage.setItem("verified_delivery_receipt_data", JSON.stringify(receiptData));
+
+      previewStatus.textContent = "Submitted";
+      successBox.style.display = "block";
+      receiptCard.style.display = "block";
+      downloadReceiptBtn.style.display = "inline-block";
+
+      successMessage.textContent = "Your document has been submitted through the verified delivery workflow. Please download your receipt and save it for your records.";
+
+      receiptVerificationId.textContent = receiptData.verificationId;
+      receiptStatus.textContent = receiptData.status;
+      receiptTimestamp.textContent = receiptData.timestamp;
+      receiptDocType.textContent = receiptData.docType;
+      receiptSender.textContent = receiptData.sender;
+      receiptRecipient.textContent = receiptData.recipient;
+
+      if (editVerifyBtn) {
+        editVerifyBtn.disabled = true;
+      }
+    } catch (error) {
+      console.error("Send Verify error:", error);
+      alert("There was an error submitting your verified delivery. Please try again.");
+      sendVerifiedBtn.disabled = false;
+      sendVerifiedBtn.textContent = "Send with Verified Delivery";
+    }
+  });
+}
     if (downloadReceiptBtn) {
       downloadReceiptBtn.addEventListener("click", function () {
         const saved = localStorage.getItem("verified_delivery_receipt_data");
