@@ -1271,14 +1271,18 @@ const closeDownloadCompleteModal = document.getElementById("closeDownloadComplet
 <p style="font-size:14px; color:#555;">
   FormatFlow™ provides delivery processing and verification records. Delivery confirmation does not guarantee review, approval, deletion, acceptance, or legal outcome.
 </p>
+    <div id="destinationButtons" style="margin-top:15px;">
+  <button type="button" class="dest-btn" data-dest="experian">Experian</button>
+  <button type="button" class="dest-btn" data-dest="equifax">Equifax</button>
+  <button type="button" class="dest-btn" data-dest="transunion">TransUnion</button>
+
+<div id="destinationPreview" style="margin-top:10px;"></div>
 
     <button id="continueStandardVerifyPayment">Standard — $9.99</button>
 <button id="continueCertifiedVerifyPayment" class="btn-secondary" style="margin-left:10px;">Certified — $14.99</button>
 <button id="cancelVerifyPayment" class="btn-secondary" style="margin-left:10px;">Cancel</button>
     <div id="destinationButtons" style="margin-top:15px;">
-  <button type="button" class="dest-btn" data-dest="experian">Experian</button>
-  <button type="button" class="dest-btn" data-dest="equifax">Equifax</button>
-  <button type="button" class="dest-btn" data-dest="transunion">TransUnion</button>
+  
 </div>
 
 <div id="destinationPreview" style="margin-top:10px;"></div>
