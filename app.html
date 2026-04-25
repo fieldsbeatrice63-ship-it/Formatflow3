@@ -617,7 +617,27 @@ Choose a document type, complete the form, and click “Generate Preview” to s
     FormatFlow™ does not provide legal advice, financial advice, or guaranteed results. AI Governance Powered by HALO™
   </footer>
 
+
+
   <script>
+const DESTINATION_MAP = {
+  experian: {
+    name: "Experian",
+    address: "P.O. Box 4500, Allen, TX 75013"
+  },
+  equifax: {
+    name: "Equifax Information Services LLC",
+    address: "P.O. Box 740256, Atlanta, GA 30374"
+  },
+  transunion: {
+    name: "TransUnion Consumer Solutions",
+    address: "P.O. Box 2000, Chester, PA 19016"
+  }
+};
+
+let selectedDestination = "";
+let selectedAddress = "";
+ 
     const docType = document.getElementById("docType");
     const fullName = document.getElementById("fullName");
     const address = document.getElementById("address");
@@ -1089,20 +1109,39 @@ if (used >= limit) {
 }
 
   document.addEventListener("click", function (e) {
-  if (e.target && e.target.id === "continueStandardVerifyPayment") {
-    localStorage.setItem("sendverify_delivery_type", "standard");
-    window.location.href = "https://buy.stripe.com/9B6aEW2JdbQZ3kM9wZ3ks0n";
+ if (e.target && e.target.id === "continueStandardVerifyPayment") {
+
+  if (!selectedDestination) {
+    alert("Please select a destination before continuing.");
+    return;
   }
 
-  if (e.target && e.target.id === "continueCertifiedVerifyPayment") {
-    localStorage.setItem("sendverify_delivery_type", "certified");
-    window.location.href = "https://buy.stripe.com/00weVcdnR1cl1cE5gJ3ks0o";
+  localStorage.setItem("sendverify_delivery_type", "standard");
+  localStorage.setItem("sendverify_destination", selectedDestination);
+  localStorage.setItem(
+    "sendverify_address",
+    document.getElementById("editableAddress")?.value || ""
+  );
+
+  window.location.href = "https://buy.stripe.com/9B6aEW2JdbQZ3kM9wZ3ks0n";
+}
+
+ if (e.target && e.target.id === "continueCertifiedVerifyPayment") {
+
+  if (!selectedDestination) {
+    alert("Please select a destination before continuing.");
+    return;
   }
-    if (e.target && e.target.id === "cancelVerifyPayment") {
-  const modal = document.getElementById("confirmVerifyModal");
-  if (modal) {
-    modal.style.display = "none";
-  }
+
+  localStorage.setItem("sendverify_delivery_type", "certified");
+  localStorage.setItem("sendverify_destination", selectedDestination);
+  localStorage.setItem(
+    "sendverify_address",
+    document.getElementById("editableAddress")?.value || ""
+  );
+
+  window.location.href = "https://buy.stripe.com/00weVcdnR1cl1cE5gJ3ks0o";
+
 }
 });
 
@@ -1231,63 +1270,103 @@ const closeDownloadCompleteModal = document.getElementById("closeDownloadComplet
   });
 }
     });
+    document.querySelectorAll(".dest-btn").forEach(btn => {
+  btn.addEventListener("click", function () {
+    const key = this.getAttribute("data-dest");
+
+    selectedDestination = key;
+    selectedAddress = DESTINATION_MAP[key].address;
+
+    document.getElementById("destinationPreview").innerHTML = `
+      <strong>${DESTINATION_MAP[key].name}</strong><br>
+      <input 
+        type="text" 
+        id="editableAddress"
+        value="${DESTINATION_MAP[key].address}"
+        style="width:100%; padding:8px; margin-top:5px;"
+      />
+    `;
+  });
+});
    
   </script>
 
-  <div id="sendVerifyModal" class="modal-overlay">
-    <div class="modal-box">
-      <button id="closeSendVerifyModal" style="position:absolute; top:10px; right:10px; border:none; background:#eee; padding:6px 10px; border-radius:8px; cursor:pointer;">✕</button>
-      <div style="margin-bottom:10px;">
-        <span style="background:#28c76f; color:#fff; padding:4px 10px; border-radius:999px; font-size:11px; font-weight:700;">
-          NEW
-        </span>
-      </div>
-      <h3>Send Verify™</h3>
-      <p>Send Verify™ allows you to move your completed document into a verified delivery workflow.</p>
-      <p><strong>Best use for credit dispute letters.</strong></p>
-      <p>Verification number, structured delivery workflow, downloadable receipt, and document record copy.</p>
-      <p><strong>Price: $9.99-$14.99 per document</strong></p>
-      <p style="font-size:14px; color:#555;">Available after your document has been purchased and retrieved.</p>
+ <div id="sendVerifyModal" class="modal-overlay">
+  <div class="modal-box" style="position:relative;">
+    <button id="closeSendVerifyModal" style="position:absolute; top:10px; right:10px; border:none; background:#eee; padding:6px 10px; border-radius:8px; cursor:pointer;">✕</button>
+
+    <div style="margin-bottom:10px;">
+      <span style="background:#28c76f; color:#fff; padding:4px 10px; border-radius:999px; font-size:11px; font-weight:700;">
+        NEW
+      </span>
     </div>
+
+    <h3>Send Verify™</h3>
+
+    <p>
+      Send Verify™ moves your completed document into a verified delivery workflow with a verification record, delivery preparation, and downloadable receipt.
+    </p>
+
+    <p>
+      <strong>Best use:</strong> credit dispute letters, debt validation letters, legal-style notices, financial documents, and time-sensitive correspondence.
+    </p>
+
+    <p style="font-size:14px; color:#555;">
+      Available after your document has been purchased and retrieved.
+    </p>
   </div>
+</div>
+
 <div id="confirmVerifyModal" class="modal-overlay">
-  <div class="modal-box">
+  <div class="modal-box" style="position:relative;">
     <button id="closeConfirmVerifyModal" style="position:absolute; top:10px; right:10px; border:none; background:#eee; padding:6px 10px; border-radius:8px; cursor:pointer;">✕</button>
 
-   <h3>Send with Verify™</h3>
+    <h3>Send with Verify™</h3>
 
-<p>Choose your delivery option for this finalized document.</p>
+    <p>Choose where this finalized document should be prepared for verified delivery.</p>
 
-<p>
-  <strong>Standard Delivery — $9.99</strong><br>
-  Automated document mailing with a FormatFlow™ verified submission record and downloadable receipt.
-</p>
+    <div id="destinationSection" style="margin-top:15px;">
+      <div id="destinationButtons" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+        <button type="button" class="dest-btn" data-dest="experian">Experian</button>
+        <button type="button" class="dest-btn" data-dest="equifax">Equifax</button>
+        <button type="button" class="dest-btn" data-dest="transunion">TransUnion</button>
+      </div>
 
-<p>
-  <strong>Certified Delivery — $14.99</strong><br>
-  Certified mail delivery with tracking and stronger proof of delivery. Recommended for credit, legal, financial, and time-sensitive documents.
-</p>
+      
+    </div>
 
-<p style="font-size:14px; color:#555;">
-  FormatFlow™ provides delivery processing and verification records. Delivery confirmation does not guarantee review, approval, deletion, acceptance, or legal outcome.
-</p>
-    <div id="destinationButtons" style="margin-top:15px;">
-  <button type="button" class="dest-btn" data-dest="experian">Experian</button>
-  <button type="button" class="dest-btn" data-dest="equifax">Equifax</button>
-  <button type="button" class="dest-btn" data-dest="transunion">TransUnion</button>
+    <p style="font-size:14px; color:#555; margin-top:16px;">
+      The destination address will populate automatically and may be reviewed before continuing.
+    </p>
 
-<div id="destinationPreview" style="margin-top:10px;"></div>
+    <hr style="border:none; border-top:1px solid #dce9ff; margin:18px 0;">
 
-    <button id="continueStandardVerifyPayment">Standard — $9.99</button>
-<button id="continueCertifiedVerifyPayment" class="btn-secondary" style="margin-left:10px;">Certified — $14.99</button>
-<button id="cancelVerifyPayment" class="btn-secondary" style="margin-left:10px;">Cancel</button>
-    <div id="destinationButtons" style="margin-top:15px;">
-  
-</div>
+    <p>
+      <strong>Standard Delivery — $9.99</strong><br>
+      Automated document mailing preparation with a FormatFlow™ verified submission record and downloadable receipt.
+    </p>
 
-<div id="destinationPreview" style="margin-top:10px;"></div>
+    <p>
+      <strong>Certified Delivery — $14.99</strong><br>
+      Certified mail preparation with tracking support and stronger proof-of-delivery workflow.
+    </p>
+
+    <p style="font-size:14px; color:#555;">
+      FormatFlow™ provides delivery processing and verification records. Delivery confirmation does not guarantee review, approval, deletion, acceptance, or legal outcome.
+    </p>
+
+    <div style="margin-top:18px;">
+      <button id="continueStandardVerifyPayment">Standard — $9.99</button>
+      <button id="continueCertifiedVerifyPayment" class="btn-secondary" style="margin-left:10px;">Certified — $14.99</button>
+      <button id="cancelVerifyPayment" class="btn-secondary" style="margin-left:10px;">Cancel</button>
+    </div>
   </div>
 </div>
+  <div id="destinationPreview" style="margin-top:12px; text-align:left;"></div>
+
+</div>
+
+
 
   <div id="editModal" class="modal-overlay">
     <div class="modal-box" style="position:relative;">
