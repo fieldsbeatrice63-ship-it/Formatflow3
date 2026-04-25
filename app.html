@@ -1058,32 +1058,36 @@ ${documentText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
     });
 
     downloadPdfBtn.addEventListener("click", function () {
-      openDocumentPrintWindow();
-      
-let used = parseInt(localStorage.getItem("docUsed") || "0");
-let limit = parseInt(localStorage.getItem("docLimit") || "0");
+  openDocumentPrintWindow();
 
-if (used >= limit) {
-  alert("You have reached your document limit for this plan.");
-  return;
-}
-      localStorage.setItem("docUsed", used + 1);
-        let updatedUsed = used + 1;
-  let remaining = limit - updatedUsed;
+  const used = parseInt(localStorage.getItem("docUsed") || "0", 10);
+  const limit = parseInt(localStorage.getItem("docLimit") || "0", 10);
 
- if (downloadCompleteModal && downloadCompleteMessage) {
-  downloadCompleteMessage.innerHTML =
-    "Thank you for using FormatFlow™ to build your professional document.<br><br>" +
-    "You have <strong>" + remaining + "</strong> document(s) remaining in your current plan.";
-  downloadCompleteModal.style.display = "flex";
-}
+  if (used >= limit) {
+    alert("You have reached your document limit for this plan.");
+    return;
+  }
+
+  const updatedUsed = used + 1;
+  const remaining = limit - updatedUsed;
+
+  localStorage.setItem("docUsed", String(updatedUsed));
+
+  const downloadCompleteModal = document.getElementById("downloadCompleteModal");
+  const downloadCompleteMessage = document.getElementById("downloadCompleteMessage");
+
+  if (downloadCompleteModal && downloadCompleteMessage) {
+    downloadCompleteMessage.innerHTML =
+      "Thank you for using FormatFlow™ to build your professional document.<br><br>" +
+      "You have <strong>" + remaining + "</strong> document(s) remaining in your current plan.";
+
+    downloadCompleteModal.style.display = "flex";
+  }
 });
 
-
-    printDocBtn.addEventListener("click", function () {
-      openDocumentPrintWindow();
-     
-    });
+printDocBtn.addEventListener("click", function () {
+  openDocumentPrintWindow();
+});
 
   if (verifiedSendBtn) {
   verifiedSendBtn.addEventListener("click", function () {
@@ -1109,27 +1113,39 @@ if (used >= limit) {
 }
 
   document.addEventListener("click", function (e) {
+  const target = e.target;
 
-  if (e.target && e.target.classList.contains("dest-btn")) {
-    const key = e.target.getAttribute("data-dest");
+  if (!target) return;
+
+  if (target.classList.contains("dest-btn")) {
+    const key = target.getAttribute("data-dest");
+
+    if (!DESTINATION_MAP[key]) {
+      alert("Destination could not be found.");
+      return;
+    }
 
     selectedDestination = key;
     selectedAddress = DESTINATION_MAP[key].address;
 
-    document.getElementById("destinationPreview").innerHTML = `
-      <strong>${DESTINATION_MAP[key].name}</strong><br>
-      <input 
-        type="text" 
-        id="editableAddress"
-        value="${DESTINATION_MAP[key].address}"
-        style="width:100%; padding:8px; margin-top:5px;"
-      />
-    `;
+    const preview = document.getElementById("destinationPreview");
+
+    if (preview) {
+      preview.innerHTML = `
+        <strong>${DESTINATION_MAP[key].name}</strong><br>
+        <input
+          type="text"
+          id="editableAddress"
+          value="${DESTINATION_MAP[key].address}"
+          style="width:100%; padding:8px; margin-top:5px;"
+        />
+      `;
+    }
 
     return;
   }
 
-  if (e.target && e.target.id === "continueStandardVerifyPayment") {
+  if (target.id === "continueStandardVerifyPayment") {
     if (!selectedDestination) {
       alert("Please select a destination before continuing.");
       return;
@@ -1139,13 +1155,14 @@ if (used >= limit) {
     localStorage.setItem("sendverify_destination", selectedDestination);
     localStorage.setItem(
       "sendverify_address",
-      document.getElementById("editableAddress")?.value || ""
+      document.getElementById("editableAddress")?.value || selectedAddress || ""
     );
 
     window.location.href = "https://buy.stripe.com/9B6aEW2JdbQZ3kM9wZ3ks0n";
+    return;
   }
 
-  if (e.target && e.target.id === "continueCertifiedVerifyPayment") {
+  if (target.id === "continueCertifiedVerifyPayment") {
     if (!selectedDestination) {
       alert("Please select a destination before continuing.");
       return;
@@ -1155,27 +1172,25 @@ if (used >= limit) {
     localStorage.setItem("sendverify_destination", selectedDestination);
     localStorage.setItem(
       "sendverify_address",
-      document.getElementById("editableAddress")?.value || ""
+      document.getElementById("editableAddress")?.value || selectedAddress || ""
     );
 
     window.location.href = "https://buy.stripe.com/00weVcdnR1cl1cE5gJ3ks0o";
+    return;
   }
 
-  if (e.target && e.target.id === "cancelVerifyPayment") {
+  if (target.id === "cancelVerifyPayment") {
     const modal = document.getElementById("confirmVerifyModal");
-    if (modal) {
-      modal.style.display = "none";
-    }
+    if (modal) modal.style.display = "none";
+    return;
   }
 
-  if (e.target && e.target.id === "closeConfirmVerifyModal") {
+  if (target.id === "closeConfirmVerifyModal") {
     const modal = document.getElementById("confirmVerifyModal");
-    if (modal) {
-      modal.style.display = "none";
-    }
+    if (modal) modal.style.display = "none";
+    return;
   }
 });
-
     docType.addEventListener("change", updateNote);
 
     window.addEventListener("DOMContentLoaded", function () {
