@@ -1246,7 +1246,7 @@ const closeDownloadCompleteModal = document.getElementById("closeDownloadComplet
       <p>Send Verify™ allows you to move your completed document into a verified delivery workflow.</p>
       <p><strong>Best use for credit dispute letters.</strong></p>
       <p>Verification number, structured delivery workflow, downloadable receipt, and document record copy.</p>
-      <p><strong>Price: $7.99 per document</strong></p>
+      <p><strong>Price: $9.99-$14.99 per document</strong></p>
       <p style="font-size:14px; color:#555;">Available after your document has been purchased and retrieved.</p>
     </div>
   </div>
@@ -1275,6 +1275,13 @@ const closeDownloadCompleteModal = document.getElementById("closeDownloadComplet
     <button id="continueStandardVerifyPayment">Standard — $9.99</button>
 <button id="continueCertifiedVerifyPayment" class="btn-secondary" style="margin-left:10px;">Certified — $14.99</button>
 <button id="cancelVerifyPayment" class="btn-secondary" style="margin-left:10px;">Cancel</button>
+    <div id="destinationButtons" style="margin-top:15px;">
+  <button type="button" class="dest-btn" data-dest="experian">Experian</button>
+  <button type="button" class="dest-btn" data-dest="equifax">Equifax</button>
+  <button type="button" class="dest-btn" data-dest="transunion">TransUnion</button>
+</div>
+
+<div id="destinationPreview" style="margin-top:10px;"></div>
   </div>
 </div>
 
