@@ -776,6 +776,22 @@
       }
     }
 
+    if (target.id === "testVerifyReturn") {
+  if (!selectedDestination) {
+    alert("Please select a destination before testing.");
+    return;
+  }
+
+  localStorage.setItem("sendverify_delivery_type", "standard");
+  localStorage.setItem("sendverify_destination", selectedDestination);
+  localStorage.setItem(
+    "sendverify_address",
+    document.getElementById("editableAddress")?.value || selectedAddress || ""
+  );
+
+  window.location.href = "sendverify.html?payment=success";
+  return;
+}
     function buildCoverNotePage(noteText) {
       return `FORMATFLOW™ VERIFIED DELIVERY COVER NOTE
 
