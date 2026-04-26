@@ -1144,6 +1144,7 @@ printDocBtn.addEventListener("click", function () {
 
     return;
   }
+    
 
   if (target.id === "continueStandardVerifyPayment") {
     if (!selectedDestination) {
@@ -1178,6 +1179,22 @@ printDocBtn.addEventListener("click", function () {
     window.location.href = "https://buy.stripe.com/00weVcdnR1cl1cE5gJ3ks0o";
     return;
   }
+    if (target.id === "testVerifyReturn") {
+  if (!selectedDestination) {
+    alert("Please select a destination before testing.");
+    return;
+  }
+
+  localStorage.setItem("sendverify_delivery_type", "standard");
+  localStorage.setItem("sendverify_destination", selectedDestination);
+  localStorage.setItem(
+    "sendverify_address",
+    document.getElementById("editableAddress")?.value || selectedAddress || ""
+  );
+
+  window.location.href = "sendverify.html?payment=success";
+  return;
+}
 
   if (target.id === "cancelVerifyPayment") {
     const modal = document.getElementById("confirmVerifyModal");
@@ -1359,6 +1376,7 @@ const closeDownloadCompleteModal = document.getElementById("closeDownloadComplet
     <button type="button" class="dest-btn" data-dest="experian">Experian</button>
     <button type="button" class="dest-btn" data-dest="equifax">Equifax</button>
     <button type="button" class="dest-btn" data-dest="transunion">TransUnion</button>
+    <button id="testVerifyReturn" class="btn-secondary" style="margin-left:10px;">Test Return</button>
   </div>
 
   <div id="destinationPreview" style="margin-top:12px; text-align:left;"></div>
