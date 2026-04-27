@@ -432,6 +432,16 @@
         min-height: 620px;
       }
     }
+    @media print {
+  .preview-paper {
+    page-break-inside: avoid;
+  }
+
+  .paper-content {
+    orphans: 3;
+    widows: 3;
+  }
+}
   </style>
 </head>
 <body>
