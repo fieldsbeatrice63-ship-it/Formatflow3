@@ -1031,7 +1031,10 @@ Delivery ID:
 ${data.deliveryId || "—"}
 
 Tracking Link:
-${data.trackingLink || "Not available yet"}
+${data.trackingLink || "Not available"}
+
+View Delivery:
+${data.trackingLink ? data.trackingLink : "Not available"}
 
 Lob Error:
 ${data.lobError || "None shown"}
@@ -1193,7 +1196,7 @@ receiptDeliveryType.textContent = data.receipt.deliveryType || "—";
 receiptDeliveryId.textContent = data.receipt.deliveryId || "—";
 
 if (data.receipt.trackingLink) {
-  receiptTrackingLink.innerHTML = `<a href="${data.receipt.trackingLink}" target="_blank" style="color:#1e4db7; font-weight:700;">View Tracking</a>`;
+ receiptTrackingLink.innerHTML = `<a href="${data.receipt.trackingLink}" target="_blank" style="color:#1e4db7; font-weight:700;">View Delivery</a>`;
 } else {
   receiptTrackingLink.textContent = "Not available yet";
 }
