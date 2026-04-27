@@ -760,6 +760,36 @@ const receiptTrackingLink = document.getElementById("receiptTrackingLink");
       deliveryNotes.value = "";
     }
 
+
+    function applyStoredSendVerifyDestination() {
+  const destinationType = localStorage.getItem("sendverify_destination") || "";
+  const customAddress = localStorage.getItem("sendverify_address") || "";
+  const deliveryType = localStorage.getItem("sendverify_delivery_type") || "standard";
+
+  const destinationNames = {
+    experian: "Experian",
+    equifax: "Equifax",
+    transunion: "TransUnion"
+  };
+
+  if (destinationType && destinationNames[destinationType]) {
+    recipientCompany.value = destinationNames[destinationType];
+  }
+
+  if (customAddress) {
+    recipientAddress.value = customAddress;
+  }
+
+  if (docNote && destinationType) {
+    docNote.textContent =
+      "Payment received for " +
+      (destinationNames[destinationType] || destinationType) +
+      " using " +
+      deliveryType +
+      " delivery. Review the information, check the boxes, then submit verified delivery.";
+  }
+}
+
     function loadTransferDocument() {
       const verifiedDoc = localStorage.getItem("verified_send_document");
       const verifiedDocType = localStorage.getItem("verified_send_doc_type");
@@ -786,6 +816,7 @@ const receiptTrackingLink = document.getElementById("receiptTrackingLink");
       if (fallbackFields && Object.keys(fallbackFields).length > 0) {
         populateVerifyFieldsFromGenerator(fallbackFields);
       }
+      applyStoredSendVerifyDestination();
 
       if (originalDocumentContent.trim()) {
         previewContent.textContent = originalDocumentContent;
