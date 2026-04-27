@@ -348,9 +348,7 @@
       </p>
       <div class="hero-actions">
         <a class="primary-btn" href="pricing.html">View Pricing</a>
-       <a class="primary-btn" href="#documents" id="startAccessBtn">
-  Start Document Access
-</a>
+      <a class="btn-secondary" href="#documents">Start Document Access</a>
       </div>
     </div>
 
@@ -617,6 +615,19 @@ if (saveAccessEmailBtn) {
     window.location.href = "pricing.html";
   });
 }
+
+  document.querySelectorAll('a.btn-secondary[href="#documents"]').forEach((btn) => {
+  if (btn.textContent.trim() === "Start Document Access") {
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+
+      const modal = document.getElementById("accessEmailModal");
+      if (modal) {
+        modal.style.display = "flex";
+      }
+    });
+  }
+});
 </script>
 </body>
 </html>
