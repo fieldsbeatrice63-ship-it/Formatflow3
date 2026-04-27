@@ -1033,6 +1033,9 @@ ${data.deliveryId || "—"}
 Tracking Link:
 ${data.trackingLink || "Not available yet"}
 
+Lob Error:
+${data.lobError || "None shown"}
+
 Reference / Account Number:
 ${data.referenceNumber}
 
@@ -1163,6 +1166,7 @@ ${text.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
 deliveryType: data.receipt.deliveryType || "—",
 deliveryId: data.receipt.deliveryId || "—",
 trackingLink: data.receipt.trackingLink || "Not available yet",
+lobError: data.receipt.lobError || "",
 referenceNumber: safeValue(referenceNumber.value),
        
         deliveryNotes: safeValue(appliedDeliveryNote, "None"),
