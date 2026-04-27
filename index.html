@@ -577,30 +577,35 @@
   localStorage.removeItem("formatflow_session_complete");
 
 
-  const startAccessBtn = document.getElementById("startAccessBtn");
+  // ==========================
+// FORMATFLOW EMAIL ACCESS MODAL
+// ==========================
+
+// Elements
+const startAccessBtn = document.getElementById("startAccessBtn");
 const accessEmailModal = document.getElementById("accessEmailModal");
 const closeAccessEmailModal = document.getElementById("closeAccessEmailModal");
 const saveAccessEmailBtn = document.getElementById("saveAccessEmailBtn");
 const accessEmail = document.getElementById("accessEmail");
 
-// Open modal
-if (startAccessBtn) {
-  startAccessBtn.addEventListener("click", (e) => {
+// OPEN MODAL
+if (startAccessBtn && accessEmailModal) {
+  startAccessBtn.addEventListener("click", function (e) {
     e.preventDefault();
     accessEmailModal.style.display = "flex";
   });
 }
 
-// Close modal
-if (closeAccessEmailModal) {
-  closeAccessEmailModal.addEventListener("click", () => {
+// CLOSE MODAL
+if (closeAccessEmailModal && accessEmailModal) {
+  closeAccessEmailModal.addEventListener("click", function () {
     accessEmailModal.style.display = "none";
   });
 }
 
-// Save email + continue
-if (saveAccessEmailBtn) {
-  saveAccessEmailBtn.addEventListener("click", () => {
+// SAVE EMAIL + CONTINUE
+if (saveAccessEmailBtn && accessEmail) {
+  saveAccessEmailBtn.addEventListener("click", function () {
     const email = accessEmail.value.trim();
 
     if (!email || !email.includes("@")) {
@@ -608,14 +613,16 @@ if (saveAccessEmailBtn) {
       return;
     }
 
+    // Save email
     localStorage.setItem("formatflow_customer_email", email);
 
+    // Close modal
     accessEmailModal.style.display = "none";
 
+    // Go to pricing
     window.location.href = "pricing.html";
   });
 }
-
   document.querySelectorAll('a.btn-secondary[href="#documents"]').forEach((btn) => {
   if (btn.textContent.trim() === "Start Document Access") {
     btn.addEventListener("click", function (e) {
