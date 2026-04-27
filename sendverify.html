@@ -588,35 +588,62 @@
       </div>
 
       <div class="receipt-card" id="receiptCard">
-        <h4>Receipt Summary</h4>
-        <div class="receipt-grid">
-          <div class="receipt-item">
-            <strong>Verification Number</strong>
-            <span id="receiptVerificationId">—</span>
-          </div>
-          <div class="receipt-item">
-            <strong>Status</strong>
-            <span id="receiptStatus">—</span>
-          </div>
-          <div class="receipt-item">
-            <strong>Timestamp</strong>
-            <span id="receiptTimestamp">—</span>
-          </div>
-          <div class="receipt-item">
-            <strong>Document Type</strong>
-            <span id="receiptDocType">—</span>
-          </div>
-          <div class="receipt-item">
-            <strong>Sender</strong>
-            <span id="receiptSender">—</span>
-          </div>
-          <div class="receipt-item">
-            <strong>Recipient</strong>
-            <span id="receiptRecipient">—</span>
-          </div>
-        </div>
-      </div>
+  <h4>Receipt Summary</h4>
+
+  <div class="receipt-grid">
+
+    <div class="receipt-item">
+      <strong>Verification Number</strong>
+      <span id="receiptVerificationId">—</span>
     </div>
+
+    <div class="receipt-item">
+      <strong>Status</strong>
+      <span id="receiptStatus">—</span>
+    </div>
+
+    <div class="receipt-item">
+      <strong>Timestamp</strong>
+      <span id="receiptTimestamp">—</span>
+    </div>
+
+    <div class="receipt-item">
+      <strong>Document Type</strong>
+      <span id="receiptDocType">—</span>
+    </div>
+
+    <div class="receipt-item">
+      <strong>Sender</strong>
+      <span id="receiptSender">—</span>
+    </div>
+
+    <div class="receipt-item">
+      <strong>Recipient</strong>
+      <span id="receiptRecipient">—</span>
+    </div>
+
+    <div class="receipt-item">
+      <strong>Recipient Address</strong>
+      <span id="receiptRecipientAddress">—</span>
+    </div>
+
+    <div class="receipt-item">
+      <strong>Delivery Type</strong>
+      <span id="receiptDeliveryType">—</span>
+    </div>
+
+    <div class="receipt-item">
+      <strong>Delivery ID</strong>
+      <span id="receiptDeliveryId">—</span>
+    </div>
+
+    <div class="receipt-item">
+      <strong>Tracking</strong>
+      <span id="receiptTrackingLink">—</span>
+    </div>
+
+  </div>
+</div>
   </section>
 
   <footer class="footer">
@@ -676,6 +703,10 @@
     const receiptDocType = document.getElementById("receiptDocType");
     const receiptSender = document.getElementById("receiptSender");
     const receiptRecipient = document.getElementById("receiptRecipient");
+    const receiptRecipientAddress = document.getElementById("receiptRecipientAddress");
+const receiptDeliveryType = document.getElementById("receiptDeliveryType");
+const receiptDeliveryId = document.getElementById("receiptDeliveryId");
+const receiptTrackingLink = document.getElementById("receiptTrackingLink");
 
     const editVerifyModal = document.getElementById("editVerifyModal");
     const confirmEditVerifyBtn = document.getElementById("confirmEditVerifyBtn");
@@ -1054,7 +1085,7 @@ ${text.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
+      body: JSON.stringify({
   document: buildFinalPackageDocument(),
   docType: originalDocumentType,
   senderName: senderName.value || "",
@@ -1062,11 +1093,15 @@ ${text.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
   recipientName: recipientCompany.value || "",
   recipientEmail: recipientEmail.value || "",
   deliveryNote: appliedDeliveryNote || "",
-  deliveryType: localStorage.getItem("sendverify_delivery_type") || "standard"
+
+  deliveryType: localStorage.getItem("sendverify_delivery_type") || "standard",
+  destinationType: localStorage.getItem("sendverify_destination") || "",
+  customAddress: localStorage.getItem("sendverify_address") || ""
 })
       });
 
       const data = await response.json();
+      console.log("SEND VERIFY RESPONSE:", data.receipt);
 
       if (!response.ok || !data.success) {
         throw new Error(data.error || "Send Verify submission failed.");
@@ -1105,6 +1140,15 @@ ${text.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
       receiptDocType.textContent = receiptData.docType;
       receiptSender.textContent = receiptData.sender;
       receiptRecipient.textContent = receiptData.recipient;
+      receiptRecipientAddress.textContent = data.receipt.recipientAddress || "—";
+receiptDeliveryType.textContent = data.receipt.deliveryType || "—";
+receiptDeliveryId.textContent = data.receipt.deliveryId || "—";
+
+if (data.receipt.trackingLink) {
+  receiptTrackingLink.innerHTML = `<a href="${data.receipt.trackingLink}" target="_blank" style="color:#1e4db7; font-weight:700;">View Tracking</a>`;
+} else {
+  receiptTrackingLink.textContent = "Not available yet";
+}
 
       if (editVerifyBtn) {
         editVerifyBtn.disabled = true;
