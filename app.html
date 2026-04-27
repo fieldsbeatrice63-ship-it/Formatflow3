@@ -1102,10 +1102,23 @@ printDocBtn.addEventListener("click", function () {
     localStorage.setItem("verified_send_doc_type", docType.value || "");
     localStorage.removeItem("verified_delivery_receipt_data");
 
-    const modal = document.getElementById("confirmVerifyModal");
+   selectedDestination = "";
+selectedAddress = "";
 
-    if (modal) {
-      modal.style.display = "flex";
+localStorage.removeItem("sendverify_delivery_type");
+localStorage.removeItem("sendverify_destination");
+localStorage.removeItem("sendverify_address");
+
+const destinationPreview = document.getElementById("destinationPreview");
+if (destinationPreview) {
+  destinationPreview.innerHTML = "Please select Experian, Equifax, or TransUnion before choosing a delivery method.";
+}
+
+const modal = document.getElementById("confirmVerifyModal");
+
+if (modal) {
+  modal.style.display = "flex";
+}
     } else {
       alert("Send Verify payment window could not open. Please try again.");
     }
