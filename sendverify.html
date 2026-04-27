@@ -1178,6 +1178,22 @@ referenceNumber: safeValue(referenceNumber.value),
 
       localStorage.setItem("verified_delivery_receipt_data", JSON.stringify(receiptData));
 
+      const deliveryHistory = JSON.parse(localStorage.getItem("formatflow_delivery_history") || "[]");
+
+deliveryHistory.push({
+  verificationId: receiptData.verificationId,
+  timestamp: receiptData.timestamp,
+  docType: receiptData.docType,
+  recipient: receiptData.recipient,
+  recipientAddress: receiptData.recipientAddress,
+  deliveryType: receiptData.deliveryType,
+  deliveryId: receiptData.deliveryId,
+  trackingLink: receiptData.trackingLink,
+  status: receiptData.status
+});
+
+localStorage.setItem("formatflow_delivery_history", JSON.stringify(deliveryHistory));
+
       previewStatus.textContent = "Submitted";
       successBox.style.display = "block";
       receiptCard.style.display = "block";
@@ -1200,6 +1216,16 @@ if (data.receipt.trackingLink) {
 } else {
   receiptTrackingLink.textContent = "Not available yet";
 }
+      const status = data.receipt.deliveryStatus || data.receipt.status || "queued";
+
+let formattedStatus = "Queued for Delivery";
+
+if (status === "queued") formattedStatus = "Queued for Delivery";
+if (status === "processing") formattedStatus = "Processing";
+if (status === "sent") formattedStatus = "Sent";
+if (status === "delivered") formattedStatus = "Delivered";
+
+receiptStatus.textContent = formattedStatus;
 
       if (editVerifyBtn) {
         editVerifyBtn.disabled = true;
