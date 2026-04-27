@@ -1118,10 +1118,9 @@ const modal = document.getElementById("confirmVerifyModal");
 
 if (modal) {
   modal.style.display = "flex";
+} else {
+  alert("Send Verify payment window could not open. Please try again.");
 }
-    } else {
-      alert("Send Verify payment window could not open. Please try again.");
-    }
   });
 }
 
