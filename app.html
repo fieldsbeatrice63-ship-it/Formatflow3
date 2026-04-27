@@ -1140,6 +1140,14 @@ if (modal) {
     selectedDestination = key;
     selectedAddress = DESTINATION_MAP[key].address;
 
+    localStorage.setItem("sendverify_destination", selectedDestination);
+localStorage.setItem("sendverify_address", selectedAddress);
+    const deliveryMessage = document.getElementById("destinationInstruction");
+    
+if (deliveryMessage) {
+  deliveryMessage.textContent = "Destination selected. Now choose Standard or Certified delivery.";
+}
+
     const preview = document.getElementById("destinationPreview");
 
     if (preview) {
