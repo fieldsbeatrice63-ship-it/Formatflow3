@@ -1140,7 +1140,10 @@ printDocBtn.addEventListener("click", function () {
           style="width:100%; padding:8px; margin-top:5px;"
         />
       `;
-    }   
+    }
+
+    return;
+  }
 
   if (target.id === "continueStandardVerifyPayment") {
     if (!selectedDestination) {
@@ -1175,18 +1178,6 @@ printDocBtn.addEventListener("click", function () {
     window.location.href = "https://buy.stripe.com/00weVcdnR1cl1cE5gJ3ks0o";
     return;
   }
-   
-
-  localStorage.setItem("sendverify_delivery_type", "standard");
-  localStorage.setItem("sendverify_destination", selectedDestination);
-  localStorage.setItem(
-    "sendverify_address",
-    document.getElementById("editableAddress")?.value || selectedAddress || ""
-  );
-
-  window.location.href = "sendverify.html?payment=success";
-  return;
-}
 
   if (target.id === "cancelVerifyPayment") {
     const modal = document.getElementById("confirmVerifyModal");
