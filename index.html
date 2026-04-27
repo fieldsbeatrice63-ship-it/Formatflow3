@@ -348,7 +348,7 @@
       </p>
       <div class="hero-actions">
         <a class="primary-btn" href="pricing.html">View Pricing</a>
-        <a class="secondary-btn" href="#documents">See What We Offer</a>
+        <a class="secondary-btn" href="#documents">Start Document Access</a>
       </div>
     </div>
 
@@ -535,6 +535,32 @@
   </div>
 </div>
 
+
+  <div id="accessEmailModal" class="modal-overlay" style="display:none;">
+  <div class="modal-box" style="position:relative;">
+    
+    <button id="closeAccessEmailModal" style="position:absolute; top:10px; right:10px;">✕</button>
+
+    <h3>Start Document Access</h3>
+
+    <p>
+      Enter the email you want connected to your FormatFlow™ document access.
+      This helps restore your remaining documents if you return later.
+    </p>
+
+    <input
+      id="accessEmail"
+      type="email"
+      placeholder="Enter your email address"
+      style="margin-top:10px; padding:10px; width:100%; border-radius:8px; border:1px solid #ccc;"
+    />
+
+    <button id="saveAccessEmailBtn" style="margin-top:15px;">
+      Continue
+    </button>
+
+  </div>
+</div>
 <script>
   const sendVerifyInfoLink = document.getElementById("sendVerifyInfoLink");
   const sendVerifyModal = document.getElementById("sendVerifyModal");
@@ -549,6 +575,46 @@
     sendVerifyModal.style.display = "none";
   });
   localStorage.removeItem("formatflow_session_complete");
+
+
+  const startAccessBtn = document.getElementById("startAccessBtn");
+const accessEmailModal = document.getElementById("accessEmailModal");
+const closeAccessEmailModal = document.getElementById("closeAccessEmailModal");
+const saveAccessEmailBtn = document.getElementById("saveAccessEmailBtn");
+const accessEmail = document.getElementById("accessEmail");
+
+// Open modal
+if (startAccessBtn) {
+  startAccessBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    accessEmailModal.style.display = "flex";
+  });
+}
+
+// Close modal
+if (closeAccessEmailModal) {
+  closeAccessEmailModal.addEventListener("click", () => {
+    accessEmailModal.style.display = "none";
+  });
+}
+
+// Save email + continue
+if (saveAccessEmailBtn) {
+  saveAccessEmailBtn.addEventListener("click", () => {
+    const email = accessEmail.value.trim();
+
+    if (!email || !email.includes("@")) {
+      alert("Please enter a valid email.");
+      return;
+    }
+
+    localStorage.setItem("formatflow_customer_email", email);
+
+    accessEmailModal.style.display = "none";
+
+    window.location.href = "pricing.html";
+  });
+}
 </script>
 </body>
 </html>
