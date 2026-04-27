@@ -993,6 +993,15 @@ ${data.recipientEmail}
 Recipient Address:
 ${data.recipientAddress}
 
+Delivery Type:
+${data.deliveryType || "—"}
+
+Delivery ID:
+${data.deliveryId || "—"}
+
+Tracking Link:
+${data.trackingLink || "Not available yet"}
+
 Reference / Account Number:
 ${data.referenceNumber}
 
@@ -1119,8 +1128,12 @@ ${text.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
         senderCityStateZip: safeValue(senderCityStateZip.value),
         recipient: safeValue(recipientCompany.value),
         recipientEmail: safeValue(recipientEmail.value),
-        recipientAddress: safeValue(recipientAddress.value),
-        referenceNumber: safeValue(referenceNumber.value),
+        recipientAddress: data.receipt.recipientAddress || safeValue(recipientAddress.value),
+deliveryType: data.receipt.deliveryType || "—",
+deliveryId: data.receipt.deliveryId || "—",
+trackingLink: data.receipt.trackingLink || "Not available yet",
+referenceNumber: safeValue(referenceNumber.value),
+       
         deliveryNotes: safeValue(appliedDeliveryNote, "None"),
         documentContent: buildFinalPackageDocument()
       };
