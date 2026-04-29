@@ -2031,5 +2031,174 @@ document.addEventListener("DOMContentLoaded", function () {
   setTimeout(attachLastDocumentWarning, 500);
 })();
 </script>
+
+<script type="module">
+/* ==========================================
+   FORMATFLOW™ FIREBASE DOWNLOAD COUNT SYNC
+   Corrected: only downloads after Firebase approves.
+========================================== */
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* USE YOUR SAME FIREBASE CONFIG */
+const firebaseConfig = {
+  apiKey: "AIzaSyDXCfdJwuynkt6pelnyTtXBtO0-f7U-izY",
+  authDomain: "formatflow-9ffd4.firebaseapp.com",
+  projectId: "formatflow-9ffd4",
+  storageBucket: "formatflow-9ffd4.firebasestorage.app",
+  messagingSenderId: "455718268348",
+  appId: "1:455718268348:web:4afcc719d30bbdd1c60fb9"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+function cleanEmail(email) {
+  return (email || "").trim().toLowerCase();
+}
+
+function emailToDocId(email) {
+  return cleanEmail(email).replaceAll(".", "_dot_").replaceAll("@", "_at_");
+}
+
+function hasGeneratedDocument() {
+  const preview = document.getElementById("previewContent");
+  if (!preview) return false;
+
+  const text = preview.innerText || "";
+  return text.trim().length > 50;
+}
+
+async function getCustomerRecord() {
+  const email = cleanEmail(localStorage.getItem("formatflow_customer_email"));
+
+  if (!email || !email.includes("@")) {
+    alert("Email is required before downloading.");
+    return null;
+  }
+
+  const customerId = emailToDocId(email);
+  const ref = doc(db, "customers", customerId);
+  const snap = await getDoc(ref);
+
+  if (!snap.exists()) {
+    await setDoc(ref, {
+      email: email,
+      plan: "Fast",
+      documents_allowed: 5,
+      documents_used: 0,
+      documents_remaining: 5,
+      created_at: serverTimestamp(),
+      updated_at: serverTimestamp()
+    });
+
+    return {
+      ref,
+      email,
+      data: {
+        documents_allowed: 5,
+        documents_used: 0,
+        documents_remaining: 5
+      }
+    };
+  }
+
+  return {
+    ref,
+    email,
+    data: snap.data()
+  };
+}
+
+async function approveAndCountDownload(event) {
+  const customer = await getCustomerRecord();
+  if (!customer) return false;
+
+  const data = customer.data;
+
+  const allowed = Number(data.documents_allowed || 5);
+  const used = Number(data.documents_used || 0);
+  const remaining = Number(data.documents_remaining || 0);
+
+  if (remaining <= 0) {
+    alert("You have reached your document limit for this plan. Please purchase another plan to continue.");
+    return false;
+  }
+
+  if (!hasGeneratedDocument()) {
+    alert("Please generate a valid document before downloading.");
+    return false;
+  }
+
+  if (remaining === 1) {
+    const confirmLast = confirm(
+      "This is your last document for this plan. After this download, you will need to purchase another plan to continue. Continue?"
+    );
+
+    if (!confirmLast) return false;
+  }
+
+  const newUsed = used + 1;
+  const newRemaining = Math.max(allowed - newUsed, 0);
+
+  await updateDoc(customer.ref, {
+    documents_used: newUsed,
+    documents_remaining: newRemaining,
+    updated_at: serverTimestamp()
+  });
+
+  localStorage.setItem("formatflow_documents_allowed", String(allowed));
+  localStorage.setItem("formatflow_documents_used", String(newUsed));
+  localStorage.setItem("formatflow_documents_remaining", String(newRemaining));
+
+  return true;
+}
+
+function attachFirebaseDownloadTracking() {
+  const downloadBtn =
+    document.getElementById("downloadPdfBtn") ||
+    document.getElementById("downloadBtn") ||
+    document.getElementById("downloadDocumentBtn");
+
+  if (!downloadBtn || downloadBtn.dataset.firebaseDownloadAttached === "true") return;
+
+  downloadBtn.dataset.firebaseDownloadAttached = "true";
+
+  downloadBtn.addEventListener(
+    "click",
+    async function (event) {
+      if (downloadBtn.dataset.allowRealDownload === "yes") {
+        downloadBtn.dataset.allowRealDownload = "no";
+        return true;
+      }
+
+      event.preventDefault();
+      event.stopImmediatePropagation();
+
+      const approved = await approveAndCountDownload(event);
+
+      if (approved) {
+        downloadBtn.dataset.allowRealDownload = "yes";
+        downloadBtn.click();
+      }
+
+      return false;
+    },
+    true
+  );
+}
+
+attachFirebaseDownloadTracking();
+document.addEventListener("DOMContentLoaded", attachFirebaseDownloadTracking);
+setTimeout(attachFirebaseDownloadTracking, 500);
+</script>
 </body>
 </html>
