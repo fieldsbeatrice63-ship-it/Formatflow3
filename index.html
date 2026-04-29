@@ -674,7 +674,7 @@
       }
 
       localStorage.setItem("formatflow_customer_email", email);
-      await supabaseClient
+     const { data, error } = await supabaseClient
   .from("formatflow_customers")
   .upsert([
     {
@@ -682,6 +682,13 @@
       stripe_status: "pending"
     }
   ]);
+
+if (error) {
+  console.error("Supabase error:", error);
+  alert("Error saving email. Check console.");
+} else {
+  console.log("Saved to Supabase:", data);
+}
       
       const modal = document.getElementById("accessEmailModal");
 
