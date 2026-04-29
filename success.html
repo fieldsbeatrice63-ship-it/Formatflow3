@@ -155,5 +155,76 @@
     returnToAppBtn.href = "app.html?payment=success&plan=" + plan;
   }
 </script>
+  <script type="module">
+/* ==========================================
+   FORMATFLOW™ PAYMENT SUCCESS PLAN RESET
+   Resets SAME email back to 5 documents after payment.
+========================================== */
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* USE THE SAME FIREBASE CONFIG YOU USED IN APP.HTML */
+const firebaseConfig = {
+  apiKey: "PASTE_YOUR_API_KEY_HERE",
+  authDomain: "PASTE_YOUR_PROJECT.firebaseapp.com",
+  projectId: "PASTE_YOUR_PROJECT_ID",
+  storageBucket: "PASTE_YOUR_PROJECT.appspot.com",
+  messagingSenderId: "PASTE_YOUR_SENDER_ID",
+  appId: "PASTE_YOUR_APP_ID"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+function cleanEmail(email) {
+  return (email || "").trim().toLowerCase();
+}
+
+function emailToDocId(email) {
+  return cleanEmail(email).replaceAll(".", "_dot_").replaceAll("@", "_at_");
+}
+
+async function resetCustomerPlanAfterPayment() {
+  const email = cleanEmail(localStorage.getItem("formatflow_customer_email"));
+
+  if (!email || !email.includes("@")) {
+    console.warn("No customer email found. Plan reset skipped.");
+    return;
+  }
+
+  const customerId = emailToDocId(email);
+  const customerRef = doc(db, "customers", customerId);
+
+  await setDoc(
+    customerRef,
+    {
+      email: email,
+      plan: "Fast",
+      documents_allowed: 5,
+      documents_used: 0,
+      documents_remaining: 5,
+      payment_status: "paid",
+      updated_at: serverTimestamp(),
+      last_payment_reset_at: serverTimestamp()
+    },
+    { merge: true }
+  );
+
+  localStorage.setItem("formatflow_customer_id", customerId);
+  localStorage.setItem("formatflow_documents_allowed", "5");
+  localStorage.setItem("formatflow_documents_used", "0");
+  localStorage.setItem("formatflow_documents_remaining", "5");
+
+  console.log("FormatFlow plan reset complete for:", email);
+}
+
+resetCustomerPlanAfterPayment();
+</script>
 </body>
 </html>
