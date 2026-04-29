@@ -658,46 +658,46 @@
         modal.style.display = "none";
       }
     }
-    const supabaseClient = supabase.createClient(
-  "https://bwdasmrluepnhjhfqlyd.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3ZGFzbXJsdWVwbmhqaGZxbHlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0MjUzNDQsImV4cCI6MjA5MzAwMTM0NH0.AeXdJGf6n4h1avtE3FDBV4f6NAqY2Obe-0WVYy81icg"
-);
- 
+    
+ async function saveAccessEmailAndContinue() {
+  const emailInput = document.getElementById("accessEmail");
+  const email = emailInput ? emailInput.value.trim().toLowerCase() : "";
 
-    async function saveAccessEmailAndContinue() {
-      const emailInput = document.getElementById("accessEmail");
-      const email = emailInput ? emailInput.value.trim() : "";
+  if (!email || !email.includes("@")) {
+    alert("Please enter a valid email.");
+    return;
+  }
 
-      if (!email || !email.includes("@")) {
-        alert("Please enter a valid email.");
-        return;
-      }
+  // Save locally (keep this)
+  localStorage.setItem("formatflow_customer_email", email);
 
-      localStorage.setItem("formatflow_customer_email", email);
-    try {
+  // 🔴 PUT YOUR REAL VALUES HERE
+  const SUPABASE_URL = "https://bwdasmrluepnhjhfqlyd.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3ZGFzbXJsdWVwbmhqaGZxbHlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0MjUzNDQsImV4cCI6MjA5MzAwMTM0NH0.AeXdJGf6n4h1avtE3FDBV4f6NAqY2Obe-0WVYy81icg";
+
+  const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+
   const { error } = await supabaseClient
-    .from("formatflow_customers")
-    .upsert([
-      {
-        email: email,
-        stripe_status: "pending"
-      }
-    ]);
+    .from("customers")
+    .insert([{ email: email }]);
 
   if (error) {
-    console.warn("Supabase email save skipped:", error.message);
+    console.error("Supabase error:", error);
+    alert("Email not saved. Check console.");
+    return;
   }
-} catch (err) {
-  console.warn("Supabase connection skipped:", err);
+
+  // Close modal
+  const modal = document.getElementById("accessEmailModal");
+  if (modal) modal.style.display = "none";
+
+  // Continue flow
+  window.location.href = "pricing.html";
 }
-      const modal = document.getElementById("accessEmailModal");
 
-      if (modal) {
-        modal.style.display = "none";
-      }
-
-      window.location.href = "pricing.html";
-    }
   </script>
 
 </body>
