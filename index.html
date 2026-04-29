@@ -619,47 +619,61 @@
     </div>
   </div>
 
-  <script>
-    const sendVerifyInfoLink = document.getElementById("sendVerifyInfoLink");
-    const sendVerifyModal = document.getElementById("sendVerifyModal");
-    const closeSendVerifyModal = document.getElementById("closeSendVerifyModal");
+ <script>
+/* ==========================
+   SEND VERIFY MODAL
+========================== */
+const sendVerifyInfoLink = document.getElementById("sendVerifyInfoLink");
+const sendVerifyModal = document.getElementById("sendVerifyModal");
+const closeSendVerifyModal = document.getElementById("closeSendVerifyModal");
 
-    if (sendVerifyInfoLink && sendVerifyModal) {
-      sendVerifyInfoLink.addEventListener("click", function(e) {
-        e.preventDefault();
-        sendVerifyModal.style.display = "flex";
-      });
-    }
+if (sendVerifyInfoLink && sendVerifyModal) {
+  sendVerifyInfoLink.addEventListener("click", function (e) {
+    e.preventDefault();
+    sendVerifyModal.style.display = "flex";
+  });
+}
 
-    if (closeSendVerifyModal && sendVerifyModal) {
-      closeSendVerifyModal.addEventListener("click", function() {
-        sendVerifyModal.style.display = "none";
-      });
-    }
+if (closeSendVerifyModal && sendVerifyModal) {
+  closeSendVerifyModal.addEventListener("click", function () {
+    sendVerifyModal.style.display = "none";
+  });
+}
 
-    localStorage.removeItem("formatflow_session_complete");
+/* ==========================
+   ACCESS EMAIL MODAL
+========================== */
+function openAccessEmailModal(event) {
+  if (event) event.preventDefault();
 
-    function openAccessEmailModal(event) {
-      if (event) {
-        event.preventDefault();
-      }
+  const modal = document.getElementById("accessEmailModal");
+  if (modal) {
+    modal.style.display = "flex";
+  }
+}
 
-      const modal = document.getElementById("accessEmailModal");
+function closeAccessEmailModalBox() {
+  const modal = document.getElementById("accessEmailModal");
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
 
-      if (modal) {
-        modal.style.display = "flex";
-      }
-    }
+/* ==========================
+   SUPABASE CLIENT (ONE ONLY)
+========================== */
+const SUPABASE_URL = "https://bwdasmrluepnhjhfqlyd.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3ZGFzbXJsdWVwbmhqaGZxbHlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0MjUzNDQsImV4cCI6MjA5MzAwMTM0NH0.AeXdJGf6n4h1avtE3FDBV4f6NAqY2Obe-0WVYy81icg";
 
-    function closeAccessEmailModalBox() {
-      const modal = document.getElementById("accessEmailModal");
+const supabaseClient = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
 
-      if (modal) {
-        modal.style.display = "none";
-      }
-    }
-    
- async function saveAccessEmailAndContinue() {
+/* ==========================
+   SAVE EMAIL TO SUPABASE
+========================== */
+async function saveAccessEmailAndContinue() {
   const emailInput = document.getElementById("accessEmail");
   const email = emailInput ? emailInput.value.trim().toLowerCase() : "";
 
@@ -668,18 +682,10 @@
     return;
   }
 
-  // Save locally (keep this)
+  // Save locally
   localStorage.setItem("formatflow_customer_email", email);
 
-  // 🔴 PUT YOUR REAL VALUES HERE
-  const SUPABASE_URL = "https://bwdasmrluepnhjhfqlyd.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3ZGFzbXJsdWVwbmhqaGZxbHlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0MjUzNDQsImV4cCI6MjA5MzAwMTM0NH0.AeXdJGf6n4h1avtE3FDBV4f6NAqY2Obe-0WVYy81icg";
-
-  const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-  );
-
+  // Save to Supabase
   const { error } = await supabaseClient
     .from("customers")
     .insert([{ email: email }]);
@@ -692,13 +698,16 @@
 
   // Close modal
   const modal = document.getElementById("accessEmailModal");
-  if (modal) modal.style.display = "none";
+  if (modal) {
+    modal.style.display = "none";
+  }
 
-  // Continue flow
+  // Continue
   window.location.href = "pricing.html";
 }
+</script>
 
-  </script>
+
 
 </body>
 </html>
