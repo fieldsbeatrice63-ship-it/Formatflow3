@@ -346,10 +346,13 @@
         Whether you need a resume, hardship letter, lease agreement, dispute letter, proof of income, or service contract,
         our platform is designed to help you move quickly and confidently.
       </p>
-      <div class="hero-actions">
-        <a class="primary-btn" href="pricing.html">View Pricing</a>
-      <a class="nav-btn" href="#documents" id="startAccessBtn">Start Document Access</a>
-      </div>
+     <div class="hero-actions">
+  <a class="primary-btn" href="pricing.html">View Pricing</a>
+
+  <a class="btn-secondary" href="#documents" onclick="openAccessEmailModal(event)">
+    Start Document Access
+  </a>
+</div>
     </div>
 
     <div class="hero-card">
@@ -536,10 +539,12 @@
 </div>
 
 
-  <div id="accessEmailModal" class="modal-overlay" style="display:none;">
+ <div id="accessEmailModal" class="modal-overlay" style="display:none;">
   <div class="modal-box" style="position:relative;">
     
-    <button id="closeAccessEmailModal" style="position:absolute; top:10px; right:10px;">✕</button>
+    <button onclick="closeAccessEmailModalBox()" style="position:absolute; top:10px; right:10px;">
+      ✕
+    </button>
 
     <h3>Start Document Access</h3>
 
@@ -555,7 +560,7 @@
       style="margin-top:10px; padding:10px; width:100%; border-radius:8px; border:1px solid #ccc;"
     />
 
-    <button id="saveAccessEmailBtn" style="margin-top:15px;">
+    <button onclick="saveAccessEmailAndContinue()" style="margin-top:15px;">
       Continue
     </button>
 
@@ -582,59 +587,45 @@
 // ==========================
 
 // Elements
-const startAccessBtn = document.getElementById("startAccessBtn");
-const accessEmailModal = document.getElementById("accessEmailModal");
-const closeAccessEmailModal = document.getElementById("closeAccessEmailModal");
-const saveAccessEmailBtn = document.getElementById("saveAccessEmailBtn");
-const accessEmail = document.getElementById("accessEmail");
 
-// OPEN MODAL
-if (startAccessBtn && accessEmailModal) {
-  startAccessBtn.addEventListener("click", function (e) {
-    e.preventDefault();
-    accessEmailModal.style.display = "flex";
-  });
-}
 
-// CLOSE MODAL
-if (closeAccessEmailModal && accessEmailModal) {
-  closeAccessEmailModal.addEventListener("click", function () {
-    accessEmailModal.style.display = "none";
-  });
-}
+  function openAccessEmailModal(event) {
+  event.preventDefault();
 
-// SAVE EMAIL + CONTINUE
-if (saveAccessEmailBtn && accessEmail) {
-  saveAccessEmailBtn.addEventListener("click", function () {
-    const email = accessEmail.value.trim();
+  const modal = document.getElementById("accessEmailModal");
 
-    if (!email || !email.includes("@")) {
-      alert("Please enter a valid email.");
-      return;
-    }
-
-    // Save email
-    localStorage.setItem("formatflow_customer_email", email);
-
-    // Close modal
-    accessEmailModal.style.display = "none";
-
-    // Go to pricing
-    window.location.href = "pricing.html";
-  });
-}
-  document.querySelectorAll('a.btn-secondary[href="#documents"]').forEach((btn) => {
-  if (btn.textContent.trim() === "Start Document Access") {
-    btn.addEventListener("click", function (e) {
-      e.preventDefault();
-
-      const modal = document.getElementById("accessEmailModal");
-      if (modal) {
-        modal.style.display = "flex";
-      }
-    });
+  if (modal) {
+    modal.style.display = "flex";
   }
-});
+}
+
+function closeAccessEmailModalBox() {
+  const modal = document.getElementById("accessEmailModal");
+
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
+
+function saveAccessEmailAndContinue() {
+  const emailInput = document.getElementById("accessEmail");
+  const email = emailInput ? emailInput.value.trim() : "";
+
+  if (!email || !email.includes("@")) {
+    alert("Please enter a valid email.");
+    return;
+  }
+
+  localStorage.setItem("formatflow_customer_email", email);
+
+  const modal = document.getElementById("accessEmailModal");
+
+  if (modal) {
+    modal.style.display = "none";
+  }
+
+  window.location.href = "pricing.html";
+}
 </script>
 </body>
 </html>
