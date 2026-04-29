@@ -635,7 +635,103 @@ Choose a document type, complete the form, and click “Generate Preview” to s
   </footer>
 
 
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getFirestore,
+    doc,
+    getDoc,
+    setDoc,
+    updateDoc,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+  const firebaseConfig = {
+   apiKey: "AIzaSyDXCfdJwuynkt6pelnyTtXBtO0-f7U-izY",
+  authDomain: "formatflow-9ffd4.firebaseapp.com",
+  projectId: "formatflow-9ffd4",
+  storageBucket: "formatflow-9ffd4.firebasestorage.app",
+  messagingSenderId: "455718268348",
+  appId: "1:455718268348:web:4afcc719d30bbdd1c60fb9"
+  };
+
+  const firebaseApp = initializeApp(firebaseConfig);
+  const firestoreDb = getFirestore(firebaseApp);
+
+  function cleanCustomerEmail(email) {
+    return String(email || "").trim().toLowerCase();
+  }
+
+  function emailToCustomerId(email) {
+    return cleanCustomerEmail(email)
+      .replaceAll(".", "_dot_")
+      .replaceAll("@", "_at_");
+  }
+
+  function getPlanLimit(planName) {
+    if (planName === "fast") return 5;
+    if (planName === "approval") return 10;
+    if (planName === "authority") return 15;
+    return 5;
+  }
+
+  async function loadOrCreateCustomerPlan(planFromUrl) {
+    const email = cleanCustomerEmail(localStorage.getItem("formatflow_customer_email"));
+
+    if (!email || !email.includes("@")) {
+      console.warn("No customer email found for Firebase tracking.");
+      return null;
+    }
+
+    const customerId = emailToCustomerId(email);
+    const customerRef = doc(firestoreDb, "customers", customerId);
+    const customerSnap = await getDoc(customerRef);
+
+    const plan = planFromUrl || "fast";
+    const allowed = getPlanLimit(plan);
+
+    if (!customerSnap.exists()) {
+      await setDoc(customerRef, {
+        email: email,
+        plan: plan,
+        documents_allowed: allowed,
+        documents_used: 0,
+        documents_remaining: allowed,
+        created_at: serverTimestamp(),
+        updated_at: serverTimestamp()
+      });
+    } else {
+      const existing = customerSnap.data();
+
+      await setDoc(
+        customerRef,
+        {
+          email: email,
+          plan: existing.plan || plan,
+          documents_allowed: existing.documents_allowed || allowed,
+          documents_used: existing.documents_used || 0,
+          documents_remaining:
+            typeof existing.documents_remaining === "number"
+              ? existing.documents_remaining
+              : allowed,
+          updated_at: serverTimestamp()
+        },
+        { merge: true }
+      );
+    }
+
+    localStorage.setItem("formatflow_customer_id", customerId);
+
+    const freshSnap = await getDoc(customerRef);
+    return freshSnap.exists() ? freshSnap.data() : null;
+  }
+
+  window.FormatFlowFirebase = {
+    firestoreDb,
+    loadOrCreateCustomerPlan
+  };
+</script>
+  
   <script>
 const DESTINATION_MAP = {
   experian: {
@@ -1074,34 +1170,92 @@ ${documentText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
       unlockRetrievedDocument();
     });
 
-    downloadPdfBtn.addEventListener("click", function () {
-  openDocumentPrintWindow();
+    downloadPdfBtn.addEventListener("click", async function () {
+  const email = localStorage.getItem("formatflow_customer_email");
 
-  const used = parseInt(localStorage.getItem("docUsed") || "0", 10);
-  const limit = parseInt(localStorage.getItem("docLimit") || "0", 10);
-
-  if (used >= limit) {
-    alert("You have reached your document limit for this plan.");
+  if (!email || !window.FormatFlowFirebase) {
+    alert("Customer session not found.");
     return;
   }
 
-  const updatedUsed = used + 1;
-  const remaining = limit - updatedUsed;
+  const id = email
+    .toLowerCase()
+    .replaceAll(".", "_dot_")
+    .replaceAll("@", "_at_");
 
-  localStorage.setItem("docUsed", String(updatedUsed));
+  const db = window.FormatFlowFirebase.firestoreDb;
+  const ref = window.FormatFlowFirebase.firestoreDb
+    ? window.FormatFlowFirebase.firestoreDb
+    : null;
 
-  const downloadCompleteModal = document.getElementById("downloadCompleteModal");
-  const downloadCompleteMessage = document.getElementById("downloadCompleteMessage");
+  try {
+    const customerRef = window.FormatFlowFirebase.firestoreDb
+      ? window.FormatFlowFirebase.firestoreDb
+      : null;
 
-  if (downloadCompleteModal && downloadCompleteMessage) {
-    downloadCompleteMessage.innerHTML =
-      "Thank you for using FormatFlow™ to build your professional document.<br><br>" +
-      "You have <strong>" + remaining + "</strong> document(s) remaining in your current plan.";
+    const docRef = window.FormatFlowFirebase.firestoreDb
+      ? window.FormatFlowFirebase.firestoreDb
+      : null;
 
-    downloadCompleteModal.style.display = "flex";
+    const snapshot = await window.FormatFlowFirebase.firestoreDb
+      ? await (await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"))
+          .getDoc(
+            (await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"))
+              .doc(window.FormatFlowFirebase.firestoreDb, "customers", id)
+          )
+      : null;
+
+    if (!snapshot || !snapshot.exists()) {
+      alert("Customer record not found.");
+      return;
+    }
+
+    const data = snapshot.data();
+
+    if (data.documents_remaining <= 0) {
+      alert("You have reached your document limit for this plan.");
+      return;
+    }
+
+    // ✅ PRINT FIRST (no delay for user)
+    openDocumentPrintWindow();
+
+    const newUsed = (data.documents_used || 0) + 1;
+    const newRemaining = (data.documents_allowed || 0) - newUsed;
+
+    // ✅ UPDATE FIREBASE
+    await (await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"))
+      .updateDoc(
+        (await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"))
+          .doc(window.FormatFlowFirebase.firestoreDb, "customers", id),
+        {
+          documents_used: newUsed,
+          documents_remaining: newRemaining,
+          updated_at: (await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"))
+            .serverTimestamp()
+        }
+      );
+
+    // ✅ UPDATE LOCAL STORAGE (UI stays same)
+    localStorage.setItem("docUsed", String(newUsed));
+    localStorage.setItem("docLimit", String(data.documents_allowed));
+
+    const downloadCompleteModal = document.getElementById("downloadCompleteModal");
+    const downloadCompleteMessage = document.getElementById("downloadCompleteMessage");
+
+    if (downloadCompleteModal && downloadCompleteMessage) {
+      downloadCompleteMessage.innerHTML =
+        "Thank you for using FormatFlow™.<br><br>" +
+        "You have <strong>" + newRemaining + "</strong> document(s) remaining.";
+
+      downloadCompleteModal.style.display = "flex";
+    }
+
+  } catch (err) {
+    console.error("Download error:", err);
+    alert("Error processing document usage.");
   }
 });
-
 printDocBtn.addEventListener("click", function () {
   openDocumentPrintWindow();
 });
@@ -1354,7 +1508,37 @@ const closeDownloadCompleteModal = document.getElementById("closeDownloadComplet
 }
     });
    
-   
+   /* ==========================
+   FIREBASE PLAN SYNC (SAFE ADD)
+   DOES NOT TOUCH UI / LAYOUT
+========================== */
+
+async function syncCustomerPlanFromFirebase() {
+  try {
+    if (!window.FormatFlowFirebase) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const planFromUrl = params.get("plan");
+
+    const customerData = await window.FormatFlowFirebase.loadOrCreateCustomerPlan(planFromUrl);
+
+    if (!customerData) return;
+
+    // ✅ ONLY sync values (no UI changes)
+    localStorage.setItem("docLimit", String(customerData.documents_allowed || 0));
+    localStorage.setItem("docUsed", String(customerData.documents_used || 0));
+
+    console.log("Firebase synced:", customerData);
+
+  } catch (err) {
+    console.error("Firebase sync error:", err);
+  }
+}
+
+/* Run AFTER page loads (safe) */
+document.addEventListener("DOMContentLoaded", function () {
+  syncCustomerPlanFromFirebase();
+});
   </script>
 
  <div id="sendVerifyModal" class="modal-overlay">
