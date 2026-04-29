@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FormatFlow™ | Professional Documents for Real-Life Needs</title>
   <meta name="description" content="FormatFlow™ helps users generate professional documents for credit, career, housing, legal, and business needs in minutes." />
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
   <style>
     * { box-sizing: border-box; }
 
@@ -657,8 +658,13 @@
         modal.style.display = "none";
       }
     }
+    const supabaseClient = supabase.createClient(
+  "https://bwdasmrluepnhjhfqlyd.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3ZGFzbXJsdWVwbmhqaGZxbHlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0MjUzNDQsImV4cCI6MjA5MzAwMTM0NH0.AeXdJGf6n4h1avtE3FDBV4f6NAqY2Obe-0WVYy81icg"
+);
+ 
 
-    function saveAccessEmailAndContinue() {
+    async function saveAccessEmailAndContinue() {
       const emailInput = document.getElementById("accessEmail");
       const email = emailInput ? emailInput.value.trim() : "";
 
@@ -668,7 +674,15 @@
       }
 
       localStorage.setItem("formatflow_customer_email", email);
-
+      await supabaseClient
+  .from("formatflow_customers")
+  .upsert([
+    {
+      email: email,
+      stripe_status: "pending"
+    }
+  ]);
+      
       const modal = document.getElementById("accessEmailModal");
 
       if (modal) {
