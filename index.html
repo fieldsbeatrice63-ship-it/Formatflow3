@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FormatFlow™ | Professional Documents for Real-Life Needs</title>
   <meta name="description" content="FormatFlow™ helps users generate professional documents for credit, career, housing, legal, and business needs in minutes." />
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   
   <style>
     * { box-sizing: border-box; }
@@ -375,6 +375,9 @@
       }
     }
   </style>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
 </head>
 
 <body>
@@ -659,55 +662,63 @@ function closeAccessEmailModalBox() {
   }
 }
 
+
 /* ==========================
-   SUPABASE CLIENT (ONE ONLY)
+   FIREBASE SETUP
 ========================== */
-const SUPABASE_URL = "https://rknrmipmilnyetjupzfb.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJrbnJtaXBtaWxueWV0anVwemZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0MzE3MzYsImV4cCI6MjA5MzAwNzczNn0.QMaU6qwspiR3Ee-T07YiF3TW1xq2vC9EsB9GdErLIgU";
+const firebaseConfig = {
+  apiKey: "AIzaSyDXCfdJwuynkt6pelnyTtXBtO0-f7U-izY",
+  authDomain: "formatflow-9ffd4.firebaseapp.com",
+  projectId: "formatflow-9ffd4",
+  storageBucket: "formatflow-9ffd4.firebasestorage.app",
+  messagingSenderId: "455718268348",
+  appId: "1:455718268348:web:4afcc719d30bbdd1c60fb9"
+};
 
-const supabaseClient = supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
 /* ==========================
-   SAVE EMAIL TO SUPABASE
+   MODAL FUNCTIONS
+========================== */
+function openAccessEmailModal(event) {
+  if (event) event.preventDefault();
+  document.getElementById("accessEmailModal").style.display = "flex";
+}
+
+function closeAccessEmailModalBox() {
+  document.getElementById("accessEmailModal").style.display = "none";
+}
+
+/* ==========================
+   SAVE EMAIL TO FIREBASE
 ========================== */
 async function saveAccessEmailAndContinue() {
   const emailInput = document.getElementById("accessEmail");
-  const email = emailInput ? emailInput.value.trim().toLowerCase() : "";
+  const email = emailInput.value.trim().toLowerCase();
 
   if (!email || !email.includes("@")) {
-    alert("Please enter a valid email.");
+    alert("Enter a valid email");
     return;
   }
 
   // Save locally
   localStorage.setItem("formatflow_customer_email", email);
 
-  // Save to Supabase
-  const { error } = await supabaseClient
-    .from("customers")
-    .insert([{ email: email }]);
+  try {
+    await db.collection("customers").add({
+      email: email,
+      created_at: new Date()
+    });
 
-  if (error) {
-    console.error("Supabase error:", error);
-    alert("Email not saved. Check console.");
-    return;
+    document.getElementById("accessEmailModal").style.display = "none";
+    window.location.href = "pricing.html";
+
+  } catch (err) {
+    console.error("Firebase error:", err);
+    alert("Email not saved");
   }
-
-  // Close modal
-  const modal = document.getElementById("accessEmailModal");
-  if (modal) {
-    modal.style.display = "none";
-  }
-
-  // Continue
-  window.location.href = "pricing.html";
 }
 </script>
-
-
-
 </body>
 </html>
