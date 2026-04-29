@@ -2201,11 +2201,12 @@ document.addEventListener("DOMContentLoaded", attachFirebaseDownloadTracking);
 setTimeout(attachFirebaseDownloadTracking, 500);
 </script>
 
+  
+
   <script>
 /* ==========================================
    FORMATFLOW™ GENERATOR ENTRY EMAIL MODAL
-   Shows when user enters app.html before setup.
-   Does not change layout, cards, colors, or boxes.
+   Opens when app.html loads before generator use.
 ========================================== */
 
 (function () {
@@ -2217,21 +2218,17 @@ setTimeout(attachFirebaseDownloadTracking, 500);
     return email && email.includes("@") && email.includes(".");
   }
 
-  function getSavedEmail() {
-    return cleanEmail(localStorage.getItem("formatflow_customer_email"));
-  }
-
   function createGeneratorEntryModal() {
     if (document.getElementById("generatorEntryEmailModal")) return;
 
     const modal = document.createElement("div");
     modal.id = "generatorEntryEmailModal";
     modal.style.cssText = `
-      display:none;
+      display:flex;
       position:fixed;
       inset:0;
       background:rgba(0,0,0,0.72);
-      z-index:100001;
+      z-index:999999;
       align-items:center;
       justify-content:center;
       padding:20px;
@@ -2259,7 +2256,7 @@ setTimeout(attachFirebaseDownloadTracking, 500);
         </p>
 
         <p style="font-size:13px;line-height:1.45;margin:0 0 16px;color:#4b5563;">
-          Use the same email each time so your remaining document count stays connected
+          Use the same email every time so your remaining document count stays connected
           to your plan.
         </p>
 
@@ -2296,25 +2293,18 @@ setTimeout(attachFirebaseDownloadTracking, 500);
         </button>
 
         <p style="font-size:12px;line-height:1.4;margin:12px 0 0;color:#6b7280;">
-          No login is required. Your email simply connects your plan and document count.
+          No login is required. Your email only connects your plan and document count.
         </p>
       </div>
     `;
 
     document.body.appendChild(modal);
-  }
 
-  function showGeneratorEntryModal() {
-    createGeneratorEntryModal();
-
-    const modal = document.getElementById("generatorEntryEmailModal");
     const input = document.getElementById("generatorEntryEmailInput");
     const button = document.getElementById("generatorEntryContinueBtn");
 
-    const existingEmail = getSavedEmail();
-    if (existingEmail) input.value = existingEmail;
-
-    modal.style.display = "flex";
+    const savedEmail = cleanEmail(localStorage.getItem("formatflow_customer_email"));
+    if (savedEmail) input.value = savedEmail;
 
     button.onclick = function () {
       const email = cleanEmail(input.value);
@@ -2325,20 +2315,16 @@ setTimeout(attachFirebaseDownloadTracking, 500);
       }
 
       localStorage.setItem("formatflow_customer_email", email);
+
       modal.style.display = "none";
     };
   }
 
-  function runGeneratorEntryGate() {
-    const savedEmail = getSavedEmail();
+  window.addEventListener("load", function () {
+    createGeneratorEntryModal();
+  });
 
-    if (!isValidEmail(savedEmail)) {
-      showGeneratorEntryModal();
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", runGeneratorEntryGate);
-  setTimeout(runGeneratorEntryGate, 500);
+  setTimeout(createGeneratorEntryModal, 700);
 })();
 </script>
 </body>
