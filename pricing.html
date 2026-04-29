@@ -483,7 +483,37 @@
 
   closeSendVerifyModal.addEventListener("click", function() {
     sendVerifyModal.style.display = "none";
-  });
+  });<script>
+  // your existing Send Verify modal code stays here
+
+  function attachEmailToStripeLinks() {
+    const email = localStorage.getItem("formatflow_customer_email");
+
+    if (!email || !email.includes("@")) return;
+
+    const links = [
+      { id: "basicLink", plan: "fast" },
+      { id: "proLink", plan: "approval" },
+      { id: "premiumLink", plan: "authority" }
+    ];
+
+    links.forEach(function(item) {
+      const link = document.getElementById(item.id);
+      if (!link) return;
+
+      const originalUrl = link.href.split("?")[0];
+
+      link.href =
+        originalUrl +
+        "?prefilled_email=" +
+        encodeURIComponent(email) +
+        "&client_reference_id=" +
+        encodeURIComponent(email + "_" + item.plan);
+    });
+  }
+
+  attachEmailToStripeLinks();
+</script>
 </script>
 </body>
 </html>
