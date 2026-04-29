@@ -376,8 +376,8 @@
     }
   </style>
 
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </head>
 
 <body>
@@ -622,10 +622,8 @@
     </div>
   </div>
 
- <script>
-/* ==========================
-   SEND VERIFY MODAL
-========================== */
+<script>
+/* SEND VERIFY MODAL */
 const sendVerifyInfoLink = document.getElementById("sendVerifyInfoLink");
 const sendVerifyModal = document.getElementById("sendVerifyModal");
 const closeSendVerifyModal = document.getElementById("closeSendVerifyModal");
@@ -643,9 +641,20 @@ if (closeSendVerifyModal && sendVerifyModal) {
   });
 }
 
-/* ==========================
-   ACCESS EMAIL MODAL
-========================== */
+/* FIREBASE SETUP */
+const firebaseConfig = {
+  apiKey: "AIzaSyDXCfdJwuynkt6pelnyTtXBtO0-f7U-izY",
+  authDomain: "formatflow-9ffd4.firebaseapp.com",
+  projectId: "formatflow-9ffd4",
+  storageBucket: "formatflow-9ffd4.firebasestorage.app",
+  messagingSenderId: "455718268348",
+  appId: "1:455718268348:web:4afcc719d30bbdd1c60fb9"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+/* ACCESS EMAIL MODAL */
 function openAccessEmailModal(event) {
   if (event) event.preventDefault();
 
@@ -662,61 +671,31 @@ function closeAccessEmailModalBox() {
   }
 }
 
-
-/* ==========================
-   FIREBASE SETUP
-========================== */
-const firebaseConfig = {
-  apiKey: "AIzaSyDXCfdJwuynkt6pelnyTtXBtO0-f7U-izY",
-  authDomain: "formatflow-9ffd4.firebaseapp.com",
-  projectId: "formatflow-9ffd4",
-  storageBucket: "formatflow-9ffd4.firebasestorage.app",
-  messagingSenderId: "455718268348",
-  appId: "1:455718268348:web:4afcc719d30bbdd1c60fb9"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-/* ==========================
-   MODAL FUNCTIONS
-========================== */
-function openAccessEmailModal(event) {
-  if (event) event.preventDefault();
-  document.getElementById("accessEmailModal").style.display = "flex";
-}
-
-function closeAccessEmailModalBox() {
-  document.getElementById("accessEmailModal").style.display = "none";
-}
-
-/* ==========================
-   SAVE EMAIL TO FIREBASE
-========================== */
+/* SAVE EMAIL */
 async function saveAccessEmailAndContinue() {
   const emailInput = document.getElementById("accessEmail");
-  const email = emailInput.value.trim().toLowerCase();
+  const email = emailInput ? emailInput.value.trim().toLowerCase() : "";
 
   if (!email || !email.includes("@")) {
     alert("Enter a valid email");
     return;
   }
 
-  // Save locally
   localStorage.setItem("formatflow_customer_email", email);
 
   try {
     await db.collection("customers").add({
       email: email,
-      created_at: new Date()
+      created_at: firebase.firestore.FieldValue.serverTimestamp()
     });
 
-    document.getElementById("accessEmailModal").style.display = "none";
-    window.location.href = "pricing.html";
+    const modal = document.getElementById("accessEmailModal");
+    if (modal) modal.style.display = "none";
 
+    window.location.href = "pricing.html";
   } catch (err) {
     console.error("Firebase error:", err);
-    alert("Email not saved");
+    alert("Email not saved. Check Firebase rules.");
   }
 }
 </script>
