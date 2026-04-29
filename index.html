@@ -674,22 +674,22 @@
       }
 
       localStorage.setItem("formatflow_customer_email", email);
-     const { data, error } = await supabaseClient
-  .from("formatflow_customers")
-  .upsert([
-    {
-      email: email,
-      stripe_status: "pending"
-    }
-  ]);
+    try {
+  const { error } = await supabaseClient
+    .from("formatflow_customers")
+    .upsert([
+      {
+        email: email,
+        stripe_status: "pending"
+      }
+    ]);
 
-if (error) {
-  console.error("Supabase error:", error);
-  alert("Error saving email. Check console.");
-} else {
-  console.log("Saved to Supabase:", data);
+  if (error) {
+    console.warn("Supabase email save skipped:", error.message);
+  }
+} catch (err) {
+  console.warn("Supabase connection skipped:", err);
 }
-      
       const modal = document.getElementById("accessEmailModal");
 
       if (modal) {
