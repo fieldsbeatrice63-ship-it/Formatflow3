@@ -5,10 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FormatFlow™ | Professional Documents for Real-Life Needs</title>
   <meta name="description" content="FormatFlow™ helps users generate professional documents for credit, career, housing, legal, and business needs in minutes." />
+
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -17,9 +16,7 @@
       color: #173b79;
     }
 
-    a {
-      text-decoration: none;
-    }
+    a { text-decoration: none; }
 
     .topbar {
       background: #ffffff;
@@ -106,6 +103,7 @@
       font-weight: 700;
       font-size: 16px;
       display: inline-block;
+      cursor: pointer;
     }
 
     .primary-btn {
@@ -212,9 +210,7 @@
       font-size: 15px;
     }
 
-    .steps .card {
-      text-align: center;
-    }
+    .steps .card { text-align: center; }
 
     .step-number {
       width: 44px;
@@ -297,6 +293,70 @@
       font-weight: 600;
     }
 
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 520px;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 24px;
+      position: relative;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.20);
+      color: #173b79;
+    }
+
+    .modal-box h2,
+    .modal-box h3 {
+      margin-top: 0;
+      color: #173b79;
+    }
+
+    .modal-box p {
+      color: #355171;
+      line-height: 1.7;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      border: none;
+      background: #eee;
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .modal-input {
+      margin-top: 10px;
+      padding: 12px;
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid #cfe0ff;
+      font-size: 15px;
+    }
+
+    .modal-submit {
+      margin-top: 15px;
+      background: #2c7dff;
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
     @media (max-width: 980px) {
       .hero,
       .grid-4,
@@ -315,24 +375,25 @@
     }
   </style>
 </head>
+
 <body>
 
   <div class="topbar">
     <div class="nav">
       <div class="brand">FormatFlow™</div>
       <div class="nav-links">
-        
         <a href="#how-it-works">How It Works</a>
-         <a href="#services">Services</a>
+        <a href="#services">Services</a>
         <a href="#documents">Documents</a>
         <a href="pricing.html">Pricing</a>
-     <a href="#" id="sendVerifyInfoLink" style="position:relative; display:inline-block;">
-  Send Verify
-  <span style="position:absolute; top:-10px; right:-18px; background:#28c76f; color:#ffffff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:999px; letter-spacing:0.4px;">
-    NEW
-  </span>
-</a>
-        
+
+        <a href="#" id="sendVerifyInfoLink" style="position:relative; display:inline-block;">
+          Send Verify
+          <span style="position:absolute; top:-10px; right:-18px; background:#28c76f; color:#ffffff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:999px; letter-spacing:0.4px;">
+            NEW
+          </span>
+        </a>
+
         <a class="nav-btn" href="pricing.html">Get Started</a>
       </div>
     </div>
@@ -346,14 +407,16 @@
         Whether you need a resume, hardship letter, lease agreement, dispute letter, proof of income, or service contract,
         our platform is designed to help you move quickly and confidently.
       </p>
-   <div class="hero-actions">
-  <a class="primary-btn" href="pricing.html">View Pricing</a>
 
-  <a class="secondary-btn" href="#documents" onclick="openAccessEmailModal(event)">
-    Start Document Access
-  </a>
-</div>
-</div>
+      <div class="hero-actions">
+        <a class="primary-btn" href="pricing.html">View Pricing</a>
+
+        <a class="secondary-btn" href="javascript:void(0)" onclick="openAccessEmailModal(event)">
+          Start Document Access
+        </a>
+      </div>
+    </div>
+
     <div class="hero-card">
       <h3>Built for urgent real-life needs</h3>
       <p>
@@ -483,148 +546,138 @@
       <a href="terms.html">Terms</a>
       <a href="contact.html">Contact</a>
     </div>
-    <div>
-     <div>
-  FormatFlow™ provides structured document-generation support based on user-provided information and is not a substitute for legal, financial, or other licensed professional advice.
 
-  <p style="margin-top:10px;">
-    FormatFlow™ operates under <strong>HALO™ AI Governance</strong> for platform protection, oversight, and integrity.
-  </p>
-</div>
+    <div>
+      FormatFlow™ provides structured document-generation support based on user-provided information and is not a substitute for legal, financial, or other licensed professional advice.
+
+      <p style="margin-top:10px;">
+        FormatFlow™ operates under <strong>HALO™ AI Governance</strong> for platform protection, oversight, and integrity.
+      </p>
     </div>
   </footer>
 
+  <div id="sendVerifyModal" class="modal-overlay">
+    <div class="modal-box">
+      <button id="closeSendVerifyModal" class="modal-close">✕</button>
 
- <div id="sendVerifyModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999;">
-  <div style="max-width:520px; margin:100px auto; background:#fff; border-radius:20px; padding:24px; position:relative;">
+      <div style="margin-bottom:10px;">
+        <span style="background:#28c76f; color:#fff; padding:4px 10px; border-radius:999px; font-size:11px; font-weight:700;">
+          NEW
+        </span>
+      </div>
 
-    <button id="closeSendVerifyModal" style="position:absolute; top:10px; right:10px; border:none; background:#eee; padding:6px 10px; border-radius:8px; cursor:pointer;">
-      ✕
-    </button>
+      <h2>Send Verify™</h2>
 
-    <div style="margin-bottom:10px;">
-      <span style="background:#28c76f; color:#fff; padding:4px 10px; border-radius:999px; font-size:11px; font-weight:700;">
-        NEW
-      </span>
+      <p>
+        Send Verify™ allows you to move your completed document into a verified delivery workflow.
+        After generating and retrieving your document, you can submit it with organized sender details,
+        receive a verification number, and download a receipt for your records.
+      </p>
+
+      <p>
+        <strong>Best use for credit dispute letters.</strong> Send Verify™ is especially useful for users who want
+        a clearer delivery process and stronger recordkeeping for credit dispute letters.
+      </p>
+
+      <ul>
+        <li>Verification number</li>
+        <li>Structured delivery workflow</li>
+        <li>Downloadable receipt (PDF)</li>
+        <li>Document record copy</li>
+      </ul>
+
+      <p><strong>Price: $9.99-14.99 per document</strong></p>
+
+      <p style="font-size:14px; color:#555;">
+        Available after your document has been unlocked and retrieved.
+      </p>
     </div>
-
-    <h2 style="margin-top:0;">Send Verify™</h2>
-
-   <p>
-  Send Verify™ allows you to move your completed document into a verified delivery workflow.
-  After generating and retrieving your document, you can submit it with organized sender details,
-  receive a verification number, and download a receipt for your records.
-</p>
-
-<p>
-  <strong>Best use for credit dispute letters.</strong> Send Verify™ is especially useful for users who want
-  a clearer delivery process and stronger recordkeeping for credit dispute letters.
-</p>
-
-<ul>
-  <li>Verification number</li>
-  <li>Structured delivery workflow</li>
-  <li>Downloadable receipt (PDF)</li>
-  <li>Document record copy</li>
-</ul>
-
-<p><strong>Price: $9.99-14.99 per document</strong></p>
-
-<p style="font-size:14px; color:#555;">
-  Available after your document has been unlocked and retrieved.
-</p>
-
   </div>
-</div>
 
+  <div id="accessEmailModal" class="modal-overlay">
+    <div class="modal-box">
+      <button onclick="closeAccessEmailModalBox()" class="modal-close">✕</button>
 
- <div id="accessEmailModal" class="modal-overlay" style="display:none;">
-  <div class="modal-box" style="position:relative;">
-    
-    <button onclick="closeAccessEmailModalBox()" style="position:absolute; top:10px; right:10px;">
-      ✕
-    </button>
+      <h3>Start Document Access</h3>
 
-    <h3>Start Document Access</h3>
+      <p>
+        Enter the email you want connected to your FormatFlow™ document access.
+        This helps restore your remaining documents if you return later.
+      </p>
 
-    <p>
-      Enter the email you want connected to your FormatFlow™ document access.
-      This helps restore your remaining documents if you return later.
-    </p>
+      <input
+        id="accessEmail"
+        class="modal-input"
+        type="email"
+        placeholder="Enter your email address"
+      />
 
-    <input
-      id="accessEmail"
-      type="email"
-      placeholder="Enter your email address"
-      style="margin-top:10px; padding:10px; width:100%; border-radius:8px; border:1px solid #ccc;"
-    />
-
-    <button onclick="saveAccessEmailAndContinue()" style="margin-top:15px;">
-      Continue
-    </button>
-
+      <button onclick="saveAccessEmailAndContinue()" class="modal-submit">
+        Continue
+      </button>
+    </div>
   </div>
-</div>
-<script>
-  const sendVerifyInfoLink = document.getElementById("sendVerifyInfoLink");
-  const sendVerifyModal = document.getElementById("sendVerifyModal");
-  const closeSendVerifyModal = document.getElementById("closeSendVerifyModal");
 
-  sendVerifyInfoLink.addEventListener("click", function(e) {
-    e.preventDefault();
-    sendVerifyModal.style.display = "block";
-  });
+  <script>
+    const sendVerifyInfoLink = document.getElementById("sendVerifyInfoLink");
+    const sendVerifyModal = document.getElementById("sendVerifyModal");
+    const closeSendVerifyModal = document.getElementById("closeSendVerifyModal");
 
-  closeSendVerifyModal.addEventListener("click", function() {
-    sendVerifyModal.style.display = "none";
-  });
-  localStorage.removeItem("formatflow_session_complete");
+    if (sendVerifyInfoLink && sendVerifyModal) {
+      sendVerifyInfoLink.addEventListener("click", function(e) {
+        e.preventDefault();
+        sendVerifyModal.style.display = "flex";
+      });
+    }
 
+    if (closeSendVerifyModal && sendVerifyModal) {
+      closeSendVerifyModal.addEventListener("click", function() {
+        sendVerifyModal.style.display = "none";
+      });
+    }
 
-  // ==========================
-// FORMATFLOW EMAIL ACCESS MODAL
-// ==========================
+    localStorage.removeItem("formatflow_session_complete");
 
-// Elements
+    function openAccessEmailModal(event) {
+      if (event) {
+        event.preventDefault();
+      }
 
+      const modal = document.getElementById("accessEmailModal");
 
-  function openAccessEmailModal(event) {
-  event.preventDefault();
+      if (modal) {
+        modal.style.display = "flex";
+      }
+    }
 
-  const modal = document.getElementById("accessEmailModal");
+    function closeAccessEmailModalBox() {
+      const modal = document.getElementById("accessEmailModal");
 
-  if (modal) {
-    modal.style.display = "flex";
-  }
-}
+      if (modal) {
+        modal.style.display = "none";
+      }
+    }
 
-function closeAccessEmailModalBox() {
-  const modal = document.getElementById("accessEmailModal");
+    function saveAccessEmailAndContinue() {
+      const emailInput = document.getElementById("accessEmail");
+      const email = emailInput ? emailInput.value.trim() : "";
 
-  if (modal) {
-    modal.style.display = "none";
-  }
-}
+      if (!email || !email.includes("@")) {
+        alert("Please enter a valid email.");
+        return;
+      }
 
-function saveAccessEmailAndContinue() {
-  const emailInput = document.getElementById("accessEmail");
-  const email = emailInput ? emailInput.value.trim() : "";
+      localStorage.setItem("formatflow_customer_email", email);
 
-  if (!email || !email.includes("@")) {
-    alert("Please enter a valid email.");
-    return;
-  }
+      const modal = document.getElementById("accessEmailModal");
 
-  localStorage.setItem("formatflow_customer_email", email);
+      if (modal) {
+        modal.style.display = "none";
+      }
 
-  const modal = document.getElementById("accessEmailModal");
+      window.location.href = "pricing.html";
+    }
+  </script>
 
-  if (modal) {
-    modal.style.display = "none";
-  }
-
-  window.location.href = "pricing.html";
-}
-</script>
 </body>
 </html>
