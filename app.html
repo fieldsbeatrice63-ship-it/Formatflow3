@@ -2200,5 +2200,146 @@ attachFirebaseDownloadTracking();
 document.addEventListener("DOMContentLoaded", attachFirebaseDownloadTracking);
 setTimeout(attachFirebaseDownloadTracking, 500);
 </script>
+
+  <script>
+/* ==========================================
+   FORMATFLOW™ GENERATOR ENTRY EMAIL MODAL
+   Shows when user enters app.html before setup.
+   Does not change layout, cards, colors, or boxes.
+========================================== */
+
+(function () {
+  function cleanEmail(email) {
+    return (email || "").trim().toLowerCase();
+  }
+
+  function isValidEmail(email) {
+    return email && email.includes("@") && email.includes(".");
+  }
+
+  function getSavedEmail() {
+    return cleanEmail(localStorage.getItem("formatflow_customer_email"));
+  }
+
+  function createGeneratorEntryModal() {
+    if (document.getElementById("generatorEntryEmailModal")) return;
+
+    const modal = document.createElement("div");
+    modal.id = "generatorEntryEmailModal";
+    modal.style.cssText = `
+      display:none;
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.72);
+      z-index:100001;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    `;
+
+    modal.innerHTML = `
+      <div style="
+        width:100%;
+        max-width:460px;
+        background:#ffffff;
+        color:#111827;
+        border-radius:18px;
+        padding:24px;
+        box-shadow:0 20px 60px rgba(0,0,0,0.38);
+        font-family:Arial, sans-serif;
+      ">
+        <h2 style="margin:0 0 10px;font-size:22px;">
+          Start Your Document Access
+        </h2>
+
+        <p style="font-size:14px;line-height:1.55;margin:0 0 14px;color:#374151;">
+          Your email is required before using the generator. FormatFlow uses your email
+          to connect your document plan, track your remaining documents, and restore
+          your access when you return.
+        </p>
+
+        <p style="font-size:13px;line-height:1.45;margin:0 0 16px;color:#4b5563;">
+          Use the same email each time so your remaining document count stays connected
+          to your plan.
+        </p>
+
+        <input
+          id="generatorEntryEmailInput"
+          type="email"
+          placeholder="Enter your email address"
+          style="
+            width:100%;
+            padding:13px;
+            border:1px solid #d1d5db;
+            border-radius:10px;
+            font-size:15px;
+            margin-bottom:14px;
+            box-sizing:border-box;
+          "
+        />
+
+        <button
+          id="generatorEntryContinueBtn"
+          style="
+            width:100%;
+            padding:13px;
+            border:none;
+            border-radius:10px;
+            background:#111827;
+            color:#ffffff;
+            font-size:15px;
+            font-weight:bold;
+            cursor:pointer;
+          "
+        >
+          Continue to Document Setup
+        </button>
+
+        <p style="font-size:12px;line-height:1.4;margin:12px 0 0;color:#6b7280;">
+          No login is required. Your email simply connects your plan and document count.
+        </p>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+  }
+
+  function showGeneratorEntryModal() {
+    createGeneratorEntryModal();
+
+    const modal = document.getElementById("generatorEntryEmailModal");
+    const input = document.getElementById("generatorEntryEmailInput");
+    const button = document.getElementById("generatorEntryContinueBtn");
+
+    const existingEmail = getSavedEmail();
+    if (existingEmail) input.value = existingEmail;
+
+    modal.style.display = "flex";
+
+    button.onclick = function () {
+      const email = cleanEmail(input.value);
+
+      if (!isValidEmail(email)) {
+        alert("Please enter a valid email address.");
+        return;
+      }
+
+      localStorage.setItem("formatflow_customer_email", email);
+      modal.style.display = "none";
+    };
+  }
+
+  function runGeneratorEntryGate() {
+    const savedEmail = getSavedEmail();
+
+    if (!isValidEmail(savedEmail)) {
+      showGeneratorEntryModal();
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", runGeneratorEntryGate);
+  setTimeout(runGeneratorEntryGate, 500);
+})();
+</script>
 </body>
 </html>
