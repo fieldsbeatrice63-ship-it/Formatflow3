@@ -1699,7 +1699,7 @@ document.addEventListener("DOMContentLoaded", function () {
 <script>
 /* ==========================================
    FORMATFLOW™ GENERATOR ENTRY EMAIL MODAL
-   Shows once per browser/email before generator use.
+   Shows when no customer email exists.
 ========================================== */
 
 (function () {
@@ -1711,15 +1711,10 @@ document.addEventListener("DOMContentLoaded", function () {
     return email && email.includes("@") && email.includes(".");
   }
 
-  function shouldShowModal() {
-    const email = cleanEmail(localStorage.getItem("formatflow_customer_email"));
-    const gateComplete = localStorage.getItem("formatflow_entry_gate_complete");
-
-    return !isValidEmail(email) || gateComplete !== "yes";
-  }
-
   function createGeneratorEntryModal() {
-    if (!shouldShowModal()) return;
+    const savedEmail = cleanEmail(localStorage.getItem("formatflow_customer_email"));
+
+    if (isValidEmail(savedEmail)) return;
     if (document.getElementById("generatorEntryEmailModal")) return;
 
     const modal = document.createElement("div");
@@ -1751,14 +1746,12 @@ document.addEventListener("DOMContentLoaded", function () {
         </h2>
 
         <p style="font-size:14px;line-height:1.55;margin:0 0 14px;color:#374151;">
-          Your email is required before using the generator. FormatFlow uses your email
-          to connect your document plan, track your remaining documents, and restore
-          your access when you return.
+          Enter your email before using the generator. FormatFlow uses your email to connect
+          your plan, track remaining documents, and restore access when you return.
         </p>
 
         <p style="font-size:13px;line-height:1.45;margin:0 0 16px;color:#4b5563;">
-          Use the same email every time so your remaining document count stays connected
-          to your plan.
+          Use the same email each time so your document count stays connected.
         </p>
 
         <input
@@ -1792,23 +1785,13 @@ document.addEventListener("DOMContentLoaded", function () {
         >
           Continue to Document Setup
         </button>
-
-        <p style="font-size:12px;line-height:1.4;margin:12px 0 0;color:#6b7280;">
-          No login is required. Your email only connects your plan and document count.
-        </p>
       </div>
     `;
 
     document.body.appendChild(modal);
 
-    const input = document.getElementById("generatorEntryEmailInput");
-    const button = document.getElementById("generatorEntryContinueBtn");
-
-    const savedEmail = cleanEmail(localStorage.getItem("formatflow_customer_email"));
-    if (savedEmail) input.value = savedEmail;
-
-    button.onclick = function () {
-      const email = cleanEmail(input.value);
+    document.getElementById("generatorEntryContinueBtn").onclick = function () {
+      const email = cleanEmail(document.getElementById("generatorEntryEmailInput").value);
 
       if (!isValidEmail(email)) {
         alert("Please enter a valid email address.");
@@ -1816,23 +1799,18 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       localStorage.setItem("formatflow_customer_email", email);
-      localStorage.setItem("formatflow_entry_gate_complete", "yes");
-
       modal.style.display = "none";
 
       if (window.FormatFlowFirebase && window.FormatFlowFirebase.loadOrCreateCustomerPlan) {
-        window.FormatFlowFirebase.loadOrCreateCustomerPlan().catch(function (err) {
-          console.error("Customer plan sync error:", err);
-        });
+        window.FormatFlowFirebase.loadOrCreateCustomerPlan().catch(console.error);
       }
     };
   }
 
   window.addEventListener("load", createGeneratorEntryModal);
-  setTimeout(createGeneratorEntryModal, 700);
+  setTimeout(createGeneratorEntryModal, 500);
 })();
 </script>
-
 </body>
 </html>
 
