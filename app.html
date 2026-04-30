@@ -2069,7 +2069,10 @@ setTimeout(attachFirebaseDownloadTracking, 500);
 
   function createGeneratorEntryModal() {
     if (document.getElementById("generatorEntryEmailModal")) return;
-
+    
+    const params = new URLSearchParams(window.location.search);
+if (params.get("payment") === "success") return;
+    
     const modal = document.createElement("div");
     modal.id = "generatorEntryEmailModal";
     modal.style.cssText = `
