@@ -1170,17 +1170,11 @@ ${documentText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
       unlockRetrievedDocument();
     });
 
-   <script>
-/* ==========================================
-   FORMATFLOW™ DOWNLOAD PDF CONTROL
-   Custom final-document modal + Firebase count
-========================================== */
-
-downloadPdfBtn.addEventListener("click", async function () {
+    downloadPdfBtn.addEventListener("click", async function () {
   const email = localStorage.getItem("formatflow_customer_email");
 
   if (!email || !window.FormatFlowFirebase) {
-    alert("Email is required before downloading. Please enter your email to connect your document plan.");
+    alert("Customer session not found.");
     return;
   }
 
@@ -1189,155 +1183,82 @@ downloadPdfBtn.addEventListener("click", async function () {
     .replaceAll(".", "_dot_")
     .replaceAll("@", "_at_");
 
+  const db = window.FormatFlowFirebase.firestoreDb;
+  const ref = window.FormatFlowFirebase.firestoreDb
+    ? window.FormatFlowFirebase.firestoreDb
+    : null;
+
   try {
-    const firestore = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+    const customerRef = window.FormatFlowFirebase.firestoreDb
+      ? window.FormatFlowFirebase.firestoreDb
+      : null;
 
-    const docRef = firestore.doc(
-      window.FormatFlowFirebase.firestoreDb,
-      "customers",
-      id
-    );
+    const docRef = window.FormatFlowFirebase.firestoreDb
+      ? window.FormatFlowFirebase.firestoreDb
+      : null;
 
-    const snapshot = await firestore.getDoc(docRef);
+    const snapshot = await window.FormatFlowFirebase.firestoreDb
+      ? await (await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"))
+          .getDoc(
+            (await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"))
+              .doc(window.FormatFlowFirebase.firestoreDb, "customers", id)
+          )
+      : null;
 
-    if (!snapshot.exists()) {
-      alert("Customer record not found. Please enter your email again before downloading.");
+    if (!snapshot || !snapshot.exists()) {
+      alert("Customer record not found.");
       return;
     }
 
     const data = snapshot.data();
 
-    const allowed = Number(data.documents_allowed || 5);
-    const used = Number(data.documents_used || 0);
-    const remaining = Number(data.documents_remaining || 0);
-
-    if (remaining <= 0) {
-      alert("Your document plan has ended. Please purchase or restore a plan to continue retrieving professional documents.");
+    if (data.documents_remaining <= 0) {
+      alert("You have reached your document limit for this plan.");
       return;
     }
 
-    function finishDownload() {
-      openDocumentPrintWindow();
+    // ✅ PRINT FIRST (no delay for user)
+    openDocumentPrintWindow();
 
-      const newUsed = used + 1;
-      const newRemaining = Math.max(allowed - newUsed, 0);
+    const newUsed = (data.documents_used || 0) + 1;
+    const newRemaining = (data.documents_allowed || 0) - newUsed;
 
-      firestore.updateDoc(docRef, {
-        documents_used: newUsed,
-        documents_remaining: newRemaining,
-        updated_at: firestore.serverTimestamp()
-      });
-
-      localStorage.setItem("docUsed", String(newUsed));
-      localStorage.setItem("docLimit", String(allowed));
-      localStorage.setItem("formatflow_documents_used", String(newUsed));
-      localStorage.setItem("formatflow_documents_remaining", String(newRemaining));
-
-      const downloadCompleteModal = document.getElementById("downloadCompleteModal");
-      const downloadCompleteMessage = document.getElementById("downloadCompleteMessage");
-
-      if (downloadCompleteModal && downloadCompleteMessage) {
-        if (newRemaining === 0) {
-          downloadCompleteMessage.innerHTML =
-            "This was your final document for this plan.<br><br>" +
-            "To continue retrieving professional documents, please restore your existing plan or choose another FormatFlow™ plan.";
-        } else {
-          downloadCompleteMessage.innerHTML =
-            "Thank you for using FormatFlow™.<br><br>" +
-            "You have <strong>" + newRemaining + "</strong> document(s) remaining.";
+    // ✅ UPDATE FIREBASE
+    await (await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"))
+      .updateDoc(
+        (await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"))
+          .doc(window.FormatFlowFirebase.firestoreDb, "customers", id),
+        {
+          documents_used: newUsed,
+          documents_remaining: newRemaining,
+          updated_at: (await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"))
+            .serverTimestamp()
         }
+      );
 
-        downloadCompleteModal.style.display = "flex";
-      }
+    // ✅ UPDATE LOCAL STORAGE (UI stays same)
+    localStorage.setItem("docUsed", String(newUsed));
+    localStorage.setItem("docLimit", String(data.documents_allowed));
+
+    const downloadCompleteModal = document.getElementById("downloadCompleteModal");
+    const downloadCompleteMessage = document.getElementById("downloadCompleteMessage");
+
+    if (downloadCompleteModal && downloadCompleteMessage) {
+      downloadCompleteMessage.innerHTML =
+        "Thank you for using FormatFlow™.<br><br>" +
+        "You have <strong>" + newRemaining + "</strong> document(s) remaining.";
+
+      downloadCompleteModal.style.display = "flex";
     }
-
-    if (remaining === 1) {
-      const lastDocModal = document.createElement("div");
-      lastDocModal.id = "finalDocumentPlanModal";
-      lastDocModal.style.cssText = `
-        position:fixed;
-        inset:0;
-        background:rgba(0,0,0,0.72);
-        z-index:999999;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        padding:20px;
-      `;
-
-      lastDocModal.innerHTML = `
-        <div style="
-          width:100%;
-          max-width:460px;
-          background:#ffffff;
-          color:#111827;
-          border-radius:18px;
-          padding:24px;
-          box-shadow:0 20px 60px rgba(0,0,0,0.38);
-          font-family:Arial, sans-serif;
-        ">
-          <h2 style="margin:0 0 10px;font-size:22px;">
-            This Is Your Last Document
-          </h2>
-
-          <p style="font-size:14px;line-height:1.55;margin:0 0 16px;color:#374151;">
-            This download will use the final document included in your current FormatFlow™ plan.
-            After this download, please restore your existing plan or choose another plan to continue
-            enjoying professional document access.
-          </p>
-
-          <button id="continueFinalDownloadBtn" style="
-            width:100%;
-            padding:13px;
-            border:none;
-            border-radius:10px;
-            background:#111827;
-            color:#ffffff;
-            font-size:15px;
-            font-weight:bold;
-            cursor:pointer;
-            margin-bottom:10px;
-          ">
-            Continue Download
-          </button>
-
-          <button id="cancelFinalDownloadBtn" style="
-            width:100%;
-            padding:12px;
-            border:1px solid #d1d5db;
-            border-radius:10px;
-            background:#ffffff;
-            color:#111827;
-            font-size:14px;
-            cursor:pointer;
-          ">
-            Not Now
-          </button>
-        </div>
-      `;
-
-      document.body.appendChild(lastDocModal);
-
-      document.getElementById("continueFinalDownloadBtn").onclick = function () {
-        lastDocModal.remove();
-        finishDownload();
-      };
-
-      document.getElementById("cancelFinalDownloadBtn").onclick = function () {
-        lastDocModal.remove();
-      };
-
-      return;
-    }
-
-    finishDownload();
 
   } catch (err) {
     console.error("Download error:", err);
     alert("Error processing document usage.");
   }
 });
-</script>
+printDocBtn.addEventListener("click", function () {
+  openDocumentPrintWindow();
+});
 
   if (verifiedSendBtn) {
   verifiedSendBtn.addEventListener("click", function () {
@@ -1752,144 +1673,5 @@ document.addEventListener("DOMContentLoaded", function () {
     <button id="closeDownloadCompleteModal">Continue</button>
   </div>
 </div>
-
-  <script>
-/* ==========================================
-   FORMATFLOW™ DISABLE PRINT/SAVE PDF BYPASS
-   Keeps design/layout untouched.
-========================================== */
-
-(function () {
-  function hidePrintSaveButton() {
-    const printBtn = document.getElementById("printDocBtn");
-
-    if (printBtn) {
-      printBtn.style.display = "none";
-      printBtn.disabled = true;
-    }
-  }
-
-  hidePrintSaveButton();
-  document.addEventListener("DOMContentLoaded", hidePrintSaveButton);
-  setTimeout(hidePrintSaveButton, 500);
-})();
-</script>
-
-<script>
-/* ==========================================
-   FORMATFLOW™ GENERATOR ENTRY EMAIL MODAL
-   Shows when no customer email exists.
-========================================== */
-
-(function () {
-  function cleanEmail(email) {
-    return (email || "").trim().toLowerCase();
-  }
-
-  function isValidEmail(email) {
-    return email && email.includes("@") && email.includes(".");
-  }
-
-  function createGeneratorEntryModal() {
-    const savedEmail = cleanEmail(localStorage.getItem("formatflow_customer_email"));
-
-    if (isValidEmail(savedEmail)) return;
-    if (document.getElementById("generatorEntryEmailModal")) return;
-
-    const modal = document.createElement("div");
-    modal.id = "generatorEntryEmailModal";
-    modal.style.cssText = `
-      display:flex;
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,0.72);
-      z-index:999999;
-      align-items:center;
-      justify-content:center;
-      padding:20px;
-    `;
-
-    modal.innerHTML = `
-      <div style="
-        width:100%;
-        max-width:460px;
-        background:#ffffff;
-        color:#111827;
-        border-radius:18px;
-        padding:24px;
-        box-shadow:0 20px 60px rgba(0,0,0,0.38);
-        font-family:Arial, sans-serif;
-      ">
-        <h2 style="margin:0 0 10px;font-size:22px;">
-          Start Your Document Access
-        </h2>
-
-        <p style="font-size:14px;line-height:1.55;margin:0 0 14px;color:#374151;">
-          Enter your email before using the generator. FormatFlow uses your email to connect
-          your plan, track remaining documents, and restore access when you return.
-        </p>
-
-        <p style="font-size:13px;line-height:1.45;margin:0 0 16px;color:#4b5563;">
-          Use the same email each time so your document count stays connected.
-        </p>
-
-        <input
-          id="generatorEntryEmailInput"
-          type="email"
-          placeholder="Enter your email address"
-          style="
-            width:100%;
-            padding:13px;
-            border:1px solid #d1d5db;
-            border-radius:10px;
-            font-size:15px;
-            margin-bottom:14px;
-            box-sizing:border-box;
-          "
-        />
-
-        <button
-          id="generatorEntryContinueBtn"
-          style="
-            width:100%;
-            padding:13px;
-            border:none;
-            border-radius:10px;
-            background:#111827;
-            color:#ffffff;
-            font-size:15px;
-            font-weight:bold;
-            cursor:pointer;
-          "
-        >
-          Continue to Document Setup
-        </button>
-      </div>
-    `;
-
-    document.body.appendChild(modal);
-
-    document.getElementById("generatorEntryContinueBtn").onclick = function () {
-      const email = cleanEmail(document.getElementById("generatorEntryEmailInput").value);
-
-      if (!isValidEmail(email)) {
-        alert("Please enter a valid email address.");
-        return;
-      }
-
-      localStorage.setItem("formatflow_customer_email", email);
-      modal.style.display = "none";
-
-      if (window.FormatFlowFirebase && window.FormatFlowFirebase.loadOrCreateCustomerPlan) {
-        window.FormatFlowFirebase.loadOrCreateCustomerPlan().catch(console.error);
-      }
-    };
-  }
-
-  window.addEventListener("load", createGeneratorEntryModal);
-  setTimeout(createGeneratorEntryModal, 500);
-})();
-</script>
 </body>
 </html>
-
