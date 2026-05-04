@@ -1538,20 +1538,19 @@ async function syncCustomerPlanFromFirebase() {
     const paymentStatus = params.get("payment");
     const planFromUrl = params.get("plan");
 
+    const pendingPlan = localStorage.getItem("formatflow_pending_paid_plan");
+    const pendingTime = Number(localStorage.getItem("formatflow_pending_paid_time") || "0");
+    const pendingIsFresh = pendingTime && Date.now() - pendingTime < 60 * 60 * 1000;
+
     let customerData = null;
 
-    if (paymentStatus === "success" && planFromUrl) {
-      const activationKey = "formatflow_plan_activated_" + planFromUrl + "_" + window.location.href;
+    if (paymentStatus === "success" && planFromUrl && pendingPlan === planFromUrl && pendingIsFresh) {
+      customerData = await window.FormatFlowFirebase.loadOrCreateCustomerPlan(planFromUrl);
 
-      if (!localStorage.getItem(activationKey)) {
-        customerData = await window.FormatFlowFirebase.loadOrCreateCustomerPlan(planFromUrl);
-        localStorage.setItem(activationKey, "true");
+      localStorage.removeItem("formatflow_pending_paid_plan");
+      localStorage.removeItem("formatflow_pending_paid_time");
 
-        const cleanUrl = window.location.pathname;
-        window.history.replaceState({}, document.title, cleanUrl);
-      } else {
-        customerData = await window.FormatFlowFirebase.loadOrCreateCustomerPlan();
-      }
+      window.history.replaceState({}, document.title, window.location.pathname);
     } else {
       customerData = await window.FormatFlowFirebase.loadOrCreateCustomerPlan();
     }
@@ -1727,7 +1726,36 @@ document.addEventListener("DOMContentLoaded", function () {
 })();
 </script>
 
+<script>
+/* ==========================================
+   FORMATFLOW™ PLAN PURCHASE MARKER
+   Marks a fresh plan purchase before leaving for Stripe.
+========================================== */
 
+(function () {
+  function markPendingPlan(planName) {
+    localStorage.setItem("formatflow_pending_paid_plan", planName);
+    localStorage.setItem("formatflow_pending_paid_time", String(Date.now()));
+  }
+
+  document.addEventListener("click", function (e) {
+    const target = e.target.closest("a");
+    if (!target) return;
+
+    if (target.id === "basicLink") {
+      markPendingPlan("fast");
+    }
+
+    if (target.id === "approvalink") {
+      markPendingPlan("approval");
+    }
+
+    if (target.id === "premiumLink") {
+      markPendingPlan("authority");
+    }
+  });
+})();
+</script>
 <script>
 /* ==========================================
    FORMATFLOW™ GENERATOR ENTRY EMAIL MODAL
