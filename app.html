@@ -1175,94 +1175,88 @@ ${documentText.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
     });
 
     downloadPdfBtn.addEventListener("click", async function () {
-  const email = localStorage.getItem("formatflow_customer_email");
+  const email = (localStorage.getItem("formatflow_customer_email") || "").trim().toLowerCase();
 
-  if (!email || !window.FormatFlowFirebase) {
-    alert("Customer session not found.");
+  if (!email || !email.includes("@") || !window.FormatFlowFirebase) {
+    alert("Customer session not found. Please enter your email again.");
     return;
   }
 
-  const id = email
-    .toLowerCase()
+  const customerId = email
     .replaceAll(".", "_dot_")
     .replaceAll("@", "_at_");
 
-  const db = window.FormatFlowFirebase.firestoreDb;
-  const ref = window.FormatFlowFirebase.firestoreDb
-    ? window.FormatFlowFirebase.firestoreDb
-    : null;
-
   try {
-    const customerRef = window.FormatFlowFirebase.firestoreDb
-      ? window.FormatFlowFirebase.firestoreDb
-      : null;
+    downloadPdfBtn.disabled = true;
+    downloadPdfBtn.textContent = "Downloading...";
 
-    const docRef = window.FormatFlowFirebase.firestoreDb
-      ? window.FormatFlowFirebase.firestoreDb
-      : null;
+    const firestoreModule = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
 
-    const snapshot = await window.FormatFlowFirebase.firestoreDb
-      ? await (await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"))
-          .getDoc(
-            (await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"))
-              .doc(window.FormatFlowFirebase.firestoreDb, "customers", id)
-          )
-      : null;
+    const customerRef = firestoreModule.doc(
+      window.FormatFlowFirebase.firestoreDb,
+      "customers",
+      customerId
+    );
 
-    if (!snapshot || !snapshot.exists()) {
-      alert("Customer record not found.");
+    const snapshot = await firestoreModule.getDoc(customerRef);
+
+    if (!snapshot.exists()) {
+      alert("Customer record not found. Please return to pricing and select your plan again.");
       return;
     }
 
     const data = snapshot.data();
 
-    if (data.documents_remaining <= 0) {
-      alert("You have reached your document limit for this plan.");
+    const allowed = Number(data.documents_allowed || 0);
+    const used = Number(data.documents_used || 0);
+    const remaining = Number(data.documents_remaining || 0);
+
+    if (remaining <= 0) {
+      alert("Your plan is complete. Please purchase another plan.");
       return;
     }
 
-    // ✅ PRINT FIRST (no delay for user)
+    // Download / save action happens first.
     openDocumentPrintWindow();
 
-    const newUsed = (data.documents_used || 0) + 1;
-    const newRemaining = (data.documents_allowed || 0) - newUsed;
+    // Count only after the download/save action is triggered.
+    const newUsed = used + 1;
+    const newRemaining = Math.max(allowed - newUsed, 0);
 
-    // ✅ UPDATE FIREBASE
-    await (await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"))
-      .updateDoc(
-        (await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"))
-          .doc(window.FormatFlowFirebase.firestoreDb, "customers", id),
-        {
-          documents_used: newUsed,
-          documents_remaining: newRemaining,
-          updated_at: (await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"))
-            .serverTimestamp()
-        }
-      );
+    await firestoreModule.updateDoc(customerRef, {
+      documents_used: newUsed,
+      documents_remaining: newRemaining,
+      updated_at: firestoreModule.serverTimestamp()
+    });
 
-    // ✅ UPDATE LOCAL STORAGE (UI stays same)
     localStorage.setItem("docUsed", String(newUsed));
-    localStorage.setItem("docLimit", String(data.documents_allowed));
+    localStorage.setItem("docLimit", String(allowed));
 
     const downloadCompleteModal = document.getElementById("downloadCompleteModal");
     const downloadCompleteMessage = document.getElementById("downloadCompleteMessage");
 
     if (downloadCompleteModal && downloadCompleteMessage) {
       if (newRemaining === 0) {
-  downloadCompleteMessage.innerHTML =
-    "Your final document for this plan has been downloaded.<br><br>" +
-    "Your current plan is now complete. Please purchase another FormatFlow™ plan to continue retrieving professional documents.";
-} else {
-  downloadCompleteMessage.innerHTML =
-    "Thank you for using FormatFlow™.<br><br>" +
-    "You have <strong>" + newRemaining + "</strong> document(s) remaining.";
-}
+        downloadCompleteMessage.innerHTML =
+          "Your final document for this plan has been downloaded.<br><br>" +
+          "Your plan is complete. Please purchase another plan.";
+      } else {
+        downloadCompleteMessage.innerHTML =
+          "Download complete.<br><br>" +
+          "You have <strong>" + newRemaining + "</strong> document(s) remaining.";
+      }
+
       downloadCompleteModal.style.display = "flex";
+    } else {
+      window.location.href = "index.html";
     }
 
   } catch (err) {
     console.error("Download error:", err);
     alert("Error processing document usage.");
+  } finally {
+    downloadPdfBtn.disabled = false;
+    downloadPdfBtn.textContent = "Download PDF";
   }
 });
 printDocBtn.addEventListener("click", function () {
