@@ -1538,20 +1538,16 @@ async function syncCustomerPlanFromFirebase() {
     const paymentStatus = params.get("payment");
     const planFromUrl = params.get("plan");
 
-    const pendingPlan = localStorage.getItem("formatflow_pending_paid_plan");
-    const pendingTime = Number(localStorage.getItem("formatflow_pending_paid_time") || "0");
-    const pendingIsFresh = pendingTime && Date.now() - pendingTime < 60 * 60 * 1000;
-
     let customerData = null;
 
-    if (paymentStatus === "success" && planFromUrl && pendingPlan === planFromUrl && pendingIsFresh) {
+    if (paymentStatus === "success" && planFromUrl) {
+      // New Stripe payment success = reset the customer plan immediately.
       customerData = await window.FormatFlowFirebase.loadOrCreateCustomerPlan(planFromUrl);
 
-      localStorage.removeItem("formatflow_pending_paid_plan");
-      localStorage.removeItem("formatflow_pending_paid_time");
-
+      // Remove payment parameters so refresh does NOT reset the plan again.
       window.history.replaceState({}, document.title, window.location.pathname);
     } else {
+      // Normal app entry = only read/sync current Firebase count.
       customerData = await window.FormatFlowFirebase.loadOrCreateCustomerPlan();
     }
 
