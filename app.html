@@ -701,25 +701,39 @@ Choose a document type, complete the form, and click “Generate Preview” to s
         updated_at: serverTimestamp()
       });
     } else {
-      const existing = customerSnap.data();
+  const existing = customerSnap.data();
 
-      await setDoc(
-        customerRef,
-        {
-          email: email,
-          plan: existing.plan || plan,
-          documents_allowed: existing.documents_allowed || allowed,
-          documents_used: existing.documents_used || 0,
-          documents_remaining:
-            typeof existing.documents_remaining === "number"
-              ? existing.documents_remaining
-              : allowed,
-          updated_at: serverTimestamp()
-        },
-        { merge: true }
-      );
-    }
-
+  if (planFromUrl) {
+    await setDoc(
+      customerRef,
+      {
+        email: email,
+        plan: plan,
+        documents_allowed: allowed,
+        documents_used: 0,
+        documents_remaining: allowed,
+        updated_at: serverTimestamp()
+      },
+      { merge: true }
+    );
+  } else {
+    await setDoc(
+      customerRef,
+      {
+        email: email,
+        plan: existing.plan || plan,
+        documents_allowed: existing.documents_allowed || allowed,
+        documents_used: existing.documents_used || 0,
+        documents_remaining:
+          typeof existing.documents_remaining === "number"
+            ? existing.documents_remaining
+            : allowed,
+        updated_at: serverTimestamp()
+      },
+      { merge: true }
+    );
+  }
+}
     localStorage.setItem("formatflow_customer_id", customerId);
 
     const freshSnap = await getDoc(customerRef);
