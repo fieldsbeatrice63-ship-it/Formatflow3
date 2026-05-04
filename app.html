@@ -1535,13 +1535,29 @@ async function syncCustomerPlanFromFirebase() {
     if (!window.FormatFlowFirebase) return;
 
     const params = new URLSearchParams(window.location.search);
+    const paymentStatus = params.get("payment");
     const planFromUrl = params.get("plan");
 
-    const customerData = await window.FormatFlowFirebase.loadOrCreateCustomerPlan(planFromUrl);
+    let customerData = null;
+
+    if (paymentStatus === "success" && planFromUrl) {
+      const activationKey = "formatflow_plan_activated_" + planFromUrl + "_" + window.location.href;
+
+      if (!localStorage.getItem(activationKey)) {
+        customerData = await window.FormatFlowFirebase.loadOrCreateCustomerPlan(planFromUrl);
+        localStorage.setItem(activationKey, "true");
+
+        const cleanUrl = window.location.pathname;
+        window.history.replaceState({}, document.title, cleanUrl);
+      } else {
+        customerData = await window.FormatFlowFirebase.loadOrCreateCustomerPlan();
+      }
+    } else {
+      customerData = await window.FormatFlowFirebase.loadOrCreateCustomerPlan();
+    }
 
     if (!customerData) return;
 
-    // ✅ ONLY sync values (no UI changes)
     localStorage.setItem("docLimit", String(customerData.documents_allowed || 0));
     localStorage.setItem("docUsed", String(customerData.documents_used || 0));
 
@@ -1552,7 +1568,6 @@ async function syncCustomerPlanFromFirebase() {
   }
 }
 
-/* Run AFTER page loads (safe) */
 document.addEventListener("DOMContentLoaded", function () {
   syncCustomerPlanFromFirebase();
 });
